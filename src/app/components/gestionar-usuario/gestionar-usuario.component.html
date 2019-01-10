@@ -105,7 +105,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="modal-editar">
+    <!--<div class="modal fade" id="modal-editar">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -114,7 +114,7 @@
                     <h4 class="modal-title">Editar</h4>
                 </div>
                 <div class="modal-body">
-                    <form [FormGroup]="formPersona" (ngSubmit)="editPersonas()" #editPersona="ngForm" name="formularioEditPersona" class="form-horizontal">
+                    <form (ngSubmit)="editPersonas()" #editPersona="ngForm" name="formularioEditPersona" class="form-horizontal">
 
                         <div class="row row-editar">
                             <div class="col-md-12">
@@ -216,7 +216,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
     <!-- Main content -->
     <section class="content">
         <div class="row">
@@ -469,7 +469,7 @@
                                             <label for="inputName" class="col-sm-4 control-label"><i class="fa fa-search"></i> Buscar por el nombre</label>
                                             <div class="col-sm-8 select-student">
                                                 <select [(ngModel)]='idPersona' name="idPersona" class="form-control select2" style="width: 100%;">
-                                                <option *ngFor="let persona of personas" [value]="persona.idPersona">{{ persona.primerNombre }} {{
+                                                <option *ngFor="let persona of personas" [value]="persona.idPersona" >{{ persona.primerNombre }} {{
                                                   persona.segundoNombre }} {{persona.primerApellido}} {{persona.segundoApellido}}</option>
                                               </select>
                                             </div>

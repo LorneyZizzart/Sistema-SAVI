@@ -11,6 +11,16 @@
             <li class="active">Gestión de usuarios</li>
         </ol>
     </section>
+    <div *ngIf="MessageDesable == true" class="pad no-print">
+            <div class="callout callout-info">
+                <h4><i class="icon fa fa-check"></i> Departamento Deshabilitado</h4>
+            </div>
+        </div>
+        <div *ngIf="MessageEnable == true" class="pad no-print">
+                <div class="callout callout-success">
+                    <h4><i class="icon fa fa-check"></i> Departamento habilitado</h4>
+                </div>
+            </div>
     <div *ngIf="MessageSuccess == true" class="pad no-print">
         <div class="callout callout-success">
             <h4><i class="icon fa fa-check"></i> Registro Exitoso</h4>
@@ -66,11 +76,15 @@
                                             <td>{{ departamento.limiteEstudiante }}</td>
                                             <td>
                                                 <div class="progress progress-xs progress-striped active">
-                                                    <div class="progress-bar progress-bar-primary" style="width: 38%"></div>
+                                                    <div class="progress-bar progress-bar-primary" style="width: 38%" ></div>
                                                 </div>
                                             </td>
-                                            <td class="text-center"><span class="badge bg-light-blue">{{ departamento.limiteEstudiante }}</span></td>
-                                            <td>{{ departamento.estadoDepartamento | estado }}</td>
+                                            <td class="text-center"><span class="badge bg-light-blue">{{ departamento.limiteEstudiante - departamento.cantidadEstudiante }}</span></td>
+                                            
+                                            <td>
+                                                <a *ngIf="departamento.estadoDepartamento == false" (click)="messageEnableDesable('inactivo')" class="btn btn-block btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
+                                                <a *ngIf="departamento.estadoDepartamento == true" (click)=" messageEnableDesable('activo')" class="btn btn-block btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Desabilitar"><i class="fa fa-close"></i></a>
+                                            </td>
                                         </tr>
                                     </table>
                                 </div>

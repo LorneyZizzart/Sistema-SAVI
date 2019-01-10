@@ -13,7 +13,8 @@ export class GestionarDepartamentoComponent implements OnInit {
   departamentos:Departamento[];
   historialDepartamento:Departamento[];
   MessageSuccess:Boolean = false;
-
+  MessageEnable:Boolean = false;
+  MessageDesable:Boolean = false;
   departamento:Departamento = {
     nombreDepartamento:"",
     costoHora:"",
@@ -39,6 +40,20 @@ export class GestionarDepartamentoComponent implements OnInit {
       setTimeout(() => {
         this.MessageSuccess = false;
       }, 10000);
+    }
+  }
+
+  messageEnableDesable(value:string){
+    if (value == 'inactivo') {
+      this.MessageEnable = true;
+      setTimeout(() => {
+        this.MessageEnable = false;
+      }, 8000);
+    }else if (value == 'activo') {
+      this.MessageDesable = true;
+      setTimeout(() => {
+        this.MessageDesable = false;
+      }, 8000);
     }
   }
   //GEATION DEPARTAMENTOS
