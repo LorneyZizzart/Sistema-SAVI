@@ -15,10 +15,17 @@ export class GestionarDepartamentoComponent implements OnInit {
   MessageSuccess:Boolean = false;
   MessageEnable:Boolean = false;
   MessageDesable:Boolean = false;
+
   departamento:Departamento = {
     nombreDepartamento:"",
     costoHora:"",
     limiteEstudiante:"",
+  }
+
+  editarDepartamento:Departamento = {
+    nombreDepartamento:"",
+    fechaRegistro:"",
+    estadoDepartamento:""
   }
 
   constructor( private _appDepartamentoService: AppDepartamentoService) {
@@ -67,9 +74,23 @@ export class GestionarDepartamentoComponent implements OnInit {
     console.log(this.departamento);
   }
 
-  editDepartamento(){
-    console.log(this.departamento);
+  editDepartamento(idDepartamento, nombre, fechaRegistro, estado){
+    this.editarDepartamento.nombreDepartamento = nombre;
+    this.editarDepartamento.fechaRegistro = fechaRegistro;
+    this.editarDepartamento.estadoDepartamento = estado;
+    console.log(this.editarDepartamento);
+    this._appDepartamentoService.putDepartamento(this.editarDepartamento, idDepartamento)
+      .subscribe((data : Departamento[]) => {console.log(data)});
+
+      setTimeout(() => {
+        this.getDepartamentos();
+      }, 2000);
   }
+
+  deleteDepartameto(){
+    
+  }
+
   saveOrganizacion(){}
 
   //GESTION HISTORIAL DEPARTAMENTOS
