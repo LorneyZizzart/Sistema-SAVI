@@ -1,0 +1,167 @@
+{
+    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+    "version": 1,
+    "newProjectRoot": "projects",
+    "projects": {
+        "AngularPrueba7": {
+            "root": "",
+            "sourceRoot": "src",
+            "projectType": "application",
+            "prefix": "app",
+            "schematics": {},
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "outputPath": "dist/AngularPrueba7",
+                        "index": "src/index.html",
+                        "main": "src/main.ts",
+                        "polyfills": "src/polyfills.ts",
+                        "tsConfig": "src/tsconfig.app.json",
+                        "assets": [
+                            "src/favicon.ico",
+                            "src/assets"
+                        ],
+                        "styles": [
+                            "node_modules/admin-lte/bower_components/bootstrap/dist/css/bootstrap.min.css",
+                            "node_modules/admin-lte/bower_components/font-awesome/css/font-awesome.min.css",
+                            "node_modules/admin-lte/bower_components/Ionicons/css/ionicons.min.css",
+                            "node_modules/admin-lte/bower_components/jvectormap/jquery-jvectormap.css",
+                            "node_modules/admin-lte/dist/css/AdminLTE.min.css",
+                            "node_modules/admin-lte/dist/css/skins/_all-skins.min.css",
+                            "node_modules/admin-lte/bower_components/select2/dist/css/select2.min.css",
+                            "node_modules/admin-lte/plugins/iCheck/all.css",
+                            "node_modules/admin-lte/plugins/timepicker/bootstrap-timepicker.min.css",
+                            "node_modules/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css",
+                            "node_modules/admin-lte/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css",
+                            "node_modules/admin-lte/bower_components/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css",
+                            "src/styles.css"
+                        ],
+                        "scripts": [
+                            "node_modules/admin-lte/bower_components/jquery/dist/jquery.min.js",
+                            "node_modules/admin-lte/bower_components/bootstrap/dist/js/bootstrap.min.js",
+                            "node_modules/admin-lte/bower_components/fastclick/lib/fastclick.js",
+                            "node_modules/admin-lte/dist/js/adminlte.min.js",
+                            "node_modules/admin-lte/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js",
+                            "node_modules/admin-lte/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js",
+                            "node_modules/admin-lte/plugins/jvectormap/jquery-jvectormap-world-mill-en.js",
+                            "node_modules/admin-lte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js",
+                            "node_modules/admin-lte/bower_components/chart.js/Chart.js",
+                            "node_modules/admin-lte/dist/js/pages/dashboard2.js",
+                            "node_modules/admin-lte/bower_components/select2/dist/js/select2.full.min.js",
+                            "node_modules/admin-lte/plugins/input-mask/jquery.inputmask.js",
+                            "node_modules/admin-lte/plugins/input-mask/jquery.inputmask.date.extensions.js",
+                            "node_modules/admin-lte/plugins/input-mask/jquery.inputmask.extensions.js",
+                            "node_modules/admin-lte/bower_components/moment/min/moment.min.js",
+                            "node_modules/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.js",
+                            "node_modules/admin-lte/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js",
+                            "node_modules/admin-lte/bower_components/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js",
+                            "node_modules/admin-lte/plugins/timepicker/bootstrap-timepicker.min.js",
+                            "node_modules/admin-lte/bower_components/fastclick/lib/fastclick.js",
+                            "node_modules/admin-lte/plugins/timepicker/bootstrap-timepicker.min.js",
+                            "node_modules/admin-lte/dist/js/demo.js",
+                            "src/assets/js/query.js"
+                        ]
+                    },
+                    "configurations": {
+                        "production": {
+                            "fileReplacements": [{
+                                "replace": "src/environments/environment.ts",
+                                "with": "src/environments/environment.prod.ts"
+                            }],
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "extractCss": true,
+                            "namedChunks": false,
+                            "aot": true,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true,
+                            "budgets": [{
+                                "type": "initial",
+                                "maximumWarning": "2mb",
+                                "maximumError": "5mb"
+                            }]
+                        }
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "browserTarget": "AngularPrueba7:build"
+                    },
+                    "configurations": {
+                        "production": {
+                            "browserTarget": "AngularPrueba7:build:production"
+                        }
+                    }
+                },
+                "extract-i18n": {
+                    "builder": "@angular-devkit/build-angular:extract-i18n",
+                    "options": {
+                        "browserTarget": "AngularPrueba7:build"
+                    }
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "main": "src/test.ts",
+                        "polyfills": "src/polyfills.ts",
+                        "tsConfig": "src/tsconfig.spec.json",
+                        "karmaConfig": "src/karma.conf.js",
+                        "styles": [
+                            "src/styles.css"
+                        ],
+                        "scripts": [],
+                        "assets": [
+                            "src/favicon.ico",
+                            "src/assets"
+                        ]
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-devkit/build-angular:tslint",
+                    "options": {
+                        "tsConfig": [
+                            "src/tsconfig.app.json",
+                            "src/tsconfig.spec.json"
+                        ],
+                        "exclude": [
+                            "**/node_modules/**"
+                        ]
+                    }
+                }
+            }
+        },
+        "AngularPrueba7-e2e": {
+            "root": "e2e/",
+            "projectType": "application",
+            "prefix": "",
+            "architect": {
+                "e2e": {
+                    "builder": "@angular-devkit/build-angular:protractor",
+                    "options": {
+                        "protractorConfig": "e2e/protractor.conf.js",
+                        "devServerTarget": "AngularPrueba7:serve"
+                    },
+                    "configurations": {
+                        "production": {
+                            "devServerTarget": "AngularPrueba7:serve:production"
+                        }
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-devkit/build-angular:tslint",
+                    "options": {
+                        "tsConfig": "e2e/tsconfig.e2e.json",
+                        "exclude": [
+                            "**/node_modules/**"
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "defaultProject": "AngularPrueba7"
+}

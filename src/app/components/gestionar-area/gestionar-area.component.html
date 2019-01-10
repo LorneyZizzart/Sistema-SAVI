@@ -1,0 +1,252 @@
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Gestionar
+            <small>Áreas del departamento</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a [routerLink]="['/home']"><i class="fa fa-home"></i> Home</a></li>
+            <li class="active">Gestión de áreas</li>
+        </ol>
+    </section>
+    <div *ngIf="MessageSuccess == true" class="pad no-print">
+        <div class="callout callout-success">
+            <h4><i class="icon fa fa-check"></i> Registro Exitoso</h4>
+            <p>El registro se realizó satisfactoriamente.</p>
+        </div>
+    </div>
+    <!---MODAL-->
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#lista" data-toggle="tab">Lista</a></li>
+                        <li><a href="#editar" data-toggle="tab">Editar</a></li>
+                        <li><a href="#registrar" data-toggle="tab">Registrar</a></li>
+                        <li><a href="#asignar" data-toggle="tab">Asignar Jefe de departamento</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <!-- LISTA -->
+                        <div class="tab-pane active" id="lista">
+                            <section id="new">
+                                <div class="box-header with-border">
+                                    <h4 class="page-header"><i class="fa fa-list-ul"></i> Lista de áreas del departamento</h4>
+                                    <div class="box-tools left">
+                                        <div class="input-group input-group-sm" style="width: 300px;">
+                                            <input type="text" name="table_search" class="form-control pull-right" placeholder="Buscar estudiante">
+
+                                            <div class="input-group-btn">
+                                                <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive no-padding">
+                                    <table class="table table-bordered table-hover">
+                                        <tr>
+                                            <th style="width: 10px">#</th>
+                                            <th>Departamento</th>
+                                            <th>Encargado</th>
+                                            <th>Costo de hora</th>
+                                            <th>Limite de estudiantes</th>
+                                            <th>Cantidades de estudiantes</th>
+                                            <th>Cupo</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                        <!-- <tr *ngFor="let departamento of departamentos; let i = index">
+                                            <td>{{ i+1 }}.</td>
+                                            <td>{{ departamento.nombreDepartamento }}</td>
+                                            <td>{{ departamento.primerNombre }} {{ departamento.segundoNombre }} {{ departamento.primerApellido }} {{ departamento.segundoApellido }}</td>
+                                            <td>{{ departamento.costoHora }}</td>
+                                            <td>{{ departamento.limiteEstudiante }}</td>
+                                            <td>
+                                                <div class="progress progress-xs progress-striped active">
+                                                    <div class="progress-bar progress-bar-primary" style="width: 38%"></div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center"><span class="badge bg-light-blue">{{ departamento.limiteEstudiante }}</span></td>
+                                            <td>{{ departamento.estadoDepartamento | estado }}</td>
+                                        </tr> -->
+                                    </table>
+                                </div>
+
+                            </section>
+                        </div>
+                        <!-- /#LISTA -->
+                        <!-- EDITAR -->
+                        <!-- <div class="tab-pane" id="editar">
+                            <section id="new">
+                                <h4 class="page-header"><i class="fa fa-edit"></i> Editar datos del departamento</h4>
+                                <form (ngSubmit)="editDepartamento()" #editDepartamento="ngForm" name="formularioEditDepartamento" class="form-horizontal">
+
+                                    <div class="row">
+                                        <div class="col-md-7">
+                                            <div class="form-group">
+                                                <label for="inputName" class="col-sm-3 control-label">Nombre</label>
+
+                                                <div class="col-sm-9">
+                                                    <input [(ngModel)]="departamento.nombreDepartamento" name="nombreDepartamento" type="text" class="form-control" id="pNombre" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputName" class="col-sm-3 control-label">Costo de hora</label>
+
+                                                <div class="col-sm-9">
+                                                    <input [(ngModel)]="departamento.costoHora" name="costoHora" type="text" class="form-control" id="costoHora" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputName" class="col-sm-3 control-label">Limite de estudiantes</label>
+
+                                                <div class="col-sm-9">
+                                                    <input [(ngModel)]="departamento.limiteEstudiante" name="limiteEstudiante" type="text" class="form-control" id="limiteEstudiante" placeholder="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <figure class="figure text-center">
+                                                <img src="../../../assets/img/avatar.png" class="figure-img img-fluid rounded img-thumbnail" alt="A generic square placeholder image with rounded corners in a figure.">
+                                                <figcaption class="figure-caption text-center">Fotografia para la identifiación</figcaption>
+                                                <button type="button" class="btn btn-default btn-subir-foto">
+                          <i class="fa fa-upload"></i> Subir fotografía</button>
+                                            </figure>
+
+                                        </div>
+                                        <div class="col-md-12 text-center">
+
+                                            <button (click)="mensajeSuccess()" type="submit" name="button" class="btn btn-primary margin">
+                        <i class="fa fa-refresh"></i> Actualizar
+                      </button>
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </section>
+                        </div> -->
+                        <!-- /#EDITAR -->
+                        <!-- REGISTRAR -->
+                        <!-- <div class="tab-pane" id="registrar">
+                            <section id="new">
+                                <h4 class="page-header"><i class="fa fa-address-book"></i> Registro de departamento</h4>
+
+                                <form (ngSubmit)="saveDepartamento()" #registroDepartamento="ngForm" name="formularioRegistroDepartamento" class="form-horizontal">
+
+                                    <div class="row">
+                                        <div class="col-md-7">
+
+                                            <div class="form-group">
+                                                <label for="inputName" class="col-sm-3 control-label">Nombre</label>
+
+                                                <div class="col-sm-9">
+                                                    <input [(ngModel)]="departamento.nombreDepartamento" name="nombreDepartamento" type="text" class="form-control" id="pNombre" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputName" class="col-sm-3 control-label">Costo de hora</label>
+
+                                                <div class="col-sm-9">
+                                                    <input [(ngModel)]="departamento.costoHora" name="costoHora" type="text" class="form-control" id="costoHora" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputName" class="col-sm-3 control-label">Limite de estudiantes</label>
+
+                                                <div class="col-sm-9">
+                                                    <input [(ngModel)]="departamento.limiteEstudiante" name="limiteEstudiante" type="text" class="form-control" id="limiteEstudiante" placeholder="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <figure class="figure text-center">
+                                                <img src="../../../assets/img/avatar.png" class="figure-img img-fluid rounded img-thumbnail" alt="A generic square placeholder image with rounded corners in a figure.">
+                                                <figcaption class="figure-caption text-center">Fotografia para la identifiación</figcaption>
+                                                <button type="button" class="btn btn-default btn-subir-foto">
+                          <i class="fa fa-upload"></i> Subir fotografía</button>
+                                            </figure>
+
+                                        </div>
+                                        <div class="col-md-12 text-center">
+
+                                            <button (click)="mensajeSuccess()" type="submit" name="button" class="btn btn-primary margin">
+                        <i class="fa fa-save"></i> Guardar
+                      </button>
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </section>
+                        </div> -->
+                        <!-- /#REGISTRAR -->
+                        <!-- USUARIO -->
+                        <!-- <div class="tab-pane" id="asignar">
+                            <section id="new">
+                                <h4 class="page-header"><i class="fa fa-address-book"></i> Asignación de Jefe del Departamento</h4>
+
+                                <form (ngSubmit)="saveOrganizacion()" #registroOrganizacion="ngForm" name="formularioRegistroDepartamento" class="form-horizontal">
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+
+                                            <div class="form-group">
+                                                <label for="inputName" class="col-sm-4 control-label">Buscar nombre</label>
+
+                                                <div class="col-sm-8 select-student">
+                                                    <select class="form-control select2" style="width: 100%;">
+                            <option selected="selected">Jhonny Gutierrez</option>
+                            <option>Saul Mamani</option>
+                            <option>Monica Ticona</option>
+                            <option>Jhoselin Calle</option>
+                            <option>Rut Nayeli Gutierrez</option>
+                            <option>Gustavo Cerezo</option>
+                            <option>Rodrigo Poma</option>
+                          </select>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="inputName" class="col-sm-4 control-label">Buscar departamento</label>
+
+                                                <div class="col-sm-8 select-student">
+                                                    <select class="form-control select2" style="width: 100%;">
+                            <option selected="selected">Comedor</option>
+                            <option>Limpieza</option>
+                            <option>Biblioteca</option>
+                            <option>Carpinteria</option>
+                            <option>Guardia</option>
+                            <option>Tecnologia de Informatica</option>
+                            <option>Panaderia</option>
+                          </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <br>
+                                            <button type="submit" class="btn bg-olive btn-flat margin">
+                        <i class="fas fa-save"></i> Guardar</button>
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </section>
+                        </div> -->
+                        <!-- /#USUARIO -->
+                    </div>
+                    <!-- /.tab-content -->
+                </div>
+                <!-- /.nav-tabs-custom -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->

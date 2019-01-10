@@ -1,0 +1,24 @@
+.row-editar{
+    margin: 0 2px 0 2px;
+}
+.buscarPersona {
+    margin: 0 49px 0 0;
+}
+
+.modal-name {
+    margin-top: -1%;
+    margin-bottom: -1%;
+}
+
+.modal-header {
+    color: beige;
+    background: #3C8DBC;
+}
+
+.modal-body {
+    background: #ECF0F5;
+}
+
+.modal-footer {
+    background: #ECF0F5;
+}

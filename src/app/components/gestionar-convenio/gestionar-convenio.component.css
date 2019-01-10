@@ -1,0 +1,21 @@
+.form {
+    margin-left: 1%;
+    margin-right: 2%;
+}
+
+.dateInicio {
+    margin-right: -2px;
+    margin-left: 0;
+}
+
+.dateFinal {
+    margin-left: 2%;
+}
+
+.buscador {
+    position: left;
+}
+
+.pad {
+    margin: 0 0 -30px 0;
+}

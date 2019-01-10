@@ -1,0 +1,544 @@
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Gestionar
+            <small>Usuarios</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a [routerLink]="['/home']"><i class="fa fa-home"></i> Home</a></li>
+            <li class="active">Gestión de usuarios</li>
+        </ol>
+    </section>
+    <div *ngIf="MessageSuccess == true" class="pad no-print">
+        <div class="callout callout-success">
+            <h4><i class="icon fa fa-check"></i> Registro Exitoso</h4>
+            <p>El registro se realizó satisfactoriamente.</p>
+        </div>
+    </div>
+    <div *ngIf="MessageEnable == true" class="pad no-print">
+        <div class="callout callout-success">
+            <h4><i class="icon fa fa-check"></i> Usuario habilitado</h4>
+        </div>
+    </div>
+    <div *ngIf="MessageDesable == true" class="pad no-print">
+        <div class="callout callout-info">
+            <h4><i class="icon fa fa-check"></i> Usuario Deshabilitado</h4>
+        </div>
+    </div>
+    <!---MODAL-->
+    <div class="modal fade" id="modal-informacion">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Mas información...</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="box-profile">
+                                <img class="profile-user-img img-responsive img-circle" src="assets/img/avatar.png" alt="User profile picture">
+                                <p class="text-muted text-center">650004813</p>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="box-header with-border">
+                                <h3 class="modal-name">{{ infoNombreCompleto }}</h3>
+                            </div>
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <p *ngIf="infoCarrera"><strong><i class="fa fa-book margin-r-5"></i> Carrera:</strong></p>
+                                        <p *ngIf="infoSemestre"><strong><i class="fa fa-star margin-r-5"></i> Semestre:</strong></p>
+                                        <p><strong><i class="fa fa-map-marker margin-r-5"></i> Dirección:</strong></p>
+                                        <p><strong><i class="fa fa-flag-checkered margin-r-5"></i> Nacionalidad:</strong></p>
+                                        <p><strong><i class="fa fa-credit-card margin-r-5"></i> Carnet de Identidad:</strong></p>
+                                        <p><strong><i class="fa fa-phone margin-r-5"></i> Celular:</strong></p>
+                                        <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha nacimiento:</strong></p>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <p *ngIf="infoCarrera">{{ infoCarrera }}</p>
+                                        <p *ngIf="infoSemestre">{{ infoSemestre }}</p>
+                                        <p>{{ infoDireccion }}</p>
+                                        <p>{{ infoNacionalidad }}</p>
+                                        <br>
+                                        <p>{{ infoCI }}</p>
+                                        <p>{{ infoCelular }}</p>
+                                        <p>{{ infoFechaNacimiento | date: 'dd/MM/yyyy' }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-password">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Usuario</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <p><strong><i class="fa fa-user margin-r-5"></i> Usuario: </strong> {{ infoUser }}</p>
+                        </div>
+                        <div class="col-md-7">
+                            <p><strong><i class="fa fa-unlock-alt margin-r-5"></i> Contraseña: </strong> {{ infoPassword }}</p>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-editar">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Editar</h4>
+                </div>
+                <div class="modal-body">
+                    <form [FormGroup]="formPersona" (ngSubmit)="editPersonas()" #editPersona="ngForm" name="formularioEditPersona" class="form-horizontal">
+
+                        <div class="row row-editar">
+                            <div class="col-md-12">
+                                <figure class="figure text-center">
+                                    <img src="../../../assets/img/avatar.png" class="figure-img img-fluid rounded img-thumbnail" alt="A generic square placeholder image with rounded corners in a figure.">
+                                    <figcaption class="figure-caption text-center">Fotografia para la identifiación</figcaption>
+                                    <button type="button" class="btn btn-default btn-subir-foto">
+                              <i class="fa fa-upload"></i> Subir fotografía</button>
+                                </figure>
+                                <br>
+                                <div class="form-group">
+                                    <label for="inputName" class="col-sm-3 control-label">Primer nombre</label>
+
+                                    <div class="col-sm-9">
+                                        <input [(ngModel)]="editpersona.primerNombre" name="editPrimerNombre" formControlName="editPrimerNombre" type="text" class="form-control" id="pNombre" placeholder="">{{ persona.primerNombre }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputName" class="col-sm-3 control-label">Segundo nombre</label>
+
+                                    <div class="col-sm-9">
+                                        <input [(ngModel)]="editpersona.segundoNombre" name="editSegundoNombre" formControlName="editSegundoNombre" type="text" class="form-control" id="pNombre" placeholder="">{{ persona.segundoNombre }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputName" class="col-sm-3 control-label">Primer apellido</label>
+
+                                    <div class="col-sm-9">
+                                        <input [(ngModel)]="editpersona.primerApellido" name="editPrimerApellido" formControlName="editPrimerApellido" type="text" class="form-control" id="pApellido" placeholder="">{{ persona.primerApellido }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputExperience" class="col-sm-3 control-label">Segundo apellido</label>
+
+                                    <div class="col-sm-9">
+                                        <input [(ngModel)]="editpersona.segundoApellido" name="editSegundoApellido" formControlName="editSegundoApellido" type="text" class="form-control" id="sApellido" placeholder="">{{ persona.segundoApellido }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputExperience" class="col-sm-3 control-label">Carrera</label>
+
+                                    <div class="col-sm-9">
+                                        <input [(ngModel)]="editpersona.carrera" name="editCarrera" formControlName="editCarrera" type="text" class="form-control" id="carrera" placeholder="">{{ persona.carrera }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputExperience" class="col-sm-3 control-label">Semestre</label>
+
+                                    <div class="col-sm-9">
+                                        <input [(ngModel)]="editpersona.semestre" name="editSemestre" formControlName="editSemestre"  type="text" class="form-control" id="semestre" placeholder="">{{ persona.semestre }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputEmail" class="col-sm-3 control-label">Nacionalidad</label>
+                                    <div class="col-sm-9">
+                                        <input [(ngModel)]="editpersona.nacionalidad" name="editNacionalidad" formControlName="editNacionalidad"  type="text" class="form-control" id="editnacionalidad" placeholder="">{{ persona.nacionalidad }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputSkills" class="col-sm-3 control-label">Fecha de nacimiento</label>
+
+                                    <div class="col-sm-9">
+                                        <input [(ngModel)]="editpersona.fechaNacimiento" name="editFechaNacimiento" formControlName="editFechaNacimiento"  type="text" class="form-control pull-right" id="editfechaNacimiento">{{ persona.fechaNacimiento }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputSkills" class="col-sm-3 control-label">Dirección</label>
+
+                                    <div class="col-sm-9">
+                                        <input [(ngModel)]="editpersona.direccion" name="editDireccion" formControlName="editDireccion" type="text" class="form-control" id="editdireccion" placeholder="">{{ persona.direccion }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputSkills" class="col-sm-3 control-label">C.I.</label>
+
+                                    <div class="col-sm-9">
+                                        <input [(ngModel)]="editpersona.ci" name="editCi" formControlName="editCi" type="text" class="form-control" id="editci" placeholder="">{{ persona.ci }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputSkills" class="col-sm-3 control-label">Celular</label>
+
+                                    <div class="col-sm-9">
+                                        <input [(ngModel)]="editpersona.celular" name="editCelular" formControlName="editCelular" type="text" class="form-control" id="editcelular" placeholder="">{{ persona.celular }}
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="col-md-12 text-center">
+
+                                <button (click)="mensajeSuccess()" type="submit" name="button" class="btn btn-primary margin" data-dismiss="modal">
+                            <i class="fa fa-refresh"></i> Actualizar
+                          </button>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        <li (click)="getUsers()" class="active"><a href="#lista" data-toggle="tab">Lista</a></li>
+                        <li (click)="resetForm(registroPersona)"><a href="#registrar" data-toggle="tab">Registrar datos personales</a></li>
+                        <li (click)="getPersonas(); resetForm(registroUser)"><a href="#registerUsuario" data-toggle="tab">Registrar Usuario</a></li>
+                        <li (click)="getPersonas(); resetForm(editUser)"><a href="#editUsuario" data-toggle="tab">Editar Usuario</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <!-- LISTA -->
+                        <div class="tab-pane active" id="lista">
+                            <section id="new">
+                                <div class="box-header with-border">
+                                    <h4 class="page-header"><i class="fa fa-list-ul"></i> Lista de Usuarios</h4>
+                                    <div class="box-tools left">
+                                        <div class="input-group input-group-sm" style="width: 300px;">
+                                            <input type="text" name="table_search" class="form-control pull-right" placeholder="Buscar estudiante">
+
+                                            <div class="input-group-btn">
+                                                <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive no-padding">
+                                    <table class="table table-bordered table-hover">
+                                        <tr>
+                                            <th style="width: 10px">#</th>
+                                            <th>Codigo estudiantil</th>
+                                            <th>Nombre completo</th>
+                                            <th>Nombre de usuario</th>
+                                            <th>Rol de Usuario</th>
+                                            <th>Estado</th>
+                                            <th>Editar</th>
+                                            <th>Contraseña</th>
+                                            <th>Información</th>
+                                        </tr>
+                                        <tr *ngFor="let user of userPersona; let i = index">
+                                            <td>{{ i+1 }}.</td>
+                                            <td>{{ 650004819 + i*3 }}</td>
+                                            <td>{{ user.primerNombre }} {{ user.segundoNombre }} {{ user.primerApellido }} {{ user.segundoApellido }}</td>
+                                            <td>{{ user.usuario }}</td>
+                                            <td>{{ user.idRol | rolUser }}</td>
+                                            <td>
+                                                <a *ngIf="user.estadoUsuario == true" (click)="editEstadoUser(user.idRol, user.usuario, user.password, 0, user.idUsuario); messageEnableDesable('activo')" class="btn btn-block btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
+                                                <a *ngIf="user.estadoUsuario == false" (click)="editEstadoUser(user.idRol, user.usuario, user.password, 1, user.idUsuario); messageEnableDesable('inactivo')" class="btn btn-block btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
+                                            </td>
+                                            <td><a data-toggle="modal" data-target="#modal-editar" class="btn btn-block btn-default btn-margin" title="Editar"><i class="fa fa-edit"></i></a></td>
+                                            <td><a (click)="buscarEstudiante(user.idPersona)" data-toggle="modal" class="btn btn-block btn-primary btn-margin" data-target="#modal-password" title="Ver"><i class="fa fa-eye"></i></a></td>
+                                            <td><a (click)="buscarEstudiante(user.idPersona)" data-toggle="modal" class="btn btn-block btn-primary btn-margin" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a></td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                            </section>
+                        </div>
+                        <!-- /#LISTA -->
+                        <!-- REGISTRAR -->
+                        <div class="tab-pane" id="registrar">
+                            <section id="new">
+                                <h4 class="page-header"><i class="fa fa-address-book"></i> Registro de datos personales</h4>
+
+                                <form (ngSubmit)="savePersona()" #registroPersona="ngForm" name="formularioRegistroPersona" class="form-horizontal">
+
+                                    <div class="row">
+                                        <div class="col-md-7">
+
+                                            <div class="form-group">
+                                                <label for="inputName" class="col-sm-3 control-label">Primer nombre</label>
+
+                                                <div class="col-sm-9">
+                                                    <input [(ngModel)]="persona.primerNombre" name="primerNombre" type="text" class="form-control" id="pNombre" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputName" class="col-sm-3 control-label">Segundo nombre</label>
+
+                                                <div class="col-sm-9">
+                                                    <input [(ngModel)]="persona.segundoNombre" name="segundoNombre" type="text" class="form-control" id="pNombre" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputName" class="col-sm-3 control-label">Primer apellido</label>
+
+                                                <div class="col-sm-9">
+                                                    <input [(ngModel)]="persona.primerApellido" name="primerApellido" type="text" class="form-control" id="pApellido" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputExperience" class="col-sm-3 control-label">Segundo apellido</label>
+
+                                                <div class="col-sm-9">
+                                                    <input [(ngModel)]="persona.segundoApellido" name="segundoApellido" type="text" class="form-control" id="sApellido" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputExperience" class="col-sm-3 control-label">Carrera</label>
+
+                                                <div class="col-sm-9">
+                                                    <input [(ngModel)]="persona.carrera" name="carrera" type="text" class="form-control" id="carrera" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputExperience" class="col-sm-3 control-label">Semestre</label>
+
+                                                <div class="col-sm-9">
+                                                    <input [(ngModel)]="persona.semestre" name="semestre" type="text" class="form-control" id="semestre" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputEmail" class="col-sm-3 control-label">Nacionalidad</label>
+                                                <div class="col-sm-9">
+                                                    <input [(ngModel)]="persona.nacionalidad" name="nacionalidad" type="text" class="form-control" id="sNombre" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputSkills" class="col-sm-3 control-label">Fecha de nacimiento</label>
+
+                                                <div class="col-sm-9">
+                                                    <input [(ngModel)]="persona.fechaNacimiento" name="fechaNacimiento" type="text" class="form-control pull-right" id="datepicker">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputSkills" class="col-sm-3 control-label">Dirección</label>
+
+                                                <div class="col-sm-9">
+                                                    <input [(ngModel)]="persona.direccion" name="direccion" type="text" class="form-control" id="inputSkills" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputSkills" class="col-sm-3 control-label">C.I.</label>
+
+                                                <div class="col-sm-9">
+                                                    <input [(ngModel)]="persona.ci" name="ci" type="text" class="form-control" id="inputSkills" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputSkills" class="col-sm-3 control-label">Celular</label>
+
+                                                <div class="col-sm-9">
+                                                    <input [(ngModel)]="persona.celular" name="celular" type="text" class="form-control" id="inputSkills" placeholder="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <figure class="figure text-center">
+                                                <img src="../../../assets/img/avatar.png" class="figure-img img-fluid rounded img-thumbnail" alt="A generic square placeholder image with rounded corners in a figure.">
+                                                <figcaption class="figure-caption text-center">Fotografia para la identifiación</figcaption>
+                                                <button type="button" class="btn btn-default btn-subir-foto">
+                                                 <i class="fa fa-upload"></i> Subir fotografía</button>
+                                            </figure>
+
+                                        </div>
+                                        <div class="col-md-12 text-center">
+
+                                            <button (click)="mensajeSuccess()" type="submit" name="button" class="btn btn-primary margin">
+                                                <i class="fa fa-save"></i> Guardar
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </section>
+                        </div>
+                        <!-- /#REGISTRAR -->
+                        <!-- USUARIO -->
+                        <div class="tab-pane" id="registerUsuario">
+                            <section id="new">
+                                <h4 class="page-header"><i class="fa fa-user"></i> Crear Usuario</h4>
+
+                                <form (ngSubmit)="saveUser()" #registroUser="ngForm" name="formulario" class="form-horizontal">
+
+                                    <div class="row form">
+                                        <div class="col-md-12">
+
+                                            <div class="form-group col-sm-6">
+                                                <label for="inputName" class="col-sm-3 control-label">Nombre completo</label>
+
+                                                <div class="col-sm-9 select-student">
+                                                    <select [(ngModel)]='idPersona' name="idPersona" class="form-control select2" style="width: 100%;">
+                                                    <option *ngFor="let persona of personas" [value]="persona.idPersona" >{{ persona.primerNombre }} {{ persona.segundoNombre }} {{ persona.primerApellido }} {{ persona.segundoApellido }}</option>
+                                                  </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-sm-6">
+                                                <label for="inputName" class="col-sm-3 control-label">Rol</label>
+
+                                                <div class="col-sm-9 select-student">
+                                                    <select [(ngModel)]="idRol" name="idRol" class="form-control select2" style="width: 100%;">
+                                                    <option value="1" selected="selected">Jefe de GTH</option>
+                                                    <option value="3">Jefatura de Finanzas</option>
+                                                    <option value="4">Finanzas</option>
+                                                    <option value="2">Jefe de Departamento</option>
+                                                    <option value="5">Estudiante</option>
+                                                  </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group col-sm-6">
+                                                <label for="inputName" class="col-sm-3 control-label">Nombre de usuario</label>
+
+                                                <div class="col-sm-9">
+                                                    <input [(ngModel)]="user.usuario" name="usuario" type="text" class="form-control" id="usuario" placeholder="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group col-sm-6">
+                                                <label for="inputName" class="col-sm-3 control-label">Contraseña</label>
+
+                                                <div class="col-sm-9">
+                                                    <input [(ngModel)]="password" name="password" type="password" class="form-control" id="password1" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-sm-6">
+                                                <label for="inputName" class="col-sm-3 control-label">Confimar contraseña</label>
+
+                                                <div class="col-sm-9">
+                                                    <input [(ngModel)]="passwordTwo" name="passwordTwo" type="password" class="form-control" id="password2" placeholder="">
+                                                    <p *ngIf="comparacionPassword()==false">La contraseña no es la misma</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <button (click)="mensajeSuccess()" type="submit" class="btn btn-primary">
+                                              <i class="fa fa-save"></i> Guardar
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </form>
+
+                            </section>
+                        </div>
+                        <!-- /#USUARIO -->
+                        <!-- USUARIO -->
+                        <div class="tab-pane" id="editUsuario">
+                            <div class="with-border">
+                                <h4 class="page-header"><i class="fa fa-edit"></i> Editar Usuario</h4>
+
+                            </div>
+                            <section id="new">
+                                <div class="row buscarPersona">
+                                    <div class="col-md-7 pull-right">
+                                        <div class="form-group">
+                                            <label for="inputName" class="col-sm-4 control-label"><i class="fa fa-search"></i> Buscar por el nombre</label>
+                                            <div class="col-sm-8 select-student">
+                                                <select [(ngModel)]='idPersona' name="idPersona" class="form-control select2" style="width: 100%;">
+                                                <option *ngFor="let persona of personas" [value]="persona.idPersona">{{ persona.primerNombre }} {{
+                                                  persona.segundoNombre }} {{persona.primerApellido}} {{persona.segundoApellido}}</option>
+                                              </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <form (ngSubmit)="editUsers()" #editUser="ngForm" name="formulario" class="form-horizontal">
+
+                                    <div class="row form">
+                                        <div class="col-md-12">
+                                            <div class="form-group col-sm-6">
+                                                <label for="inputName" class="col-sm-3 control-label">Nombre de usuario</label>
+
+                                                <div class="col-sm-9">
+                                                    <input [(ngModel)]="user.usuario" name="usuario" type="text" class="form-control" id="usuario" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-sm-6">
+                                                <label for="inputName" class="col-sm-3 control-label">Rol</label>
+
+                                                <div class="col-sm-9 select-student">
+                                                    <select [(ngModel)]="idRol" name="idRol" class="form-control select2" style="width: 100%;">
+                                                    <option value="1" selected="selected">Jefe de GTH</option>
+                                                    <option value="2">Jefatura de Finanzas</option>
+                                                    <option value="3">Finanzas</option>
+                                                    <option value="4">Jefe de Departamento</option>
+                                                    <option value="5">Estudiante</option>
+                                                  </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group col-sm-6">
+                                                <label for="inputName" class="col-sm-3 control-label">Contraseña</label>
+
+                                                <div class="col-sm-9">
+                                                    <input [(ngModel)]="password" name="password" type="text" class="form-control" id="password1" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-sm-6">
+                                                <label for="inputName" class="col-sm-3 control-label">Confimar contraseña</label>
+
+                                                <div class="col-sm-9">
+                                                    <input [(ngModel)]="passwordTwo" name="passwordTwo" type="text" class="form-control" id="password2" placeholder="">
+                                                    <p *ngIf="comparacionPassword()==false">La contraseña no es la misma</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 text-center">
+                                                <button (click)="mensajeSuccess()" type="submit" class="btn btn-primary">
+                                              <i class="fa fa-save"></i> Guardar
+                                            </button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </form>
+                            </section>
+                        </div>
+                        <!-- /#USUARIO -->
+                    </div>
+                    <!-- /.tab-content -->
+                </div>
+                <!-- /.nav-tabs-custom -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->

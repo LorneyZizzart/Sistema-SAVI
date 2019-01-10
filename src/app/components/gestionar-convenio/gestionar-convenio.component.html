@@ -1,0 +1,3010 @@
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Gestionar
+            <small>Convenios</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a [routerLink]="['/home']"><i class="fa fa-home"></i> Home</a></li>
+            <li class="active">Gestionar convenios</li>
+        </ol>
+    </section>
+    <div *ngIf="MessageSuccess == true" class="pad no-print">
+        <div class="callout callout-success">
+            <h4><i class="icon fa fa-check"></i> Registro Exitoso</h4>
+            <p>El registro se realizó satisfactoriamente.</p>
+        </div>
+    </div>
+    <!---MODAL-->
+    <div class="modal fade" id="modal-horario">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Mas información...</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="box-profile">
+                                <img class="profile-user-img img-responsive img-circle" src="assets/img/avatar.png" alt="User profile picture">
+                                <p class="text-muted text-center">650004813</p>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="box-header with-border">
+                                <h3 class="modal-name">{{ infoNombreCompleto }}</h3>
+                            </div>
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <p><strong><i class="fa fa-book margin-r-5"></i> Carrera:</strong></p>
+                                        <p><strong><i class="fa fa-star margin-r-5"></i> Semestre:</strong></p>
+                                        <p><strong><i class="fa fa-map-marker margin-r-5"></i> Dirección:</strong></p>
+                                        <p><strong><i class="fa fa-flag-checkered margin-r-5"></i> Nacionalidad:</strong></p>
+                                        <p><strong><i class="fa fa-credit-card margin-r-5"></i> Carnet de Identidad:</strong></p>
+                                        <p><strong><i class="fa fa-phone margin-r-5"></i> Celular:</strong></p>
+                                        <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha nacimiento:</strong></p>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <p>Ingenieria de Sistemas</p>
+                                        <p>8</p>
+                                        <p>{{ infoDireccion }}</p>
+                                        <p>{{ infoNacionalidad }}</p>
+                                        <p>{{ infoCI }}</p>
+                                        <p>{{ infoCelular }}</p>
+                                        <p>{{ infoFechaNacimiento | date: 'dd/MM/yyyy' }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        <li (click)="getConvenios()" class="active"><a href="#lista" data-toggle="tab">Lista</a></li>
+                        <li><a href="#editar" data-toggle="tab">Editar</a></li>
+                        <li (click)="getDepartamentos()"><a href="#registrar" data-toggle="tab">Registrar</a></li>
+                        <li><a href="#expediente" data-toggle="tab">Expediente</a></li>
+                        <li><a href="#consumir" data-toggle="tab">Agregar estudiante del sistema académico</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <!-- LISTA -->
+                        <div class="tab-pane active" id="lista">
+                            <section id="new">
+                                <h4 class="page-header"><i class="fa fa-list-ul"></i> Lista de convenios</h4>
+                                <div class="table-responsive pad">
+                                    <table class="table table-bordered table-hover">
+                                        <tr>
+                                            <th style="width: 10px">#</th>
+                                            <th>Nombre completo</th>
+                                            <th>Departamento</th>
+                                            <th>Tipo de beca</th>
+                                            <th>Fecha de inicio</th>
+                                            <th>Fecha final</th>
+                                            <th>Fotocopia de carnet</th>
+                                            <th>Solicitud de trabajo</th>
+                                            <th class="text-center">Estado</th>
+                                            <th>Horario</th>
+                                        </tr>
+                                        <tr *ngFor="let convenio of convenios; let i = index">
+                                            <td>{{ i+1 }}.</td>
+                                            <td>{{ convenio.primerNombre }} {{ convenio.segundoNombre }} {{ convenio.primerApellido }} {{ convenio.segundoApellido }}</td>
+                                            <td>{{ convenio.departamento }}</td>
+                                            <td>{{ convenio.beca }}</td>
+                                            <td>{{ convenio.fechaInicio | date: 'dd/MM/yyyy' }}</td>
+                                            <td>{{ convenio.fechaFinal | date: 'dd/MM/yyyy' }}</td>
+                                            <td class="text-center">
+                                                <span *ngIf="convenio.fotocopiaCarnet != estado" class="badge bg-green"><i class="fa fa-check"></i></span>
+                                                <span *ngIf="convenio.fotocopiaCarnet == estado" class="badge bg-red"><i class="fa fa-times"></i></span>
+                                            </td>
+                                            <td class="text-center">
+                                                <span *ngIf="convenio.solicitudTrabajo != estado" class="badge bg-green"><i class="fa fa-check"></i></span>
+                                                <span *ngIf="convenio.solicitudTrabajo == estado" class="badge bg-red"><i class="fa fa-times"></i></span>
+                                            </td>
+                                            <td class="text-center">{{ convenio.estado | estado }}</td>
+                                            <td><a data-toggle="modal" class="btn btn-block btn-primary btn-margin" data-target="#modal-horario"><i class="fa fa-eye"></i></a></td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                            </section>
+                        </div>
+                        <!-- /#LISTA -->
+                        <!-- EDITAR -->
+                        <div class="tab-pane" id="editar">
+                            <section id="new">
+                                <h4 class="page-header"><i class="fa fa-edit"></i> Editar convenio</h4>
+                                <form (ngSubmit)="editConvenio()" #editConvenio="ngForm" name="formularioRegistroPersona" class="form-horizontal">
+
+                                    <div class="row form">
+
+                                        <div class="col-md-6">
+
+                                            <div class="form-group">
+                                                <label for="inputName" class="col-sm-3 control-label">Estudiante</label>
+
+                                                <div class="col-sm-9 select-student">
+                                                    <select [(ngModel)]="idEstudiante" name="estudiante" class="form-control select2" style="width: 100%;">
+                            <option *ngFor="let persona of estudiantes" [value]="persona.idPersona">{{ persona.primerNombre }}
+                              {{ persona.segundoNombre }} {{persona.primerApellido}} {{persona.segundoApellido}}</option>
+                          </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputName" class="col-sm-3 control-label">Departamento</label>
+
+                                                <div class="col-sm-9 select-student">
+                                                    <select [(ngModel)]="idDepartamento" name="departamento" class="form-control select2" style="width: 100%;">
+                            <option *ngFor="let departamento of departamentos" [value]="departamento.idDepartamento">{{
+                              departamento.nombre }}</option>
+                          </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="inputName" class="col-sm-3 control-label">Beca</label>
+
+                                                <div class="col-sm-9 select-student">
+                                                    <select [(ngModel)]="idBeca" name="beca" class="form-control select2" style="width: 100%;">
+                            <option value="1">Beca Industrial </option>
+                            <option value="2">Beca Institucional</option>
+                          </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="col-md-6">
+                                                <div class="form-group dateInicio">
+                                                    <label class="col-sm-3">Fecha inicio</label>
+
+                                                    <div class="col-md-9 input-group date">
+                                                        <div class="input-group-addon">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </div>
+                                                        <input [(ngModel)]="convenio.fechaInicio" name="dateInicio" type="text" class="form-control pull-right" id="datepicker">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group dateFinal">
+                                                    <label class="col-sm-3">Fecha final</label>
+                                                    <div class="col-md-9 input-group date">
+                                                        <div class="input-group-addon">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </div>
+                                                        <input [(ngModel)]="convenio.fechaFinal" name="dateFinal" type="text" class="form-control pull-right" id="datepicker">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <br>
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label>
+                            <input type="checkbox"> Solicitud de trabajo
+                          </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label>
+                            <input type="checkbox" class="minimal"> Fotocopia de carnet
+                          </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <br>
+                                            <div class="with-border">
+                                                <h4><i class="fa fa-clock-o"></i> Horarios</h4>
+                                            </div>
+                                            <table class="table table-bordered text-center">
+                                                <tr>
+                                                    <th>Periodo</th>
+                                                    <th>Lunes</th>
+                                                    <th>Martes</th>
+                                                    <th>Miercoles</th>
+                                                    <th>Jueves</th>
+                                                    <th>Viernes</th>
+                                                    <th>Sábado</th>
+                                                    <th>Domingo</th>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>04:00 - 04:59</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>05:00 - 05:59</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>06:00 - 06:59</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>07:30 - 08:15</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>08:15 - 09:00</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>09:15 - 10:00</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>10:00 - 10:45</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>11:00 - 11:45</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>11:45 - 12:30</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>12:30 - 13:15</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>13:30 - 14:15</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>14:15 - 15:00</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>15:15 - 16:00</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>16:00 - 16:45</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>17:00 - 17:45</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>17:45 - 18:30</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>18:45 - 19:30</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>19:30 - 20:15</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>20:15 - 21:00</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>21:00 - 21:45</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>21:45 - 22:30</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                <input type="checkbox">
+                              </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </div>
+                                        <div class="col-md-12">
+
+                                            <div class="form-group text-center">
+                                                <div class="checkbox">
+                                                    <label>
+                                                      <input type="checkbox"> Aceptó los <a href="#">terminos y condiciones del convenio</a>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 text-center">
+                                                <button type="submit" class="btn bg-olive btn-flat margin">
+                                                  <i class="fa fa-save"></i> Guardar
+                                                </button>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </section>
+                        </div>
+                        <!-- /#EDITAR -->
+                        <!-- REGISTRAR -->
+                        <div class="tab-pane" id="registrar">
+                            <section id="new">
+                                <h4 class="page-header"><i class="fa fa-address-book"></i> Registro de datos personales</h4>
+
+                                <form name="formularioRegistroPersona" class="form-horizontal">
+
+                                    <div class="row form">
+
+                                        <div class="col-md-6">
+
+                                            <div class="form-group">
+                                                <label for="inputName" class="col-sm-3 control-label">Estudiante</label>
+
+                                                <div class="col-sm-9 select-student">
+                                                    <select [(ngModel)]="idEstudiante" name="estudiante" class="form-control select2" style="width: 100%;">
+                                                      <option *ngFor="let persona of estudiantes" [value]="persona.idPersona">{{ persona.primerNombre }}
+                                                        {{ persona.segundoNombre }} {{persona.primerApellido}} {{persona.segundoApellido}}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputName" class="col-sm-3 control-label">Departamento</label>
+
+                                                <div class="col-sm-9 select-student">
+                                                    <select [(ngModel)]="idDepartamento" name="departamento" class="form-control select2" style="width: 100%;">
+                                                      <option *ngFor="let departamento of departamentos" [value]="departamento.idDepartamento" >{{ departamento.nombreDepartamento }}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="inputName" class="col-sm-3 control-label">Beca</label>
+
+                                                <div class="col-sm-9 select-student">
+                                                    <select [(ngModel)]="idBeca" name="beca" class="form-control select2" style="width: 100%;">
+                                                      <option value="1">Beca Industrial </option>
+                                                      <option value="2">Beca Institucional</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="col-md-6">
+                                                <div class="form-group dateInicio">
+                                                    <label class="col-sm-3">Fecha inicio</label>
+
+                                                    <div class="col-md-9 input-group date">
+                                                        <div class="input-group-addon">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </div>
+                                                        <input [(ngModel)]="convenio.fechaInicio" name="dateInicio" type="text" class="form-control pull-right" id="datepicker">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group dateFinal">
+                                                    <label class="col-sm-3">Fecha final</label>
+                                                    <div class="col-md-9 input-group date">
+                                                        <div class="input-group-addon">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </div>
+                                                        <input [(ngModel)]="convenio.fechaFinal" name="dateFinal" type="text" class="form-control pull-right" id="datepicker">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <br>
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label>
+                                                      <input type="checkbox"> Solicitud de trabajo
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label>
+                                                <input type="checkbox" class="minimal"> Fotocopia de carnet
+                                              </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <br>
+                                            <div class="with-border">
+                                                <h4><i class="fa fa-clock-o"></i> Horarios</h4>
+                                            </div>
+                                            <table class="table table-bordered text-center">
+                                                <tr>
+                                                    <th>Periodo</th>
+                                                    <th>Lunes</th>
+                                                    <th>Martes</th>
+                                                    <th>Miercoles</th>
+                                                    <th>Jueves</th>
+                                                    <th>Viernes</th>
+                                                    <th>Sábado</th>
+                                                    <th>Domingo</th>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>04:00 - 04:59</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                              <input type="checkbox">
+                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                <input type="checkbox">
+                                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                <input type="checkbox">
+                                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                <input type="checkbox">
+                                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                <input type="checkbox">
+                                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                <input type="checkbox">
+                                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                <input type="checkbox">
+                                              </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>05:00 - 05:59</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                              <input type="checkbox">
+                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                    <input type="checkbox">
+                                                </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                    <input type="checkbox">
+                                                </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                    <input type="checkbox">
+                                                </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                            <input type="checkbox">
+                                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                <input type="checkbox">
+                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                    <input type="checkbox">
+                                                </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>06:00 - 06:59</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                <input type="checkbox">
+                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                    <input type="checkbox">
+                                                </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                        <input type="checkbox">
+                                                    </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                    <input type="checkbox">
+                                                </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                <input type="checkbox">
+                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                <input type="checkbox">
+                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                    <input type="checkbox">
+                                                </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>07:30 - 08:15</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                        <input type="checkbox">
+                                                    </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                    <input type="checkbox">
+                                                </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                    <input type="checkbox">
+                                                </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                <input type="checkbox">
+                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                <input type="checkbox">
+                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                    <input type="checkbox">
+                                                </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                    <input type="checkbox">
+                                                </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>08:15 - 09:00</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>09:15 - 10:00</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                              <input type="checkbox">
+                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>10:00 - 10:45</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>11:00 - 11:45</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>11:45 - 12:30</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>12:30 - 13:15</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>13:30 - 14:15</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>14:15 - 15:00</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>15:15 - 16:00</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>16:00 - 16:45</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>17:00 - 17:45</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>17:45 - 18:30</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>18:45 - 19:30</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>19:30 - 20:15</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                <input type="checkbox">
+                                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                <input type="checkbox">
+                                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                <input type="checkbox">
+                                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                <input type="checkbox">
+                                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                <input type="checkbox">
+                                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                <input type="checkbox">
+                                              </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                <input type="checkbox">
+                                              </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>20:15 - 21:00</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>21:00 - 21:45</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>21:45 - 22:30</strong></td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                          <input type="checkbox">
+                                        </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </div>
+                                        <div class="col-md-12">
+
+                                            <div class="form-group text-center">
+                                                <div class="checkbox">
+                                                    <label>
+                                                          <input type="checkbox"> Aceptó los <a href="#">terminos y condiciones del convenio</a>
+                                                        </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 text-center">
+                                                <button (click)="mensajeSuccess()" type="submit" class="btn bg-olive btn-flat margin">
+                                                  <i class="fa fa-save"></i> Guardar
+                                                </button>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </section>
+                        </div>
+                        <!-- /#REGISTRAR -->
+                        <!-- USUARIO -->
+                        <div class="tab-pane" id="expediente">
+                            <section id="new">
+                                <div class="box-header with-border">
+                                    <h4 class="page-header"><i class="fa fa-file-text"></i> Expediente</h4>
+                                    <div class="box-tools left">
+                                        <div class="input-group input-group-sm" style="width: 300px;">
+                                            <input type="text" name="table_search" class="form-control pull-right" placeholder="Buscar estudiante">
+
+                                            <div class="input-group-btn">
+                                                <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <br>
+                                    <div class="col-md-3">
+
+                                        <!-- Profile Image -->
+                                        <div class="box box-primary">
+                                            <div class="box-body box-profile">
+                                                <img class="profile-user-img img-responsive img-circle" src="assets/img/avatar.png" alt="User profile picture">
+
+                                                <h3 class="profile-username text-center">Jhonny Gutierrez</h3>
+
+                                                <p class="text-muted text-center">60000789</p>
+
+                                                <ul class="list-group list-group-unbordered">
+                                                    <li class="list-group-item">
+                                                        <b>C.I.</b> <a class="pull-right">9898313 LP</a>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <b>Telefono</b> <a class="pull-right">60454871</a>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        <b>Codigo registro</b> <a class="pull-right">543</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <!-- /.box-body -->
+                                        </div>
+                                        <!-- /.box -->
+
+                                        <!-- About Me Box -->
+                                        <div class="box box-primary">
+                                            <div class="box-header with-border">
+                                                <h3 class="box-title">Mas datos</h3>
+                                            </div>
+                                            <!-- /.box-header -->
+                                            <div class="box-body">
+                                                <strong><i class="fa fa-book margin-r-5"></i> Carrera</strong>
+
+                                                <p>
+                                                    Ingenieria de Sistemas
+                                                </p>
+
+
+                                                <strong><i class="fa fa-star margin-r-5"></i> Semestre</strong>
+
+                                                <p>8</p>
+
+
+                                                <strong><i class="fa fa-map-marker margin-r-5"></i> Direccion</strong>
+
+                                                <p>Av. Simon I. Patiño</p>
+
+                                                <strong><i class="fa fa-flag-checkered margin-r-5"></i> Nacionalidad</strong>
+
+                                                <p>Bolivia</p>
+                                            </div>
+                                            <!-- /.box-body -->
+                                        </div>
+                                        <!-- /.box -->
+                                    </div>
+                                    <!-- /.col -->
+                                    <div class="col-md-9">
+                                        <!-- TABLE: MATERIAS AND NOTAS -->
+                                        <div class="box box-success">
+                                            <div class="box-header with-border">
+                                                <h3 class="box-title">Cursos matriculados</h3>
+
+                                                <div class="box-tools pull-right">
+                                                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                                </div>
+                                            </div>
+                                            <!-- /.box-header -->
+                                            <div class="box-body">
+                                                <div class="table-responsive">
+                                                    <table class="table no-margin">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="text-center">#</th>
+                                                                <th class="text-center">Materia</th>
+                                                                <th class="text-center">Primer parcial</th>
+                                                                <th class="text-center">Segundo parcial</th>
+                                                                <th class="text-center">Tercer parcial</th>
+                                                                <th class="text-center">Nota Final</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="text-center">1</td>
+                                                                <td>Ingenieria de Software</td>
+                                                                <td class="text-center"><span class="label label-success">30</span></td>
+                                                                <td class="text-center"><span class="label label-danger">12</span></td>
+                                                                <td class="text-center"><span class="label label-warning">22</span></td>
+                                                                <td class="text-center"><span class="label label-warning">64</span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-center">2</td>
+                                                                <td>Administración de Redes y Servidores</td>
+                                                                <td class="text-center"><span class="label label-danger">30</span></td>
+                                                                <td class="text-center"><span class="label label-success">12</span></td>
+                                                                <td class="text-center"><span class="label label-warning">22</span></td>
+                                                                <td class="text-center"><span class="label label-success">64</span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-center">3</td>
+                                                                <td>Taller de Base de Datos</td>
+                                                                <td class="text-center"><span class="label label-warning">30</span></td>
+                                                                <td class="text-center"><span class="label label-danger">12</span></td>
+                                                                <td class="text-center"><span class="label label-warning">22</span></td>
+                                                                <td class="text-center"><span class="label label-warning">64</span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-center">4</td>
+                                                                <td>Metodología de Investigación</td>
+                                                                <td class="text-center"><span class="label label-danger">30</span></td>
+                                                                <td class="text-center"><span class="label label-warning">12</span></td>
+                                                                <td class="text-center"><span class="label label-warning">22</span></td>
+                                                                <td class="text-center"><span class="label label-success">64</span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-center">5</td>
+                                                                <td>Practica Empresarial I</td>
+                                                                <td class="text-center"><span class="label label-success">30</span></td>
+                                                                <td class="text-center"><span class="label label-success">12</span></td>
+                                                                <td class="text-center"><span class="label label-warning">22</span></td>
+                                                                <td class="text-center"><span class="label label-danger">64</span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-center">6</td>
+                                                                <td>Electiva III</td>
+                                                                <td class="text-center"><span class="label label-warning">30</span></td>
+                                                                <td class="text-center"><span class="label label-danger">12</span></td>
+                                                                <td class="text-center"><span class="label label-warning">22</span></td>
+                                                                <td class="text-center"><span class="label label-warning">64</span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-center">7</td>
+                                                                <td>Perspectiva Biblica de la Historia</td>
+                                                                <td class="text-center"><span class="label label-danger">30</span></td>
+                                                                <td class="text-center"><span class="label label-warning">12</span></td>
+                                                                <td class="text-center"><span class="label label-warning">22</span></td>
+                                                                <td class="text-center"><span class="label label-danger">64</span></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <!-- /.table-responsive -->
+                                            </div>
+                                            <!-- /.box-body -->
+                                            <div class="box-footer clearfix text-center">
+                                                <p>Cantidad: <strong>7 materias</strong></p>
+                                            </div>
+                                            <!-- /.box-footer -->
+                                        </div>
+                                        <!-- /.box -->
+                                        <!-- TABLE: HORARIO -->
+                                        <div class="box box-success">
+                                            <div class="box-header with-border">
+                                                <h3 class="box-title">Horario de clases</h3>
+
+                                                <div class="box-tools pull-right">
+                                                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                                </div>
+                                            </div>
+                                            <!-- /.box-header -->
+                                            <div class="box-body">
+                                                <img class="img-responsive" src="assets/img/horario.jpg" alt="Photo">
+                                            </div>
+                                            <!-- /.box-body -->
+                                        </div>
+                                        <!-- /.box -->
+                                        <!-- TABLE: EVALUACION DE DESEMPEÑO LABORAL -->
+                                        <div class="box box-success">
+                                            <div class="box-header with-border">
+                                                <h3 class="box-title">Evaluación de rendimiento laboral</h3>
+
+                                                <div class="box-tools pull-right">
+                                                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                                </div>
+                                            </div>
+                                            <!-- /.box-header -->
+                                            <div class="box-body">
+                                                <div class="row">
+                                                    <div class="col-md-8">
+                                                        <p class="text-center">
+                                                            <strong>Fecha: 1 Enero, 2018 - 30 Diciembre, 2018</strong>
+                                                        </p>
+
+                                                        <div class="chart">
+                                                            <!-- Sales Chart Canvas -->
+                                                            <canvas id="salesChart" style="height: 180px;"></canvas>
+                                                        </div>
+                                                        <!-- /.chart-responsive -->
+                                                    </div>
+                                                    <!-- /.col -->
+                                                    <div class="col-md-4">
+                                                        <p class="text-center">
+                                                            <strong>Evaluación</strong>
+                                                        </p>
+
+                                                        <div class="progress-group">
+                                                            <span class="progress-text">Puntualidad</span>
+                                                            <span class="progress-number"><b>60</b>/100</span>
+
+                                                            <div class="progress sm">
+                                                                <div class="progress-bar progress-bar-green" style="width: 60%"></div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- /.progress-group -->
+                                                        <div class="progress-group">
+                                                            <span class="progress-text">Retrasos</span>
+                                                            <span class="progress-number"><b>30</b>/100</span>
+
+                                                            <div class="progress sm">
+                                                                <div class="progress-bar progress-bar-warning" style="width: 30%"></div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- /.progress-group -->
+                                                        <div class="progress-group">
+                                                            <span class="progress-text">Faltas a dias de trabajo</span>
+                                                            <span class="progress-number"><b>10</b>/100</span>
+
+                                                            <div class="progress sm">
+                                                                <div class="progress-bar progress-bar-danger" style="width: 10%"></div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- /.progress-group -->
+                                                        <div class="progress-group">
+                                                            <span class="progress-text">Desempeño laboral</span>
+                                                            <span class="progress-number"><b>80</b>/100</span>
+
+                                                            <div class="progress sm">
+                                                                <div class="progress-bar progress-bar-yellow" style="width: 80%"></div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- /.progress-group -->
+                                                    </div>
+                                                    <!-- /.col -->
+                                                </div>
+                                                <!-- /.row -->
+                                            </div>
+                                            <!-- ./box-body -->
+                                            <div class="box-footer">
+                                                <div class="row">
+                                                    <div class="col-sm-3 col-xs-6">
+                                                        <div class="description-block border-right">
+                                                            <h5 class="description-header">25</h5>
+                                                            <span class="description-text">DIAS DE TRABAJO</span>
+                                                        </div>
+                                                        <!-- /.description-block -->
+                                                    </div>
+                                                    <!-- /.col -->
+                                                    <div class="col-sm-3 col-xs-6">
+                                                        <div class="description-block border-right">
+                                                            <h5 class="description-header">260:00</h5>
+                                                            <span class="description-text">TOTAL HORAS</span>
+                                                        </div>
+                                                        <!-- /.description-block -->
+                                                    </div>
+                                                    <!-- /.col -->
+                                                    <div class="col-sm-3 col-xs-6">
+                                                        <div class="description-block border-right">
+                                                            <h5 class="description-header">560 Bs.</h5>
+                                                            <span class="description-text">SALDO ACUMULADO</span>
+                                                        </div>
+                                                        <!-- /.description-block -->
+                                                    </div>
+                                                    <!-- /.col -->
+                                                    <div class="col-sm-3 col-xs-6">
+                                                        <div class="description-block">
+                                                            <h5 class="description-header">Limpieza</h5>
+                                                            <span class="description-text">DEPARTAMENTO</span>
+                                                        </div>
+                                                        <!-- /.description-block -->
+                                                    </div>
+                                                </div>
+                                                <!-- /.row -->
+                                            </div>
+                                            <!-- /.box-footer -->
+                                        </div>
+                                        <!-- /.box -->
+                                    </div>
+                                </div>
+
+                            </section>
+                        </div>
+                        <div class="tab-pane" id="consumir">
+                            <section id="new">
+                                <div class="box-header with-border">
+                                    <h4 class="page-header"><i class="fa fa-file-archive-o"></i> Buscar estudiante en el sistema académico</h4>
+                                    <div class="box-tools">
+                                        <div class="input-group input-group-sm" style="width: 300px;">
+                                            <input type="text" name="table_search" class="form-control pull-right" placeholder="Buscar estudiante">
+
+                                            <div class="input-group-btn">
+                                                <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                            </div>
+                                        </div>
+                                        <br>
+                                    </div>
+                                </div>
+                                <div class="box box-primary">
+
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="box-body box-profile">
+                                                <img class="profile-user-img img-responsive img-circle" src="assets/img/Jhonny.png" alt="User profile picture">
+
+                                                <h3 class="profile-username text-center">Jhonny Gutierrez</h3>
+
+                                                <p class="text-muted text-center">60000789</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="box-header with-border">
+                                                <h3 class="box-title">Datos personales</h3>
+                                                <div class="box-tools">
+                                                    <button type="button" class="btn btn-primary">
+                                                        <i class="fa fa-plus"></i> Agregar
+                                                      </button>
+                                                </div>
+
+                                            </div>
+
+                                            <!-- /.box-header -->
+                                            <div class="box-body">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <strong><i class="fa fa-book margin-r-5"></i> Carrera</strong>
+
+                                                        <p>
+                                                            Contaduria pública
+                                                        </p>
+                                                        <strong><i class="fa fa-star margin-r-5"></i> Semestre</strong>
+
+                                                        <p>3</p>
+                                                        <strong><i class="fa fa-phone margin-r-5"></i> Celular</strong>
+
+                                                        <p>79866532</p>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <strong><i class="fa fa-map-marker margin-r-5"></i> Direccion</strong>
+
+                                                        <p>Av. Simon I. Patiño</p>
+
+                                                        <strong><i class="fa fa-flag-checkered margin-r-5"></i> Nacionalidad</strong>
+
+                                                        <p>Bolivia</p>
+                                                        <strong><i class="fa fa-calendar margin-r-5"></i> Fecha de nacimiento</strong>
+
+                                                        <p>09-10-1994</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- /.box-body -->
+                                </div>
+                                <!-- datos del estudiante -->
+                                <div class="box box-primary">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="box-body box-profile">
+                                                <img class="profile-user-img img-responsive img-circle" src="assets/img/Luis.png" alt="User profile picture">
+
+                                                <h3 class="profile-username text-center">Luis Fernando Apaza</h3>
+
+                                                <p class="text-muted text-center">60000987</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="box-header with-border">
+                                                <h3 class="box-title">Datos personales</h3>
+                                                <div class="box-tools">
+                                                    <button type="button" class="btn btn-primary">
+                                        <i class="fa fa-plus"></i> Agregar
+                                      </button>
+                                                </div>
+                                            </div>
+                                            <!-- /.box-header -->
+                                            <div class="box-body">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <strong><i class="fa fa-book margin-r-5"></i> Carrera</strong>
+
+                                                        <p>
+                                                            Ingenieria de Sistemas
+                                                        </p>
+                                                        <strong><i class="fa fa-star margin-r-5"></i> Semestre</strong>
+
+                                                        <p>8</p>
+                                                        <strong><i class="fa fa-phone margin-r-5"></i> Celular</strong>
+
+                                                        <p>79866532</p>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <strong><i class="fa fa-map-marker margin-r-5"></i> Direccion</strong>
+
+                                                        <p>Av. Simon I. Patiño</p>
+
+                                                        <strong><i class="fa fa-flag-checkered margin-r-5"></i> Nacionalidad</strong>
+
+                                                        <p>Bolivia</p>
+                                                        <strong><i class="fa fa-calendar margin-r-5"></i> Fecha de nacimiento</strong>
+
+                                                        <p>09-10-1994</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- /.box-body -->
+                                </div>
+
+                            </section>
+                        </div>
+                        <!-- /#USUARIO -->
+                    </div>
+                    <!-- /.tab-content -->
+                </div>
+                <!-- /.nav-tabs-custom -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
