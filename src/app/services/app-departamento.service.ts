@@ -47,4 +47,12 @@ export class AppDepartamentoService {
   getHistorialDepartamento(){
     return this._http.get<Departamento[]>(this.listaHistorialDepartamentoURL).pipe(map(res => res));
   }
+
+  postHistorialDepartamento(departamento:Departamento):Observable<Departamento[]>{
+    let body = JSON.stringify(departamento);
+    let headers = new HttpHeaders({
+      'Content-Type' : 'application/json'
+    });
+    return this._http.post<Departamento[]>(this.listaDepartamentoURL, body, {headers}).pipe();
+  }
 }

@@ -11,20 +11,23 @@ import { Departamento } from "../../interfaces/departamento.interface";
 export class GestionarDepartamentoComponent implements OnInit {
 
   departamentos:Departamento[];
-  historialDepartamento:Departamento[];
+  historialDepartamentos:Departamento[];
   MessageSuccess:Boolean = false;
   MessageEnable:Boolean = false;
   MessageDesable:Boolean = false;
 
   departamento:Departamento = {
-    nombreDepartamento:"",
-    costoHora:"",
-    limiteEstudiante:"",
+    nombreDepartamento:""
   }
 
   editarDepartamento:Departamento = {
-    nombreDepartamento:"",
-    fechaRegistro:"",
+    nombreDepartamento:""
+  }
+
+  historialDepartamento:Departamento = {
+    idDepartamento:"",
+    limiteEstudiante:"",
+    costoHora:"",
     estadoDepartamento:""
   }
 
@@ -72,6 +75,16 @@ export class GestionarDepartamentoComponent implements OnInit {
 
   saveDepartamento(){
     console.log(this.departamento);
+    this._appDepartamentoService.postDepartamento(this.departamento)
+    .subscribe((departamento:Departamento[]) => {console.log(departamento)});
+    
+    setTimeout(() => {
+      this.getHistorialDepartamentos();
+    }, 2000);
+
+    setTimeout(() => {
+      this.saveHistorialDepartamento();
+    }, 2000)
   }
 
   editDepartamento(idDepartamento, nombre, fechaRegistro, estado){
@@ -94,8 +107,21 @@ export class GestionarDepartamentoComponent implements OnInit {
   saveOrganizacion(){}
 
   //GESTION HISTORIAL DEPARTAMENTOS
-  // getHistorialDepartamentos(){
-  //   this._appDepartamentoService.getHistorialDepartamento().subscribe((departamentos: Departamento[]) => { this.historialDepartamento = departamentos });
-  // }
+  getHistorialDepartamentos(){
+  this._appDepartamentoService.getHistorialDepartamento()
+  .subscribe((departamentos: Departamento[]) => { this.historialDepartamentos = departamentos });
+  }
+
+  saveHistorialDepartamento(){
+
+    for(let hDeptarmento of this.historialDepartamentos){
+      this.historialDepartamento.idDepartamento = hDeptarmento.idDepartamento;
+    }
+
+    console.log(this.historialDepartamento);
+    this._appDepartamentoService.postHistorialDepartamento(this.historialDepartamento)
+      .subscribe((departamento:Departamento[]) => {console.log(departamento)});
+    
+  }
 
 }
