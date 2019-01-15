@@ -1,6 +1,6 @@
-# AngularPrueba7
+# Sistema Savi
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.0.4.
+El proyecto fue eleborado en [Angular CLI] version 7.0.4.
 
 ## Development server
 
