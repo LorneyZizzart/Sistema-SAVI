@@ -105,7 +105,7 @@
             </div>
         </div>
     </div>
-    <!--<div class="modal fade" id="modal-editar">
+    <div class="modal fade" id="modal-editar">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -114,7 +114,7 @@
                     <h4 class="modal-title">Editar</h4>
                 </div>
                 <div class="modal-body">
-                    <form (ngSubmit)="editPersonas()" #editPersona="ngForm" name="formularioEditPersona" class="form-horizontal">
+                    <form [formGroup]="formPersona"  name="formularioEditPersona" class="form-horizontal">
 
                         <div class="row row-editar">
                             <div class="col-md-12">
@@ -129,80 +129,78 @@
                                     <label for="inputName" class="col-sm-3 control-label">Primer nombre</label>
 
                                     <div class="col-sm-9">
-                                        <input [(ngModel)]="editpersona.primerNombre" name="editPrimerNombre" formControlName="editPrimerNombre" type="text" class="form-control" id="pNombre" placeholder="">{{ persona.primerNombre }}
+                                        <input [(ngModel)]="editpersona.primerNombre" name="editPrimerNombre" formControlName="editPrimerNombre" type="text" class="form-control" id="pNombre" placeholder="">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputName" class="col-sm-3 control-label">Segundo nombre</label>
 
                                     <div class="col-sm-9">
-                                        <input [(ngModel)]="editpersona.segundoNombre" name="editSegundoNombre" formControlName="editSegundoNombre" type="text" class="form-control" id="pNombre" placeholder="">{{ persona.segundoNombre }}
+                                        <input [(ngModel)]="editpersona.segundoNombre" name="editSegundoNombre" formControlName="editSegundoNombre" type="text" class="form-control" id="pNombre" placeholder="">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputName" class="col-sm-3 control-label">Primer apellido</label>
 
                                     <div class="col-sm-9">
-                                        <input [(ngModel)]="editpersona.primerApellido" name="editPrimerApellido" formControlName="editPrimerApellido" type="text" class="form-control" id="pApellido" placeholder="">{{ persona.primerApellido }}
+                                        <input [(ngModel)]="editpersona.primerApellido" name="editPrimerApellido" formControlName="editPrimerApellido" type="text" class="form-control" id="pApellido" placeholder="">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputExperience" class="col-sm-3 control-label">Segundo apellido</label>
 
                                     <div class="col-sm-9">
-                                        <input [(ngModel)]="editpersona.segundoApellido" name="editSegundoApellido" formControlName="editSegundoApellido" type="text" class="form-control" id="sApellido" placeholder="">{{ persona.segundoApellido }}
+                                        <input [(ngModel)]="editpersona.segundoApellido" name="editSegundoApellido" formControlName="editSegundoApellido" type="text" class="form-control" id="sApellido" placeholder="">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputExperience" class="col-sm-3 control-label">Carrera</label>
 
                                     <div class="col-sm-9">
-                                        <input [(ngModel)]="editpersona.carrera" name="editCarrera" formControlName="editCarrera" type="text" class="form-control" id="carrera" placeholder="">{{ persona.carrera }}
+                                        <input [(ngModel)]="editpersona.carrera" name="editCarrera" formControlName="editCarrera" type="text" class="form-control" id="carrera" placeholder="">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputExperience" class="col-sm-3 control-label">Semestre</label>
 
                                     <div class="col-sm-9">
-                                        <input [(ngModel)]="editpersona.semestre" name="editSemestre" formControlName="editSemestre"  type="text" class="form-control" id="semestre" placeholder="">{{ persona.semestre }}
+                                        <input [(ngModel)]="editpersona.semestre" name="editSemestre" formControlName="editSemestre"  type="text" class="form-control" id="semestre" placeholder="">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputEmail" class="col-sm-3 control-label">Nacionalidad</label>
                                     <div class="col-sm-9">
-                                        <input [(ngModel)]="editpersona.nacionalidad" name="editNacionalidad" formControlName="editNacionalidad"  type="text" class="form-control" id="editnacionalidad" placeholder="">{{ persona.nacionalidad }}
+                                        <input [(ngModel)]="editpersona.nacionalidad" name="editNacionalidad" formControlName="editNacionalidad"  type="text" class="form-control" id="editnacionalidad" placeholder="">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputSkills" class="col-sm-3 control-label">Fecha de nacimiento</label>
 
                                     <div class="col-sm-9">
-                                        <input [(ngModel)]="editpersona.fechaNacimiento" name="editFechaNacimiento" formControlName="editFechaNacimiento"  type="text" class="form-control pull-right" id="editfechaNacimiento">{{ persona.fechaNacimiento }}
+                                        <input [(ngModel)]="editpersona.fechaNacimiento" name="editFechaNacimiento" formControlName="editFechaNacimiento"  type="text" class="form-control pull-right" id="editfechaNacimiento">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputSkills" class="col-sm-3 control-label">Dirección</label>
 
                                     <div class="col-sm-9">
-                                        <input [(ngModel)]="editpersona.direccion" name="editDireccion" formControlName="editDireccion" type="text" class="form-control" id="editdireccion" placeholder="">{{ persona.direccion }}
+                                        <input [(ngModel)]="editpersona.direccion" name="editDireccion" formControlName="editDireccion" type="text" class="form-control" id="editdireccion" placeholder="">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputSkills" class="col-sm-3 control-label">C.I.</label>
 
                                     <div class="col-sm-9">
-                                        <input [(ngModel)]="editpersona.ci" name="editCi" formControlName="editCi" type="text" class="form-control" id="editci" placeholder="">{{ persona.ci }}
+                                        <input [(ngModel)]="editpersona.ci" name="editCi" formControlName="editCi" type="text" class="form-control" id="editci" placeholder="">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputSkills" class="col-sm-3 control-label">Celular</label>
 
                                     <div class="col-sm-9">
-                                        <input [(ngModel)]="editpersona.celular" name="editCelular" formControlName="editCelular" type="text" class="form-control" id="editcelular" placeholder="">{{ persona.celular }}
+                                        <input [(ngModel)]="editpersona.celular" name="editCelular" formControlName="editCelular" type="text" class="form-control" id="editcelular" placeholder="">
                                     </div>
                                 </div>
-
-
                             </div>
                             <div class="col-md-12 text-center">
 
@@ -216,7 +214,7 @@
                 </div>
             </div>
         </div>
-    </div>-->
+    </div>
     <!-- Main content -->
     <section class="content">
         <div class="row">
@@ -267,7 +265,7 @@
                                                 <a *ngIf="user.estadoUsuario == true" (click)="editEstadoUser(user.idRol, user.usuario, user.password, 0, user.idUsuario); messageEnableDesable('activo')" class="btn btn-block btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
                                                 <a *ngIf="user.estadoUsuario == false" (click)="editEstadoUser(user.idRol, user.usuario, user.password, 1, user.idUsuario); messageEnableDesable('inactivo')" class="btn btn-block btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
                                             </td>
-                                            <td><a data-toggle="modal" data-target="#modal-editar" class="btn btn-block btn-default btn-margin" title="Editar"><i class="fa fa-edit"></i></a></td>
+                                            <td><a (click)="buscarEstudianteEditar(user.idPersona)" data-toggle="modal" data-target="#modal-editar" class="btn btn-block btn-default btn-margin" title="Editar"><i class="fa fa-edit"></i></a></td>
                                             <td><a (click)="buscarEstudiante(user.idPersona)" data-toggle="modal" class="btn btn-block btn-primary btn-margin" data-target="#modal-password" title="Ver"><i class="fa fa-eye"></i></a></td>
                                             <td><a (click)="buscarEstudiante(user.idPersona)" data-toggle="modal" class="btn btn-block btn-primary btn-margin" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a></td>
                                         </tr>

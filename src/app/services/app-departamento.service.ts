@@ -11,6 +11,7 @@ export class AppDepartamentoService {
 
   listaDepartamentoURL = 'http://localhost:3000/departamento';
   listaHistorialDepartamentoURL = "http://localhost:3000/historialDepartamento";
+ 
 
   constructor(private _http: HttpClient) { }
 
@@ -45,6 +46,7 @@ export class AppDepartamentoService {
   //Gestion de HistorialDep
   //Obtenemos todos los departamentos
   getHistorialDepartamento(){
+    //Lo utilizaremos para obtener el ultimo idDept
     return this._http.get<Departamento[]>(this.listaHistorialDepartamentoURL).pipe(map(res => res));
   }
 

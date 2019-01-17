@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { NgForm, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { NgForm, FormBuilder, FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { User } from '../../interfaces/user.interface';
 import { Persona } from "../../interfaces/persona.interface";
 import { AppUserService } from "../../services/app-user.service";
@@ -23,7 +23,7 @@ export class GestionarUsuarioComponent implements OnInit {
   MessageSuccess:Boolean = false;
   MessageEnable:Boolean = false;
   MessageDesable:Boolean = false;
-  userPersona: Persona[];
+  public userPersona: Persona[];
   usuario:User[];
   personas:Persona[];
   //Para ver la informacion por estudiante
@@ -135,7 +135,7 @@ messageEnableDesable(value:string){
   //   this._appUserService.getUser('1').subscribe((usuario: User[]) => this.usuario = usuario);
   //   console.log(this.usuario);
   // }
-  buscarEstudiante(idPersona:string){
+buscarEstudiante(idPersona:string){
 
     for (let estudiante of this.userPersona) {
       if(estudiante.idPersona == idPersona){
@@ -162,20 +162,22 @@ messageEnableDesable(value:string){
   //Buscar al estudiante para editar
   buscarEstudianteEditar(idPersona:string){
     for(let estudiante of this.userPersona){
+     
       if (estudiante.idPersona == idPersona) {
-        this.formPersona = this._formBuilder.group({
-          editPrimerNombre : estudiante.primerNombre,
-          editSegundoNombre : estudiante.segundoNombre,
-          editPrimerApellido : estudiante.primerApellido,
-          editSegundoApellido : estudiante.segundoApellido,
-          editCarrera : estudiante.carrera,
-          editSemestre : estudiante.semestre,
-          editNacionalidad : estudiante.nacionalidad,
-          editFechaNacimiento : estudiante.fechaNacimiento,
-          editDireccion : estudiante.direccion,
-          editCi : estudiante.ci,
-          editCelular : estudiante.celular
-        })
+         console.log("idPersonas: ", estudiante.idPersona )
+        this.formPersona = new FormGroup({
+          editPrimerNombre: new FormControl(estudiante.primerNombre),
+          editSegundoNombre: new FormControl(estudiante.segundoNombre),
+          editPrimerApellido : new FormControl(estudiante.primerApellido),
+          editSegundoApellido : new FormControl(estudiante.segundoApellido),
+          editCarrera : new FormControl(estudiante.carrera),
+          editSemestre : new FormControl(estudiante.semestre),
+          editNacionalidad : new FormControl(estudiante.nacionalidad),
+          editFechaNacimiento : new FormControl(estudiante.fechaNacimiento),
+          editDireccion : new FormControl(estudiante.direccion),
+          editCi : new FormControl(estudiante.ci),
+          editCelular : new FormControl(estudiante.celular)
+        });
       }
     }
   }
