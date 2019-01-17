@@ -1,3 +1,21 @@
 .btn-save-departamento{
     margin-top: -2px;
 }
+
+.modal-name {
+    margin-top: -1%;
+    margin-bottom: -1%;
+}
+
+.modal-header {
+    color: beige;
+    background: #3C8DBC;
+}
+
+.modal-body {
+    background: #ECF0F5;
+}
+
+.modal-footer {
+    background: #ECF0F5;
+}

@@ -21,12 +21,18 @@
                     <h4><i class="icon fa fa-check"></i> Departamento habilitado</h4>
                 </div>
             </div>
-    <div *ngIf="MessageSuccess == true" class="pad no-print">
+    <div *ngIf="MessageSuccessOrg == true" class="pad no-print">
         <div class="callout callout-success">
             <h4><i class="icon fa fa-check"></i> Registro Exitoso</h4>
-            <p>El registro se realizó satisfactoriamente.</p>
+            <p>El registro del departamento se realizó satisfactoriamente.</p>
         </div>
     </div>
+    <div *ngIf="MessageFailOrg == true" class="pad no-print">
+            <div class="callout callout-danger">
+                <h4><i class="icon fa fa-check"></i> Fallo en el registro</h4>
+                <p>Se ha producido un fallo al registrar el departamento.</p>
+            </div>
+        </div>
     <!---MODAL-->
     <div class="modal fade" id="modal-editar">
         <div class="modal-dialog">
@@ -121,6 +127,7 @@
                                             <th>Cupo</th>
                                             <th>Estado</th>
                                             <th>Editar</th>
+                                            <th>Información</th>
                                         </tr>
                                         <tr *ngFor="let departamento of departamentos; let i = index">
                                             <td>{{ i+1 }}.</td>
@@ -140,6 +147,7 @@
                                                 <a *ngIf="departamento.estadoDepartamento == true" (click)=" messageEnableDesable('activo')" class="btn btn-block btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Desabilitar"><i class="fa fa-close"></i></a>
                                             </td>
                                             <td><a data-toggle="modal" data-target="#modal-editar" class="btn btn-block btn-default btn-margin" title="Editar"><i class="fa fa-edit"></i></a></td>
+                                            <td><a data-toggle="modal" class="btn btn-block btn-primary btn-margin" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -159,7 +167,7 @@
                                         <div class="box-header with-border">
                                           <h4 class="box-title">
                                             <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-                                              Nombre del departamento
+                                              #1 Nombre del departamento
                                             </a>
                                           </h4>
                                         </div>
@@ -179,7 +187,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3 text-center">
-                                                            <button data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" type="submit" name="button" class="btn btn-primary margin btn-save-departamento">
+                                                            <button type="submit"  name="button" class="btn btn-primary margin btn-save-departamento">
                                                                     <i class="fa fa-save"></i> Guardar
                                                             </button>
                                                             
@@ -192,9 +200,9 @@
                                       </div>
                                       <div class="panel box box-primary">
                                         <div class="box-header with-border">
-                                          <h4 class="box-title">
+                                          <h4 (click)="getMaxIdDep()" class="box-title">
                                             <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-                                              Datos
+                                              #2 Datos
                                             </a>
                                           </h4>
                                         </div>
@@ -230,7 +238,7 @@
                                                     </div>
                                                     <div class="col-md-12 text-center">
             
-                                                        <button data-toggle="collapse" data-parent="#accordion" href="#collapseThree" type="submit" name="button" class="btn btn-primary margin">
+                                                        <button type="submit" name="button" class="btn btn-primary margin">
                                                           <i class="fa fa-save"></i> Guardar
                                                         </button>
                                                     </div>
@@ -242,9 +250,9 @@
                                       </div>
                                       <div class="panel box box-primary">
                                         <div class="box-header with-border">
-                                          <h4 class="box-title">
+                                          <h4 (click)="getListDeptoSJ()" class="box-title">
                                             <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
-                                              Encargado
+                                              #3 Encargado
                                             </a>
                                           </h4>
                                         </div>
@@ -261,8 +269,8 @@
                                                             <label for="inputName" class="col-sm-4 control-label">Buscar nombre</label>
             
                                                             <div class="col-sm-8 select-student">
-                                                                <select [(ngModel)]="organizacionDepartamento.idPersona" name="organizacionDepartamento.idPersona" class="form-control select2" style="width: 100%;">
-                                                                    <option *ngFor="let persona of listJefesDepto" value="persona.idPersona" selected="selected">{{ persona.primerNombre }} {{ persona.segundoNombre }} {{ persona.primerApellido }} {{ persona.segundoApellido }}</option>
+                                                                <select [(ngModel)]="idPersona" name="idPersona" class="form-control select2" style="width: 100%;">
+                                                                    <option *ngFor="let persona of listJefesDepto" [value]="persona.idPersona" selected="selected">{{ persona.primerNombre }} {{ persona.segundoNombre }} {{ persona.primerApellido }} {{ persona.segundoApellido }}</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -274,8 +282,8 @@
                                                             <label for="inputName" class="col-sm-4 control-label">Buscar departamento</label>
             
                                                             <div class="col-sm-8 select-student">
-                                                                <select [(ngModel)]="organizacionDepartamento.idDepartamento" name="organizacionDepartamento.idDepartamento" class="form-control select2" style="width: 100%;">
-                                                                    <option  *ngFor="let departamento of listDepSJ" value="departamento.idDepartamento" selected="selected"> {{ departamento.nombreDepartamento }} </option>
+                                                                <select [(ngModel)]="idDepartamento" name="idDepartamento" class="form-control select2" style="width: 100%;">
+                                                                    <option *ngFor="let departamento of listDepSJ" [value]="departamento.idDepartamento" selected="selected"> {{ departamento.nombreDepartamento }} </option>
                                                                 </select>
                                                             </div>
                                                         </div>

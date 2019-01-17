@@ -14,7 +14,6 @@ import { Persona } from '../../interfaces/persona.interface';
 })
 export class GestionarDepartamentoComponent implements OnInit {
 
-  MessageSuccess:Boolean = false;
   MessageEnable:Boolean = false;
   MessageDesable:Boolean = false;
   //DEPARTAMENTO
@@ -43,6 +42,10 @@ export class GestionarDepartamentoComponent implements OnInit {
   }
   //ORGANIZACION DEPARTAMENTO
   //Sera donde recibiremos el id maximo
+  MessageFailOrg:boolean = false;
+  MessageSuccessOrg:boolean = false;
+  idPersona:string = "";
+  idDepartamento:string = "";
   idMax:string = "";
   listDepSJ:Departamento[];
   listJefesDepto:Persona[];
@@ -56,23 +59,13 @@ export class GestionarDepartamentoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getListDeptoSJ();
     this.getListJefesDeptarmento();
+    //Lo ejecutamos por que a la primera nos responde undefine-> luego si muestra resultados
+    this.getMaxIdDep();
   }
 
   ngOnDestroy(): void {
 
-  }
-
-  //ALERT SUCCESS
-  mensajeSuccess() {
-    if (!this.MessageSuccess) {
-      this.getDepartamentos();
-      this.MessageSuccess = true;
-      setTimeout(() => {
-        this.MessageSuccess = false;
-      }, 10000);
-    }
   }
 
   messageEnableDesable(value:string){
@@ -100,14 +93,12 @@ export class GestionarDepartamentoComponent implements OnInit {
   getMaxIdDep(){
     this._appDepartamentoService.getHistorialDepartamento()
       .subscribe((maxidDept:Departamento[]) => {this.maxidDept = maxidDept});
-
-      
+      console.log("getMAXdEP: ",this.maxidDept )
   }
 
   saveDepartamento(){
-    // this._appDepartamentoService.postDepartamento(this.departamento)
-    // .subscribe((departamento:Departamento[]) => {console.log(departamento)});
-    console.log(this.departamento);
+    this._appDepartamentoService.postDepartamento(this.departamento)
+    .subscribe((departamento:Departamento[]) => {console.log(departamento)});
   }
 
   editarDepartamento(){
@@ -131,16 +122,14 @@ export class GestionarDepartamentoComponent implements OnInit {
   }
 
   saveHistorialDepartamento(){
-    // for(let id of this.maxidDept){
-    //   this.idMax = id.idDepartamento;
-    // }
+    for(let id of this.maxidDept){
+      this.idMax = id.idDepartamento;
+    }
     // //falla del ultimo id
-    // this.historialDepartamento.idDepartamento = this.idMax;
-    // this._appDepartamentoService.postHistorialDepartamento(this.historialDepartamento)
-    //   .subscribe((departamento:Departamento[]) => {console.log(departamento)});
+    this.historialDepartamento.idDepartamento = this.idMax;
+    this._appDepartamentoService.postHistorialDepartamento(this.historialDepartamento)
+      .subscribe((departamento:Departamento[]) => {console.log(departamento)});
 
-      console.log(this.historialDepartamento);
-    
   }
 
   //GESTIONAR ORGANIZACION DEPARTAMENTO
@@ -156,9 +145,28 @@ export class GestionarDepartamentoComponent implements OnInit {
   }
 
   saveOrganizacion(){
-  // this._appDeptOrgService.postOrganizacionDepartamento(this.organizacionDepartamento)
-  //   .subscribe((departamento:Departamento[])=>{console.log(departamento)});
-    console.log(this.organizacionDepartamento)
+    if(this.idDepartamento != "" && this.idPersona != ""){
+
+      this.organizacionDepartamento.idPersona = this.idPersona;
+      this.organizacionDepartamento.idDepartamento = this.idDepartamento;
+
+      this._appDeptOrgService.postOrganizacionDepartamento(this.organizacionDepartamento)
+      .subscribe((departamento:Departamento[])=>{console.log(departamento)});
+
+    this.MessageSuccessOrg = true;
+    setTimeout(()=>{
+      this.MessageSuccessOrg = false;
+    }, 5000);
+
+    }else{
+
+      this.MessageFailOrg = true;
+      setTimeout(()=>{
+        this.MessageFailOrg = false;
+      }, 5000);
+
+    }
+    
   }
 
 }

@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { AppAreaService } from '../../services/app-area.service';
+import { Area } from '../../interfaces/area.interface';
+
 
 @Component({
   selector: 'app-gestionar-area',
@@ -7,21 +10,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GestionarAreaComponent implements OnInit {
 
-  MessageSuccess:Boolean = false;
+  //GestionarArea
+  listaAreaDepartamento:Area[];
 
-  constructor() { }
+  constructor( private _appAreaService : AppAreaService) {
+    
+   }
 
   ngOnInit() {
-  }
-  //ALERT SUCCESS
-  mensajeSuccess() {
-    if (!this.MessageSuccess) {
-      this.MessageSuccess = true;
-      setTimeout(() => {
-        this.MessageSuccess = false;
-      }, 10000);
-    }
+    this.getAreaDepartamento("1");
   }
 
+  ngOnDestroy(): void {
+    this.getAreaDepartamento("1");
+  }
 
+  getAreaDepartamento(idDepto:string){
+    this._appAreaService.getAreasDepartamento(idDepto)
+    .subscribe((areas : Area[]) => {this.listaAreaDepartamento = areas});
+  }
+ 
 }

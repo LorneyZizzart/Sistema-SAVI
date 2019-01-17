@@ -11,12 +11,6 @@
             <li class="active">Gestión de áreas</li>
         </ol>
     </section>
-    <div *ngIf="MessageSuccess == true" class="pad no-print">
-        <div class="callout callout-success">
-            <h4><i class="icon fa fa-check"></i> Registro Exitoso</h4>
-            <p>El registro se realizó satisfactoriamente.</p>
-        </div>
-    </div>
     <!---MODAL-->
 
     <!-- Main content -->
@@ -35,7 +29,7 @@
                         <div class="tab-pane active" id="lista">
                             <section id="new">
                                 <div class="box-header with-border">
-                                    <h4 class="page-header"><i class="fa fa-list-ul"></i> Lista de áreas del departamento</h4>
+                                    <h4 class="page-header"><i class="fa fa-list-ul"></i> Lista de áreas del departamento </h4>
                                     <div class="box-tools left">
                                         <div class="input-group input-group-sm" style="width: 300px;">
                                             <input type="text" name="table_search" class="form-control pull-right" placeholder="Buscar estudiante">
@@ -51,27 +45,17 @@
                                         <tr>
                                             <th style="width: 10px">#</th>
                                             <th>Departamento</th>
-                                            <th>Encargado</th>
-                                            <th>Costo de hora</th>
-                                            <th>Limite de estudiantes</th>
-                                            <th>Cantidades de estudiantes</th>
-                                            <th>Cupo</th>
+                                            <th>Area</th>
+                                            <th>Fecha de Registro</th>
                                             <th>Estado</th>
                                         </tr>
-                                        <!-- <tr *ngFor="let departamento of departamentos; let i = index">
+                                        <tr *ngFor="let area of listaAreaDepartamento; let i = index">
                                             <td>{{ i+1 }}.</td>
-                                            <td>{{ departamento.nombreDepartamento }}</td>
-                                            <td>{{ departamento.primerNombre }} {{ departamento.segundoNombre }} {{ departamento.primerApellido }} {{ departamento.segundoApellido }}</td>
-                                            <td>{{ departamento.costoHora }}</td>
-                                            <td>{{ departamento.limiteEstudiante }}</td>
-                                            <td>
-                                                <div class="progress progress-xs progress-striped active">
-                                                    <div class="progress-bar progress-bar-primary" style="width: 38%"></div>
-                                                </div>
-                                            </td>
-                                            <td class="text-center"><span class="badge bg-light-blue">{{ departamento.limiteEstudiante }}</span></td>
-                                            <td>{{ departamento.estadoDepartamento | estado }}</td>
-                                        </tr> -->
+                                            <td>{{ area.nombreDepartamento }}</td>
+                                            <td>{{ area.nombreArea }}</td>
+                                            <td>{{ area.fechaRegistroArea }}</td>
+                                            <td>{{ area.estadoArea | estado }}</td>
+                                        </tr>
                                     </table>
                                 </div>
 

@@ -74,15 +74,15 @@ export class GestionarUsuarioComponent implements OnInit {
   constructor( private _appUserService: AppUserService,
               private _appPersonaService: AppPersonaService,
               private _formBuilder: FormBuilder) {
-    this.getUsers();
   }
 
   ngOnInit() {
+    this.getUsers();
+    this.formPersona = new FormGroup({});
   }
 
 
   ngOnDestroy(): void {
-    this.getUsers();
     this.getPersonas();
     this.saveUser();
     this.editUsers();
@@ -160,24 +160,39 @@ buscarEstudiante(idPersona:string){
   }
 
   //Buscar al estudiante para editar
+  //Aun falta no muestra los datos 
   buscarEstudianteEditar(idPersona:string){
     for(let estudiante of this.userPersona){
      
       if (estudiante.idPersona == idPersona) {
          console.log("idPersonas: ", estudiante.idPersona )
-        this.formPersona = new FormGroup({
-          editPrimerNombre: new FormControl(estudiante.primerNombre),
-          editSegundoNombre: new FormControl(estudiante.segundoNombre),
-          editPrimerApellido : new FormControl(estudiante.primerApellido),
-          editSegundoApellido : new FormControl(estudiante.segundoApellido),
-          editCarrera : new FormControl(estudiante.carrera),
-          editSemestre : new FormControl(estudiante.semestre),
-          editNacionalidad : new FormControl(estudiante.nacionalidad),
-          editFechaNacimiento : new FormControl(estudiante.fechaNacimiento),
-          editDireccion : new FormControl(estudiante.direccion),
-          editCi : new FormControl(estudiante.ci),
-          editCelular : new FormControl(estudiante.celular)
-        });
+        this.formPersona = this._formBuilder.group({
+          editPrimerNombre: estudiante.primerNombre,
+          editSegundoNombre: estudiante.segundoNombre,
+          editPrimerApellido : estudiante.primerApellido,
+          editSegundoApellido : estudiante.segundoApellido,
+          editCarrera : estudiante.carrera,
+          editSemestre : estudiante.semestre,
+          editNacionalidad : estudiante.nacionalidad,
+          editFechaNacimiento : estudiante.fechaNacimiento,
+          editDireccion : estudiante.direccion,
+          editCi : estudiante.ci,
+          editCelular : estudiante.celular
+        })
+
+        // this.formPersona = new FormGroup({
+        //   editPrimerNombre: new FormControl(estudiante.primerNombre),
+        //   editSegundoNombre: new FormControl(estudiante.segundoNombre),
+        //   editPrimerApellido : new FormControl(estudiante.primerApellido),
+        //   editSegundoApellido : new FormControl(estudiante.segundoApellido),
+        //   editCarrera : new FormControl(estudiante.carrera),
+        //   editSemestre : new FormControl(estudiante.semestre),
+        //   editNacionalidad : new FormControl(estudiante.nacionalidad),
+        //   editFechaNacimiento : new FormControl(estudiante.fechaNacimiento),
+        //   editDireccion : new FormControl(estudiante.direccion),
+        //   editCi : new FormControl(estudiante.ci),
+        //   editCelular : new FormControl(estudiante.celular)
+        // });
       }
     }
   }

@@ -55,6 +55,6 @@ export class AppDepartamentoService {
     let headers = new HttpHeaders({
       'Content-Type' : 'application/json'
     });
-    return this._http.post<Departamento[]>(this.listaDepartamentoURL, body, {headers}).pipe();
+    return this._http.post<Departamento[]>(this.listaHistorialDepartamentoURL, body, {headers}).pipe();
   }
 }
