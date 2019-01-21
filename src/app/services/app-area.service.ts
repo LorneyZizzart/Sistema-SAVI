@@ -46,7 +46,17 @@ export class AppAreaService {
       .pipe ();
   }
 
-  deleteArea(key$:string){
+  putEstado(area:Area, key$:Area):Observable<Area[]>{
+    let body = JSON.stringify(area);
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    let url = `${this.listaAreaDepartamento}/estado/${key$}`;
+    return this._http.put<Area[]>(url, body, { headers })
+      .pipe ();
+  }
+
+  deleteArea(key$:Area){
     let url = `${this.listaAreaDepartamento}/${key$}`;
     return this._http.delete(url).pipe(map(res => res));
   }

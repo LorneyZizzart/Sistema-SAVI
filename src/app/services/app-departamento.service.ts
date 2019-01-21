@@ -16,6 +16,11 @@ export class AppDepartamentoService {
   constructor(private _http: HttpClient) { }
 
   //gestion de Departamentos
+  
+  getAllDepartamento(){
+    let url = `${this.listaDepartamentoURL}/all/depts`;
+    return this._http.get<Departamento[]>(url).pipe(map(res => res));
+  }
 
   getDepartamentos(){
     return this._http.get<Departamento[]>(this.listaDepartamentoURL).pipe(map(res => res));
@@ -35,6 +40,15 @@ export class AppDepartamentoService {
       'Content-Type':'application/json'
     });
     let url = `${this.listaDepartamentoURL}/${key$}`;
+    return this._http.put<Departamento[]>(url, body, {headers}).pipe();
+  }
+
+  putEstadoDepartamento(departamento:Departamento, key$:string):Observable<Departamento[]>{
+    let body = JSON.stringify(departamento);
+    let headers = new HttpHeaders({
+      'Content-Type':'application/json'
+    });
+    let url = `${this.listaDepartamentoURL}/editEstado/${key$}`;
     return this._http.put<Departamento[]>(url, body, {headers}).pipe();
   }
 

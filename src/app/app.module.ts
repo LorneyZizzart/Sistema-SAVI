@@ -24,6 +24,7 @@ import { AppTipoPersonaService } from './services/app-tipoPersona.service';
 //Pipe
 import { KeysPipe } from './pipes/keys.pipe';
 import { RolUserPipe } from './pipes/rol-user.pipe';
+import { BoleanpPipe } from './pipes/boolean.pipe';
 
 //Routing
 import { AppRoutingModule } from './app-routing.module';
@@ -77,6 +78,7 @@ import { NavbarJFComponent } from './components/navbar-jf/navbar-jf.component';
     GestionarRolComponent,
     RolUserPipe,
     EstadoPipe,
+    BoleanpPipe,
     MesPipe,
     NavbarJFComponent
   ],

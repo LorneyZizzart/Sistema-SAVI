@@ -1,0 +1,16 @@
+.modal-header {
+    color: beige;
+    background: #3C8DBC;
+}
+
+.modal-body {
+    background: #ECF0F5;
+}
+
+.modal-footer {
+    background: #ECF0F5;
+}
+
+.btn-save{
+    margin-top: -2px;
+}

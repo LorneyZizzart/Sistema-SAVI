@@ -11,7 +11,143 @@
             <li class="active">Gestión de áreas</li>
         </ol>
     </section>
+    <div *ngIf="MessageDelete == true" class="pad no-print">
+        <div class="callout callout-success">
+            <h4><i class="icon fa fa-check"></i> El área fue eliminada</h4>
+        </div>
+    </div>
+    <div *ngIf="MessageEnabled == true" class="pad no-print">
+        <div class="callout callout-success">
+            <h4><i class="icon fa fa-check"></i> Area habilitado</h4>
+        </div>
+    </div>
+    <div *ngIf="MessageDisabled == true" class="pad no-print">
+        <div class="callout callout-info">
+            <h4><i class="icon fa fa-check"></i> Area Deshabilitado</h4>
+        </div>
+    </div>
+    <div *ngIf="MessageSuccessArea == true" class="pad no-print">
+        <div class="callout callout-success">
+            <h4><i class="icon fa fa-check"></i> Registro Exitoso</h4>
+            <p>El registro del área del departamento, fue satisfactoriamente.</p>
+        </div>
+    </div>
+    <div *ngIf="MessageFailArea == true" class="pad no-print">
+            <div class="callout callout-danger">
+                <h4><i class="icon fa fa-check"></i> Fallo en el registro</h4>
+                <p>Se ha producido un fallo al registrar el área .</p>
+            </div>
+        </div>
+
     <!---MODAL-->
+    <div class="modal fade" id="modal-informacion">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Mas información...</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="box-profile">
+                                <img class="profile-user-img img-responsive img-circle" src="assets/img/avatar.png" alt="User profile picture">
+                                <p class="text-muted text-center">650004813</p>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="box-header with-border">
+                                <h3 class="modal-name">Jhonny san</h3>
+                            </div>
+                            <div class="box-body">
+                                <div class="row">
+                                    <!-- <div class="col-md-5">
+                                        <p *ngIf="infoCarrera"><strong><i class="fa fa-book margin-r-5"></i> Carrera:</strong></p>
+                                        <p *ngIf="infoSemestre"><strong><i class="fa fa-star margin-r-5"></i> Semestre:</strong></p>
+                                        <p><strong><i class="fa fa-map-marker margin-r-5"></i> Dirección:</strong></p>
+                                        <p><strong><i class="fa fa-flag-checkered margin-r-5"></i> Nacionalidad:</strong></p>
+                                        <p><strong><i class="fa fa-credit-card margin-r-5"></i> Carnet de Identidad:</strong></p>
+                                        <p><strong><i class="fa fa-phone margin-r-5"></i> Celular:</strong></p>
+                                        <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha nacimiento:</strong></p>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <p *ngIf="infoCarrera">{{ infoCarrera }}</p>
+                                        <p *ngIf="infoSemestre">{{ infoSemestre }}</p>
+                                        <p>{{ infoDireccion }}</p>
+                                        <p>{{ infoNacionalidad }}</p>
+                                        <br>
+                                        <p>{{ infoCI }}</p>
+                                        <p>{{ infoCelular }}</p>
+                                        <p>{{ infoFechaNacimiento | date: 'dd/MM/yyyy' }}</p>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-editar">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Editar</h4>
+                </div>
+                <div class="modal-body">
+                    <form (ngSubmit)="editarArea()" #editarArea="ngForm" name="formularioEditPersona" class="form-horizontal">
+
+                        <div class="row row-editar">
+                            <div class="col-md-12">
+                                <figure class="figure text-center">
+                                    <img src="../../../assets/img/departamento.png" class="figure-img img-fluid rounded img-thumbnail" alt="A generic square placeholder image with rounded corners in a figure.">
+                                    <figcaption class="figure-caption text-center">Fotografia para la identifiación</figcaption>
+                                    <button type="button" class="btn btn-default btn-subir-foto">
+                                    <i class="fa fa-upload"></i> Subir fotografía</button>
+                                </figure>
+                                <br>
+                                <div class="form-group">
+                                    <label for="inputName" class="col-sm-3 control-label">Nombre</label>
+
+                                    <div class="col-sm-9">
+                                        <input  name="nombreDepartamento" type="text" class="form-control" id="pNombre" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputName" class="col-sm-3 control-label">Costo de hora</label>
+
+                                    <div class="col-sm-9">
+                                        <input name="costoHora" type="text" class="form-control" id="costoHora" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputName" class="col-sm-3 control-label">Limite de estudiantes</label>
+
+                                    <div class="col-sm-9">
+                                        <input name="limiteEstudiante" type="text" class="form-control" id="limiteEstudiante" placeholder="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 text-center">
+
+                                <button  type="submit" name="button" class="btn btn-primary margin" data-dismiss="modal">
+                                    <i class="fa fa-refresh"></i> Actualizar
+                          </button>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Main content -->
     <section class="content">
@@ -19,10 +155,9 @@
             <div class="col-xs-12">
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#lista" data-toggle="tab">Lista</a></li>
-                        <li><a href="#editar" data-toggle="tab">Editar</a></li>
+                        <li (click)="this.getAreaDepartamento('1')" class="active"><a href="#lista" data-toggle="tab">Lista</a></li>
                         <li><a href="#registrar" data-toggle="tab">Registrar</a></li>
-                        <li><a href="#asignar" data-toggle="tab">Asignar Jefe de departamento</a></li>
+                        <li><a href="#asignar" data-toggle="tab">Asignar estudiante a un área</a></li>
                     </ul>
                     <div class="tab-content">
                         <!-- LISTA -->
@@ -32,7 +167,7 @@
                                     <h4 class="page-header"><i class="fa fa-list-ul"></i> Lista de áreas del departamento </h4>
                                     <div class="box-tools left">
                                         <div class="input-group input-group-sm" style="width: 300px;">
-                                            <input type="text" name="table_search" class="form-control pull-right" placeholder="Buscar estudiante">
+                                            <input type="text" name="table_search" class="form-control pull-right" placeholder="Buscar area">
 
                                             <div class="input-group-btn">
                                                 <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
@@ -47,14 +182,23 @@
                                             <th>Departamento</th>
                                             <th>Area</th>
                                             <th>Fecha de Registro</th>
-                                            <th>Estado</th>
+                                            <th class="text-center">Estado</th>
+                                            <th class="text-center">Editar</th>
+                                            <th class="text-center">Informacion</th>
+                                            <th class="text-center">Eliminar</th>
                                         </tr>
                                         <tr *ngFor="let area of listaAreaDepartamento; let i = index">
                                             <td>{{ i+1 }}.</td>
                                             <td>{{ area.nombreDepartamento }}</td>
                                             <td>{{ area.nombreArea }}</td>
-                                            <td>{{ area.fechaRegistroArea }}</td>
-                                            <td>{{ area.estadoArea | estado }}</td>
+                                            <td>{{ area.fechaRegistroArea | date: 'dd/MM/yyyy' }}</td>
+                                            <td>
+                                                <a *ngIf="area.estadoArea == true" (click)="editEstadoArea(area.idArea, '0')" class="btn btn-block btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
+                                                <a *ngIf="area.estadoArea == false" (click)="editEstadoArea(area.idArea, '1')" class="btn btn-block btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
+                                            </td>
+                                            <td><a  data-toggle="modal" data-target="#modal-editar" class="btn btn-block btn-default btn-margin" title="Editar"><i class="fa fa-edit"></i></a></td>
+                                            <td><a  data-toggle="modal" class="btn btn-block btn-primary btn-margin" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a></td>
+                                            <td><a (click)="deleteArea(area.idArea)" class="btn btn-block btn-danger btn-margin"  title="Eliminar"><i class="fa fa-fw fa-trash"></i></a></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -62,109 +206,34 @@
                             </section>
                         </div>
                         <!-- /#LISTA -->
-                        <!-- EDITAR -->
-                        <!-- <div class="tab-pane" id="editar">
-                            <section id="new">
-                                <h4 class="page-header"><i class="fa fa-edit"></i> Editar datos del departamento</h4>
-                                <form (ngSubmit)="editDepartamento()" #editDepartamento="ngForm" name="formularioEditDepartamento" class="form-horizontal">
-
-                                    <div class="row">
-                                        <div class="col-md-7">
-                                            <div class="form-group">
-                                                <label for="inputName" class="col-sm-3 control-label">Nombre</label>
-
-                                                <div class="col-sm-9">
-                                                    <input [(ngModel)]="departamento.nombreDepartamento" name="nombreDepartamento" type="text" class="form-control" id="pNombre" placeholder="">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="inputName" class="col-sm-3 control-label">Costo de hora</label>
-
-                                                <div class="col-sm-9">
-                                                    <input [(ngModel)]="departamento.costoHora" name="costoHora" type="text" class="form-control" id="costoHora" placeholder="">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="inputName" class="col-sm-3 control-label">Limite de estudiantes</label>
-
-                                                <div class="col-sm-9">
-                                                    <input [(ngModel)]="departamento.limiteEstudiante" name="limiteEstudiante" type="text" class="form-control" id="limiteEstudiante" placeholder="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-5">
-                                            <figure class="figure text-center">
-                                                <img src="../../../assets/img/avatar.png" class="figure-img img-fluid rounded img-thumbnail" alt="A generic square placeholder image with rounded corners in a figure.">
-                                                <figcaption class="figure-caption text-center">Fotografia para la identifiación</figcaption>
-                                                <button type="button" class="btn btn-default btn-subir-foto">
-                          <i class="fa fa-upload"></i> Subir fotografía</button>
-                                            </figure>
-
-                                        </div>
-                                        <div class="col-md-12 text-center">
-
-                                            <button (click)="mensajeSuccess()" type="submit" name="button" class="btn btn-primary margin">
-                        <i class="fa fa-refresh"></i> Actualizar
-                      </button>
-                                        </div>
-
-                                    </div>
-                                </form>
-                            </section>
-                        </div> -->
-                        <!-- /#EDITAR -->
                         <!-- REGISTRAR -->
-                        <!-- <div class="tab-pane" id="registrar">
+                        <div class="tab-pane" id="registrar">
                             <section id="new">
-                                <h4 class="page-header"><i class="fa fa-address-book"></i> Registro de departamento</h4>
+                                <h4 class="page-header"><i class="fa fa-address-book"></i> Registro de área en el departamento</h4>
 
-                                <form (ngSubmit)="saveDepartamento()" #registroDepartamento="ngForm" name="formularioRegistroDepartamento" class="form-horizontal">
+                                <form (ngSubmit)="saveArea()" #registroArea="ngForm" name="formularioRegistroArea" class="form-horizontal">
 
                                     <div class="row">
                                         <div class="col-md-7">
 
                                             <div class="form-group">
-                                                <label for="inputName" class="col-sm-3 control-label">Nombre</label>
+                                                <label for="inputName" class="col-sm-5 control-label">Nombre del area</label>
 
-                                                <div class="col-sm-9">
-                                                    <input [(ngModel)]="departamento.nombreDepartamento" name="nombreDepartamento" type="text" class="form-control" id="pNombre" placeholder="">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="inputName" class="col-sm-3 control-label">Costo de hora</label>
-
-                                                <div class="col-sm-9">
-                                                    <input [(ngModel)]="departamento.costoHora" name="costoHora" type="text" class="form-control" id="costoHora" placeholder="">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="inputName" class="col-sm-3 control-label">Limite de estudiantes</label>
-
-                                                <div class="col-sm-9">
-                                                    <input [(ngModel)]="departamento.limiteEstudiante" name="limiteEstudiante" type="text" class="form-control" id="limiteEstudiante" placeholder="">
+                                                <div class="col-sm-7">
+                                                    <input [(ngModel)]="area.nombreArea" name="nombreArea" type="text" class="form-control" id="nombreArea" placeholder="">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-5">
-                                            <figure class="figure text-center">
-                                                <img src="../../../assets/img/avatar.png" class="figure-img img-fluid rounded img-thumbnail" alt="A generic square placeholder image with rounded corners in a figure.">
-                                                <figcaption class="figure-caption text-center">Fotografia para la identifiación</figcaption>
-                                                <button type="button" class="btn btn-default btn-subir-foto">
-                          <i class="fa fa-upload"></i> Subir fotografía</button>
-                                            </figure>
-
-                                        </div>
-                                        <div class="col-md-12 text-center">
-
-                                            <button (click)="mensajeSuccess()" type="submit" name="button" class="btn btn-primary margin">
-                        <i class="fa fa-save"></i> Guardar
-                      </button>
+                                                <button type="submit" name="button" class="btn-save btn btn-primary margin">
+                                                    <i class="fa fa-save"></i> Guardar
+                                                </button>
                                         </div>
 
                                     </div>
                                 </form>
                             </section>
-                        </div> -->
+                        </div>
                         <!-- /#REGISTRAR -->
                         <!-- USUARIO -->
                         <!-- <div class="tab-pane" id="asignar">

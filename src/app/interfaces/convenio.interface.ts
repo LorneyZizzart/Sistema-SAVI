@@ -1,10 +1,18 @@
 export interface Convenio {
   idConvenio?:string
-  idPersona?: string
-  primerNombre?:string
-  segundoNombre?:string
-  primerApellido?:string
-  segundoApellido?:string
+  idPersona?: string;
+  primerNombre?: string;
+  segundoNombre?: string;
+  primerApellido?: string;
+  segundoApellido?: string;
+  nacionalidad?: string;
+  direccion?: string;
+  ci?: string;
+  celular?: string;
+  fechaNacimiento?: string;
+  estadoPersona?: boolean;
+  carrera?:string
+  semestre?:string
   idDepartamento?:string
   departamento?:string
   idBeca?:string
@@ -13,5 +21,5 @@ export interface Convenio {
   fechaFinal?:any
   fotocopiaCarnet?:string
   solicitudTrabajo?:string
-  estado?:string
+  estadoConvenio?:string
 }

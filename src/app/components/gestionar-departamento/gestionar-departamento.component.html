@@ -90,6 +90,79 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modal-informacion">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Mas información...</h4>
+                </div>
+                <div class="infoConvenio modal-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="box-profile">
+                                <img class="profile-user-img img-responsive img-circle" src="assets/img/departamento.png" alt="User profile picture">
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="box-header with-border">
+                                <h3 class="modal-name"><strong>DEPARTAEMNTO {{ nombreDepartamento | uppercase }}</strong> </h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <hr>
+                        <h4>DATOS DEL JEFE DEL DEPARTAEMNTO</h4>
+                            <div class="col-md-5">
+                                <p><strong><i class="fa fa-user margin-r-5"></i> Nombre completo:</strong></p>                                        
+                                <p><strong><i class="fa fa-credit-card margin-r-5"></i> Carnet de Identidad:</strong></p>                                        
+                                <p><strong><i class="fa fa-flag-checkered margin-r-5"></i> Nacionalidad:</strong></p>
+                                <p><strong><i class="fa fa-map-marker margin-r-5"></i> Dirección:</strong></p>
+                                <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha nacimiento:</strong></p>
+                                <p><strong><i class="fa fa-phone margin-r-5"></i> Celular:</strong></p>
+                                <p><strong><i class="fa fa-dot-circle-o margin-r-5"></i> Estado de registro:</strong></p>
+                            </div>
+                            <div class="col-md-7">
+                                <p>{{ nombreCompleto }}</p>   
+                                <p>{{ ci }}</p>   
+                                <p>{{ nacionalidad }}</p>
+                                <p>{{ direccion }}</p>
+                                <p>{{ fechaNacimiento | date: 'dd/MM/yyyy' }}</p>
+                                <p>{{ celular }}</p>
+                                <p>{{ estadoPersona | estado}}</p>
+                            </div>
+                    </div>
+                    <div class="row">
+                        <hr>
+                        <h4>DATOS DEL DEPARTAEMNTO</h4>
+                            <div class="col-md-5">
+                                <p><strong><i class="fa fa-slack margin-r-5"></i> Código departamento:</strong></p>
+                                <p><strong><i class="fa fa-building margin-r-5"></i> nombre del departamento:</strong></p>
+                                <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha de registro:</strong></p>
+                                <p><strong><i class="fa fa-step-forward margin-r-5"></i> Limite de estudiantes:</strong></p>
+                                <p><strong><i class="fa fa-play margin-r-5"></i> Cant. Est. trabajando:</strong></p>
+                                <p><strong><i class="fa  fa-forward margin-r-5"></i> Cupos:</strong></p>
+                                <p><strong><i class="fa fa-dot-circle-o margin-r-5"></i> Estado del departamento:</strong></p>
+                            </div>
+                            <div class="col-md-7">
+                                <p>{{ codigoDepartamento }}</p>
+                                <p>{{ nombreDepartamento }}</p>
+                                <p>{{ fechaRegistroDepartamento | date: 'dd/MM/yyyy' }}</p>
+                                <p>{{ limiteEstudiante }}</p>
+                                <p>{{ cantidadEstudiantes }}</p>
+                                <p>{{ cupos }}</p>
+                                <p>{{ estadoDepartamento | estado }}</p>
+                            </div>
+                        </div>
+                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Main content -->
     <section class="content">
         <div class="row">
@@ -143,11 +216,11 @@
                                             <td class="text-center"><span class="badge bg-light-blue">{{ departamento.limiteEstudiante }}</span></td>
                                             
                                             <td>
-                                                <a *ngIf="departamento.estadoDepartamento == false" (click)="messageEnableDesable('inactivo')" class="btn btn-block btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
-                                                <a *ngIf="departamento.estadoDepartamento == true" (click)=" messageEnableDesable('activo')" class="btn btn-block btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Desabilitar"><i class="fa fa-close"></i></a>
+                                                <a *ngIf="departamento.estadoDepartamento == false" (click)="editEstadoDepartamento(departamento.idDepartamento, '1'); messageEnableDesable('inactivo')" class="btn btn-block btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
+                                                <a *ngIf="departamento.estadoDepartamento == true" (click)="editEstadoDepartamento(departamento.idDepartamento, '0'); messageEnableDesable('activo')" class="btn btn-block btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Desabilitar"><i class="fa fa-close"></i></a>
                                             </td>
                                             <td><a data-toggle="modal" data-target="#modal-editar" class="btn btn-block btn-default btn-margin" title="Editar"><i class="fa fa-edit"></i></a></td>
-                                            <td><a data-toggle="modal" class="btn btn-block btn-primary btn-margin" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a></td>
+                                            <td><a (click)="getInfoDepartamento(departamento.idDepartamento)" data-toggle="modal" class="btn btn-block btn-primary btn-margin" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a></td>
                                         </tr>
                                     </table>
                                 </div>

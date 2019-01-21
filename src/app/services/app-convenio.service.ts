@@ -16,9 +16,8 @@ export class AppConvenioService {
   constructor(private _http:HttpClient) { }
 
   getConvenios(): Observable<Convenio[]>{
-
     return this._http.get<Convenio[]>(this.listaUserURL).pipe(map(res => res));
-    }
+  }
 
   getConvenio(key$: string): Observable<Convenio[]> {
     let url = `${this.listaUserURL}/${key$}`;
@@ -32,7 +31,6 @@ export class AppConvenioService {
     });
 
     return this._http.post<Convenio[]>(this.listaUserURL, body, { headers })
-      //.pipe(map( res => {return res}));
       .pipe();
   }
 

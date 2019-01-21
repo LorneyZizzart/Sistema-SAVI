@@ -17,4 +17,13 @@ export interface Persona {
   usuario?: string;
   password?: string;
   estadoUsuario?: string
+//Se utiliza para dar info del estudiante en convenio
+  departamento?:string;
+  beca?:string;
+  estadoConvenio?:boolean;
+  fechaInicio?:string;
+  fechaFinal?:string;
+  fotocopiaCarnet?:boolean;
+  solicitudTrabajo?:boolean;
+
 }

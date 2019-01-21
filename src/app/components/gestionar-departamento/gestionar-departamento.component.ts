@@ -18,13 +18,28 @@ export class GestionarDepartamentoComponent implements OnInit {
   MessageDesable:Boolean = false;
   //DEPARTAMENTO
   departamentos:Departamento[];
-  departamento:Departamento = {
-    nombreDepartamento:""
-  }
+  departamento:Departamento = {}
 
   editDepartamento:Departamento = {
     nombreDepartamento:""
   }
+  //Info Departamento
+    codigoDepartamento:string;
+    nombreCompleto:string;
+    nacionalidad: string;
+    direccion: string;
+    ci: string;
+    celular: string;
+    fechaNacimiento: string;
+    estadoPersona;
+    estadoDepartamento;
+    fechaRegistroDepartamento:string;
+    limiteEstudiante:string;
+    nombreDepartamento:string;
+    cantidadEstudiantes:string = "3"; //falta aun sumar and restar
+    cupos:string = "5"; //falta aun sumar and restar
+
+  
   //HISTORIAL DEPARTAMENTO
   maxidDept:Departamento[];
   historialDepartamentos:Departamento[];
@@ -96,6 +111,33 @@ export class GestionarDepartamentoComponent implements OnInit {
       console.log("getMAXdEP: ",this.maxidDept )
   }
 
+  getInfoDepartamento(idDepartamento:string){
+    for(let departamento of this.departamentos){
+      if(departamento.idDepartamento == idDepartamento){
+        if (departamento.segundoNombre == null && departamento.segundoApellido != null ) {
+          this.nombreCompleto = departamento.primerNombre + " " + departamento.primerApellido + " " + departamento.segundoApellido;
+        } else if (departamento.segundoNombre == null && departamento.segundoApellido == null){
+          this.nombreCompleto = departamento.primerNombre + " " + departamento.primerApellido; 
+        }else if (departamento.segundoNombre != null && departamento.segundoApellido == null){ 
+          this.nombreCompleto = departamento.primerNombre + " " + departamento.segundoNombre + " " + departamento.primerApellido;   
+        }else{
+          this.nombreCompleto = departamento.primerNombre + " " + departamento.segundoNombre + " " + departamento.primerApellido + " " + departamento.segundoApellido;
+        }
+        this.nacionalidad = departamento.nacionalidad;
+        this.direccion = departamento.direccion;
+        this.celular = departamento.celular;
+        this.ci = departamento.ci;
+        this.fechaNacimiento = departamento.fechaNacimiento;
+        this.estadoPersona = departamento.estadoPersona;
+        this.codigoDepartamento = departamento.idDepartamento;
+        this.estadoDepartamento = departamento.estadoDepartamento;
+        this.fechaRegistroDepartamento = departamento.fechaRegistroDepartamento;
+        this.limiteEstudiante = departamento.limiteEstudiante;
+        this.nombreDepartamento = departamento.nombreDepartamento;
+      }
+    }
+  }
+
   saveDepartamento(){
     this._appDepartamentoService.postDepartamento(this.departamento)
     .subscribe((departamento:Departamento[]) => {console.log(departamento)});
@@ -105,6 +147,16 @@ export class GestionarDepartamentoComponent implements OnInit {
     let idDepartamento = "1";
     console.log(this.editarDepartamento);
     this._appDepartamentoService.putDepartamento(this.editDepartamento, idDepartamento)
+      .subscribe((data : Departamento[]) => {console.log(data)});
+
+      setTimeout(() => {
+        this.getDepartamentos();
+      }, 2000);
+  }
+
+  editEstadoDepartamento(idDepartamento:string, estado:string){
+    this.departamento.estadoDepartamento = estado;
+    this._appDepartamentoService.putEstadoDepartamento(this.departamento, idDepartamento)
       .subscribe((data : Departamento[]) => {console.log(data)});
 
       setTimeout(() => {

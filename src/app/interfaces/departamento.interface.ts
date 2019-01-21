@@ -2,7 +2,7 @@ export interface Departamento {
   idDepartamento?:string
   nombreDepartamento?:string
   limiteEstudiante?:string
-  fechaRegistro?:string
+  fechaRegistroDepartamento?:string
   estadoDepartamento?:string
   idPersona?: string
   primerNombre?: string

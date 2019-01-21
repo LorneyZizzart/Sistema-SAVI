@@ -19,3 +19,24 @@
 .pad {
     margin: 0 0 -30px 0;
 }
+.modal-name {
+    margin-top: 7%;
+}
+
+.modal-header {
+    color: beige;
+    background: #3C8DBC;
+}
+
+.modal-body {
+    padding-left: 8%;
+}
+
+.modal-footer {
+    background: #ECF0F5;
+}
+
+.infoConvenio{
+    background: #ECF0F5;
+}
+

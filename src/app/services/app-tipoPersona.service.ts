@@ -30,7 +30,6 @@ export class AppTipoPersonaService {
     });
 
     return this._http.post<Persona[]>(this.listaTipoPersonaURL, body, { headers })
-      //.pipe(map( res => {return res}));
       .pipe();
   }
 }

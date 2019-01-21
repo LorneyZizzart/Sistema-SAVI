@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormBuilder, FormGroup } from '@angular/forms';
 import { formatDate, DatePipe } from "@angular/common";
 import { Convenio } from "../../interfaces/convenio.interface";
 import { AppConvenioService } from "../../services/app-convenio.service";
@@ -19,48 +19,54 @@ export class GestionarConvenioComponent implements OnInit {
   estudiantes: Persona [];
   departamentos:Departamento[];
   //alert message
-  MessageSuccess = false;
+  MessageSuccessConvenio:boolean = false;
+  MessageFailConvenio:boolean = false
   estado = false;
+  //Register
   idConvenio = "";
   idEstudiante = "";
   idDepartamento = "";
   idBeca = "";
   fechaInicio = "";
   fechaFinal = "";
-
+  fotocopiaCarnet:boolean = false;
+  solicitud:boolean = false;
+  aceptoTerminos:boolean = false;
   private convenio: Convenio = {
-    idPersona: "",
     idDepartamento: "",
+    idPersona: "",
     idBeca: "",
     fechaInicio: "",
     fechaFinal: "",
     fotocopiaCarnet: "0",
-    solicitudTrabajo: "0",
-    estado: "1"
+    solicitudTrabajo: "0"
   }
+  //Info Estudiante
+  nombreCompleto:string;
+  nacionalidad: string;
+  direccion: string;
+  ci: string;
+  celular: string;
+  fechaNacimiento: string;
+  estadoPersona: boolean;
+  carrera:string
+  semestre:string
+  departamento:string;
+  beca:string;
+  estadoConvenio:string;
+  fotocopiaCI;
+  solicitudWork;
+
+
 
   constructor( private _appConvenioService:AppConvenioService,
               private _appTipoPersonaService:AppTipoPersonaService,
-    private _appDepartamentoService: AppDepartamentoService) {
+    private _appDepartamentoService: AppDepartamentoService,
+    private formBuilder:FormBuilder) {
    }
 
   ngOnInit() {
     this.getConvenios();
-    setTimeout(() => {
-      this.getEstudiantes();
-    }, 4000);
-  }
-
-  ngOnChanges(): void {
-    this.getConvenios();
-    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-    //Add '${implements OnChanges}' to the class.
-  }
-
-  ngOnDestroy(): void {
-    this.getConvenios();
-    this.getEstudiantes();
-    this.getDepartamentos();
   }
 
   //resetear el FORMULARIO no estamos usando
@@ -68,17 +74,12 @@ export class GestionarConvenioComponent implements OnInit {
     formulario.reset({
     });
   }
-
-  mensajeSuccess() {
-    if (!this.MessageSuccess) {
-      this.MessageSuccess = true;
-      setTimeout(() => {
-        this.MessageSuccess = false;
-      }, 10000);
-    }
-
+  activaRegister(){
+    this.getEstudiantes();
+    setTimeout(() => {
+      this.getDepartamentos();
+    }, 2000)
   }
-
   //GESTIONAR CONVENIO
 
   getConvenios(){
@@ -86,13 +87,33 @@ export class GestionarConvenioComponent implements OnInit {
     console.log(this.convenios);
   }
 
+  cambio(){
+    this.solicitud = true;
+  }
+
   saveConvenio(){
     this.convenio.idPersona = this.idEstudiante;
     this.convenio.idDepartamento = this.idDepartamento;
     this.convenio.idBeca = this.idBeca;
-    console.log(this.convenio);
-    this._appConvenioService.postConvenio(this.convenio)
+    if(this.convenio.idPersona != "" && this.convenio.idDepartamento != "" && this.convenio.idBeca ){
+      if(this.solicitud == true){
+        this.convenio.solicitudTrabajo = "1";
+      }else{this.convenio.solicitudTrabajo = "0";}
+      if(this.fotocopiaCarnet == true){
+        this.convenio.fotocopiaCarnet = "1";
+      }else{this.convenio.fotocopiaCarnet = "0";}
+      this._appConvenioService.postConvenio(this.convenio)
       .subscribe((data: Convenio[]) => { console.log(data) });
+      this.MessageSuccessConvenio = true;
+      setTimeout(() => {
+        this.MessageSuccessConvenio = false;
+      }, 8000);
+    }else{
+      this.MessageFailConvenio = true;
+      setTimeout(() => {
+        this.MessageFailConvenio = false;
+      }, 8000);
+    }
   }
 
   editConvenio(){
@@ -104,13 +125,46 @@ export class GestionarConvenioComponent implements OnInit {
   //GESTIONAR TIPO PERSONA
 
   getEstudiantes(){
-    this._appTipoPersonaService.getTipoPersona('5').subscribe((estudiantes: Persona[]) => this.estudiantes = estudiantes);
+    this._appTipoPersonaService.getTipoPersona('5')
+    .subscribe((estudiantes: Persona[]) => this.estudiantes = estudiantes);
     console.log(this.estudiantes);
+  }
+
+  informacionEstudiante(idEstudiante){
+    for(let estudiante of this.convenios){
+      if(estudiante.idPersona == idEstudiante){
+        if (estudiante.segundoNombre == null && estudiante.segundoApellido != null ) {
+          this.nombreCompleto = estudiante.primerNombre + " " + estudiante.primerApellido + " " + estudiante.segundoApellido;
+        } else if (estudiante.segundoNombre == null && estudiante.segundoApellido == null){
+          this.nombreCompleto = estudiante.primerNombre + " " + estudiante.primerApellido; 
+        }else if (estudiante.segundoNombre != null && estudiante.segundoApellido == null){ 
+          this.nombreCompleto = estudiante.primerNombre + " " + estudiante.segundoNombre + " " + estudiante.primerApellido;   
+        }else{
+          this.nombreCompleto = estudiante.primerNombre + " " + estudiante.segundoNombre + " " + estudiante.primerApellido + " " + estudiante.segundoApellido;
+        }
+          this.nacionalidad = estudiante.nacionalidad;
+          this.direccion = estudiante.direccion;
+          this.celular = estudiante.celular;
+          this.ci = estudiante.ci;
+          this.fechaNacimiento = estudiante.fechaNacimiento;
+          this.estadoPersona = estudiante.estadoPersona;
+          this.carrera = estudiante.carrera;
+          this.semestre = estudiante.semestre;
+          this.departamento = estudiante.departamento;
+          this.beca = estudiante.beca;
+          this.estadoConvenio = estudiante.estadoConvenio;
+          this.fechaInicio = estudiante.fechaInicio;
+          this.fechaFinal = estudiante.fechaFinal;
+          this.fotocopiaCI = estudiante.fotocopiaCarnet;
+          this.solicitudWork = estudiante.solicitudTrabajo;
+      }
+    }
   }
 
   //GESTIONAR DEPARTAMENTO
   getDepartamentos(){
-    this._appDepartamentoService.getDepartamentos().subscribe((departamento: Departamento[]) => this.departamentos = departamento);
+    this._appDepartamentoService.getAllDepartamento()
+    .subscribe((departamento: Departamento[]) => this.departamentos = departamento);
     console.log(this.departamentos);
   }
 }
