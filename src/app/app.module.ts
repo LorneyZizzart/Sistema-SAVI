@@ -15,7 +15,7 @@ import { AppInformeEstudianteService } from "./services/app-informe-estudiante.s
 import { AppInformeFinanzasService } from "./services/app-informe-finanzas.service";
 import { AppInformeJefeService } from "./services/app-informe-jefe.service";
 import { AppOrganizacionService } from "./services/app-organizacion.service";
-import { AppRegistroHoraService } from "./services/app-registro-hora.service";
+import { AppRegistroHoraService } from "./services/app-registroHora.service";
 import { AppRolService } from "./services/app-rol.service";
 import { AppTurnoService } from "./services/app-turno.service";
 import { AppUserService } from "./services/app-user.service";
@@ -52,6 +52,9 @@ import { GestionarRolComponent } from './components/gestionar-rol/gestionar-rol.
 import { EstadoPipe } from './pipes/estado.pipe';
 import { MesPipe } from './pipes/mes.pipe';
 import { NavbarJFComponent } from './components/navbar-jf/navbar-jf.component';
+import { GestionarInformeHoyComponent } from './components/gestionar-informe-hoy/gestionar-informe-hoy.component';
+import { HoraPipe } from './pipes/hora.pipe';
+import { MinutoPipe } from './pipes/minuto.pipe';
 
 
 @NgModule({
@@ -80,7 +83,10 @@ import { NavbarJFComponent } from './components/navbar-jf/navbar-jf.component';
     EstadoPipe,
     BoleanpPipe,
     MesPipe,
-    NavbarJFComponent
+    NavbarJFComponent,
+    GestionarInformeHoyComponent,
+    HoraPipe,
+    MinutoPipe
   ],
   imports: [
     BrowserModule,

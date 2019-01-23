@@ -23,6 +23,16 @@
                 <p>Se ha producido un fallo al registrar el Convenio.</p>
         </div>
     </div>
+    <div *ngIf="MessageDesableConvenio == true" class="pad no-print">
+        <div class="callout callout-info">
+            <h4><i class="icon fa fa-check"></i> Convenio Deshabilitado</h4>
+        </div>
+    </div>
+    <div *ngIf="MessageEnableConvenio == true" class="pad no-print">
+        <div class="callout callout-success">
+            <h4><i class="icon fa fa-check"></i> Convenio habilitado</h4>
+        </div>
+    </div>
     <!---MODAL-->
     <div class="modal fade" id="modal-horario">
         <div class="modal-dialog">
@@ -83,72 +93,64 @@
                             <span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">Editar</h4>
                     </div>
+                    <form (ngSubmit)="saveConvenio()" #registroConvenio="ngForm" name="RegistroConvenio" class="form-horizontal">
+
                     <div class="modal-body">
-                        <form (ngSubmit)="saveConvenio()" #registroConvenio="ngForm" name="RegistroConvenio" class="form-horizontal">
-
-                            <div class="row form">
-
-                                <div class="col-md-6">
-
-                                    <div class="form-group">
-                                        <label for="inputName" class="col-sm-3 control-label">Estudiante</label>
-
-                                        <div class="col-sm-9 select-student">
-                                            <select [(ngModel)]="idEstudiante" name="estudiante" class="form-control select2" style="width: 100%;">
-                                                <option *ngFor="let persona of estudiantes" [value]="persona.idPersona">{{ persona.primerNombre }}
-                                                {{ persona.segundoNombre }} {{persona.primerApellido}} {{persona.segundoApellido}}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inputName" class="col-sm-3 control-label">Departamento</label>
-
-                                        <div class="col-sm-9 select-student">
-                                            <select [(ngModel)]="idDepartamento" name="departamento" class="form-control select2" style="width: 100%;">
-                                                <option *ngFor="let departamento of departamentos" [value]="departamento.idDepartamento" >{{ departamento.nombreDepartamento }}</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="box-profile">
+                                    <img class="profile-user-img img-responsive img-circle" src="assets/img/avatar.png" alt="User profile picture">
+                                    <p class="text-muted text-center">650004813</p>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="inputName" class="col-sm-3 control-label">Beca</label>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="box-header with-border">
+                                    <h3 class="modal-name">Jhonny Gutierrez Villca</h3>
+                                </div>
+                            </div>
+                        </div>
 
-                                        <div class="col-sm-9 select-student">
-                                            <select [(ngModel)]="idBeca" name="beca" class="form-control select2" style="width: 100%;">
-                                                <option value="1">Beca Industrial </option>
-                                                <option value="2">Beca Institucional</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                            <div class="row form-edit">
+                                <div class="col-md-12">
+                                        <div class="form-group">
+                                                <label>Departamento:</label>
+                                                <select [(ngModel)]="idDepartamento" name="departamento" class="form-control select2" style="width: 100%;">
+                                                    <option *ngFor="let departamento of departamentos" [value]="departamento.idDepartamento" >{{ departamento.nombreDepartamento }}</option>
+                                                </select>
+                                              </div>
                                 </div>
                                 <div class="col-md-12">
-                                    <div class="col-md-6">
-                                        <div class="form-group dateInicio">
-                                            <label class="col-sm-3">Fecha inicio</label>
-
-                                            <div class="col-md-9 input-group date">
+                                    <div class="form-group">
+                                        <label>Beca:</label>
+                                        <select [(ngModel)]="idBeca" name="beca" class="form-control select2" style="width: 100%;">
+                                                <option value="1">Beca Industrial </option>
+                                                <option value="2">Beca Institucional</option>
+                                        </select>
+                                    </div>                                    
+                                </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Fecha inicio:</label>                                    
+                                            <div class="input-group date">
                                                 <div class="input-group-addon">
-                                                    <i class="fa fa-calendar"></i>
+                                                <i class="fa fa-calendar"></i>
                                                 </div>
                                                 <input [(ngModel)]="convenio.fechaInicio" name="dateInicio" type="text" class="form-control pull-right" id="datepicker" placeholder="2001/01/01">
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group dateFinal">
-                                            <label class="col-sm-3">Fecha final</label>
-                                            <div class="col-md-9 input-group date">
-                                                <div class="input-group-addon">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                                <label>Fecha final:</label>                                    
+                                                <div class="input-group date">
+                                                    <div class="input-group-addon">
                                                     <i class="fa fa-calendar"></i>
+                                                    </div>
+                                                    <input [(ngModel)]="convenio.fechaFinal" name="dateFinal" type="text" class="form-control pull-right" id="datepickers" placeholder="2001/01/01">
                                                 </div>
-                                                <input [(ngModel)]="convenio.fechaFinal" name="dateFinal" type="text" class="form-control pull-right" id="datepicker" placeholder="2001/01/01">
                                             </div>
-                                        </div>
                                     </div>
-                                </div>
                                 <div class="col-md-12 text-center">
-                                    <br>
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label>
@@ -164,21 +166,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="form-group text-center">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" [(ngModel)]="aceptoTerminos" name="aceptoTerminos"> Aceptó los <a href="#">terminos y condiciones del convenio</a>
-                                            </label>
-                                        </div>
-                                    </div>                                
-                                </div>
                             </div>
-                            <div class="col-md-12 text-center">
-                                <button type="submit" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-refresh"></i> Actualizar</button>
-                            </div>
-                        </form>
                     </div>
+                    <div class="modal-footer text-center modal-footer-edit">
+                        <button type="submit" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-refresh"></i> Actualizar</button>
+                    </div>
+                </form>
+
                 </div>
             </div>
         </div>
@@ -303,8 +297,8 @@
                                                 <span *ngIf="convenio.solicitudTrabajo == estado" class="badge bg-red"><i class="fa fa-times"></i></span>
                                             </td>
                                             <td>
-                                                <a *ngIf="convenio.estadoConvenio == true"  class="btn btn-block btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
-                                                <a *ngIf="convenio.estadoConvenio == false"  class="btn btn-block btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
+                                                <a *ngIf="convenio.estadoConvenio == true"  (click)="editEstadoConvenio(convenio.idConvenio, '0'); messageEnableDesable('inactivo')" class="btn btn-block btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
+                                                <a *ngIf="convenio.estadoConvenio == false" (click)="editEstadoConvenio(convenio.idConvenio, '1'); messageEnableDesable('activo')" class="btn btn-block btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
                                             </td>
                                             <td><a data-toggle="modal" class="btn btn-block btn-primary btn-margin" data-target="#modal-horario" title="Ver"><i class="fa fa-eye"></i></a></td>
                                             <td><a (click)="activaRegister()" data-toggle="modal" data-target="#modal-editar" class="btn btn-block btn-default btn-margin" title="Editar"><i class="fa fa-edit"></i></a></td>
@@ -1629,7 +1623,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-12 text-center">
-                                                <button type="submit" class="btn bg-olive btn-flat margin">
+                                                <button type="submit" class="btn btn-primary margin">
                                                   <i class="fa fa-save"></i> Guardar
                                                 </button>
                                             </div>
@@ -1975,7 +1969,7 @@
                                             <div class="box-header with-border">
                                                 <h3 class="box-title">Datos personales</h3>
                                                 <div class="box-tools">
-                                                    <button type="button" class="btn btn-primary">
+                                                    <button type="button" class="btn btn-primary" data-widget="remove">
                                                         <i class="fa fa-plus"></i> Agregar
                                                       </button>
                                                 </div>

@@ -15,6 +15,9 @@ import { Departamento } from 'src/app/interfaces/departamento.interface';
 })
 export class GestionarConvenioComponent implements OnInit {
 
+  //estadoCOnvenio
+  MessageDesableConvenio:boolean = false;
+  MessageEnableConvenio:boolean = false;
   convenios:Convenio [];
   estudiantes: Persona [];
   departamentos:Departamento[];
@@ -32,15 +35,7 @@ export class GestionarConvenioComponent implements OnInit {
   fotocopiaCarnet:boolean = false;
   solicitud:boolean = false;
   aceptoTerminos:boolean = false;
-  private convenio: Convenio = {
-    idDepartamento: "",
-    idPersona: "",
-    idBeca: "",
-    fechaInicio: "",
-    fechaFinal: "",
-    fotocopiaCarnet: "0",
-    solicitudTrabajo: "0"
-  }
+  private convenio: Convenio = {};
   //Info Estudiante
   nombreCompleto:string;
   nacionalidad: string;
@@ -79,6 +74,20 @@ export class GestionarConvenioComponent implements OnInit {
     setTimeout(() => {
       this.getDepartamentos();
     }, 2000)
+  }
+
+  messageEnableDesable(value:string){
+    if (value == 'inactivo') {
+      this.MessageDesableConvenio = true;
+      setTimeout(() => {
+        this.MessageDesableConvenio = false;
+      }, 8000);
+    }else if (value == 'activo') {
+      this.MessageEnableConvenio = true;
+      setTimeout(() => {
+        this.MessageEnableConvenio = false;
+      }, 8000);
+    }
   }
   //GESTIONAR CONVENIO
 
@@ -120,6 +129,15 @@ export class GestionarConvenioComponent implements OnInit {
     console.log(this.convenio);
     // this._appConvenioService.putConvenio(this.convenio, this.idConvenio)
     //   .subscribe((data: Convenio[]) => { console.log(data) });
+  }
+
+  editEstadoConvenio(idConvenio:string, estado:string){
+    this.convenio.estadoConvenio = estado;
+    this._appConvenioService.putEstadoConvenio(this.convenio, idConvenio)
+    .subscribe((data : Convenio[]) => {console.log(data)});
+    setTimeout(() => {
+      this.getConvenios();
+    }, 2000);
   }
 
   //GESTIONAR TIPO PERSONA

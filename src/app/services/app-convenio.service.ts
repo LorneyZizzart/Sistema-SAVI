@@ -44,6 +44,16 @@ export class AppConvenioService {
       .pipe();
   }
 
+  putEstadoConvenio(convenio:Convenio, key$:string): Observable<Convenio[]> {
+    let body = JSON.stringify(convenio);
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    let url = `${this.listaUserURL}/editEstado/${key$}`;
+    return this._http.put<Convenio[]>(url, body, { headers })
+      .pipe();
+  }
+
   deleteConvenio(key$: string) {
     let url = `${this.listaUserURL}/${key$}`;
     return this._http.delete(url).pipe(map(res => res));
