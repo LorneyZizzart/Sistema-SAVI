@@ -22,6 +22,11 @@ export class AppTipoPersonaService {
   getMaxIdPersona() {
     return this._http.get(this.listaTipoPersonaURL).pipe(map(res => res));
   }
+  //Para listar lso estudiantes x departamento
+  getListStudentDepto(idDepartamento:string){
+    let url = `${this.listaTipoPersonaURL}/estDep/${idDepartamento}`;
+    return this._http.get<Persona[]>(url).pipe(map(res => res));
+  }
 
   postEstudiante(estudiante:Persona): Observable<Persona[]> {
     let body = JSON.stringify(estudiante);

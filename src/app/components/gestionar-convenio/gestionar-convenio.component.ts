@@ -96,10 +96,6 @@ export class GestionarConvenioComponent implements OnInit {
     console.log(this.convenios);
   }
 
-  cambio(){
-    this.solicitud = true;
-  }
-
   saveConvenio(){
     this.convenio.idPersona = this.idEstudiante;
     this.convenio.idDepartamento = this.idDepartamento;

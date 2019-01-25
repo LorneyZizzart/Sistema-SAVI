@@ -1,0 +1,186 @@
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+      <h1>
+          Departamento
+          <small> de {{ nombreDepartamento }}</small>
+      </h1>
+      <ol class="breadcrumb">
+          <li><a [routerLink]="['/home']"><i class="fa fa-home"></i> Home</a></li>
+          <li class="active">Informe de hoy</li>
+      </ol>
+  </section>
+<!-- Modal -->
+<!-- <div class="modal fade" id="modal-informacion">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Mas información...</h4>
+          </div>
+          <div class="infoConvenio modal-body">
+              <div class="row">
+                  <div class="col-md-3">
+                      <div class="box-profile">
+                          <img class="profile-user-img img-responsive img-circle" src="assets/img/departamento.png" alt="User profile picture">
+                      </div>
+                  </div>
+                  <div class="col-md-9">
+                      <div class="box-header with-border">
+                          <h3 class="modal-name"><strong>DEPARTAEMNTO {{ nombreDepartamento | uppercase }}</strong> </h3>
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <hr>
+                  <h4>DATOS DEL JEFE DEL DEPARTAEMNTO</h4>
+                      <div class="col-md-5">
+                          <p><strong><i class="fa fa-user margin-r-5"></i> Nombre completo:</strong></p>    
+                      </div>
+                      <div class="col-md-7">
+                          <p>{{ nombreCompleto }}</p>  
+                      </div>
+              </div>
+              <div class="row">
+                  <hr>
+                  <h4>DATOS DEL DEPARTAEMNTO</h4>
+                      <div class="col-md-5">
+                          <p><strong><i class="fa fa-slack margin-r-5"></i> Código departamento:</strong></p>
+                          <p><strong><i class="fa fa-building margin-r-5"></i> Nombre del departamento:</strong></p>
+                          <p><strong><i class="fa fa-money margin-r-5"></i> Costo de hora:</strong></p>
+                          <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha de actualizacion:</strong></p>
+                          <p><strong><i class="fa fa-step-forward margin-r-5"></i> Limite de estudiantes:</strong></p>
+                          <p><strong><i class="fa fa-play margin-r-5"></i> Cant. Est. trabajando:</strong></p>
+                          <p><strong><i class="fa fa-forward margin-r-5"></i> Cupos:</strong></p>
+                          <p><strong><i class="fa fa-dot-circle-o margin-r-5"></i> Estado del departamento:</strong></p>
+                      </div>
+                      <div class="col-md-7">
+                          <p>{{ codigoDepartamento }}</p>
+                          <p>{{ nombreDepartamento }}</p>
+                          <p>{{ costoHora }} Bs.</p>
+                          <p>{{ fechaRegistroHistorialDep | date: 'dd/MM/yyyy' }}</p>
+                          <p>{{ limiteEstudiante }}</p>
+                          <p>{{ cantidadEstudiantes }}</p>
+                          <p>{{ cupos }}</p>
+                          <p>{{ estadoDepartamento | estado }}</p>
+                      </div>
+                  </div>
+              </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+          </div>
+      </div>
+  </div>
+</div> -->
+  <!-- Main content -->
+  <section class="content">
+      <div class="row">
+          <div class="col-md-12">
+              <div class="box box-primary">
+                  <div class="box-header with-border">
+                      <h4 class="page-header"><i class="fa fa-list-ul"></i> Registro de asistencia del {{ fechaHoy | date: 'dd/MM/yyyy'  }}</h4>
+
+                      <div class="btn-opciones box-tools pull-right">
+                            <div class="btn-group">
+                                  <button type="button" class="btn btn-primary  dropdown-toggle" data-toggle="dropdown">Opciones</button>
+                                  <button type="button" class="btn btn-primary  dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                  </button>
+                                  <ul class="dropdown-menu" role="menu">
+                                    <li><a data-toggle="modal" data-target="#modal-informacion" >Informacion</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#">Imorimir</a></li>
+                                    <li><a href="#">Generar PDF</a></li>
+                                  </ul>
+                          </div>
+                          
+                      </div>
+                  </div>
+                  <!-- /.box-header -->
+                  <div class="box-body">
+                      <p>Lista de los estudiantes que ingresaron hoy.</p>                     
+                          <div class="table-responsive pad">
+                              <table class="table table-bordered table-hover ">
+                                  <tr>
+                                      <th style="width: 10px">#</th>
+                                      <th class="text-center">Cod.</th>
+                                      <th>Nombre completo</th>
+                                      <th class="text-center">Hora de ingreso</th>
+                                      <th class="text-center">Hora de salida</th>
+                                      <th class="text-center">Area</th>
+                                      <th>Total horas</th>
+                                      <th>Total saldo</th>
+                                      <th class="text-center">Información</th>
+                                      <th class="text-center">Marcar salida</th>
+                                      <th>Opcion</th>
+                                  </tr>
+                                  <tr *ngFor="let registro of informesRegistrosYesterday; let i = index">
+                                      <td>{{i+1}}.</td>
+                                      <td class="text-center">{{registro.idRegistroHora}}</td>
+                                      <td>{{registro.primerNombre}}  {{registro.segundoNombre}} {{registro.primerApellido}} {{registro.segundoApellido}}</td>
+                                      <td class="text-center">{{registro.horaEntrada | hora }}:{{registro.minutoEntrada | minuto}}</td>
+                                      <td *ngIf="registro.horaSalida == null"></td>
+                                      <td *ngIf="registro.horaSalida" class="text-center">{{registro.horaSalida}}:{{registro.minutoSalida}}</td>
+                                      <td>{{registro.nombreArea}}</td>
+                                      <td class="text-center">{{listHours[i+1]}}</td>
+                                      <td>{{listSaldo[i+1]}} Bs.</td>
+                                      <td><a class="btn btn-block btn-primary btn-margin" title="Ver"><i class="fa fa-eye"></i></a></td>
+                                      <td><a (click)="registrarSalida(registro.idRegistroHora)" class="btn btn-block btn-success btn-margin" title="Marcar salida"><i class="fa fa-sign-in"></i></a></td>
+                                      <td><a (click)="eliminarAsistencia(registro.idRegistroHora)" class="btn btn-block btn-danger btn-margin" title="Eliminar"><i class="fa fa-trash"></i></a></td>
+                                  </tr>
+                              </table>
+                          </div>
+                  </div>
+                  <!-- ./box-body -->
+                  <div class="box-footer">
+                          <div class="row">
+                                  <div class="col-md-4 col-sm-6 col-xs-12">
+                                          <div class="info-box border-right">
+                                              <span class="info-box-icon"><i class="fa fa-users"></i></span>
+                  
+                                              <div class="info-box-content">
+                                                  <span class="info-box-text">CANTIDAD DE ESTUDIANTE</span>
+                                                  <span class="info-box-number">{{numStudent}}</span>
+                                              </div>
+                                              <!-- /.info-box-content -->
+                                          </div>
+                                  </div>  
+                                  <div class="col-md-4 col-sm-6 col-xs-12">
+                                      <div class="info-box border-right">
+                                          <span class="info-box-icon"><i class="fa fa-clock-o"></i></span>
+              
+                                          <div class="info-box-content">
+                                              <span class="info-box-text">TOTAL DE HORAS</span>
+                                              <span class="info-box-number">{{numHour}}</span>
+                                          </div>
+                                          <!-- /.info-box-content -->
+                                      </div>
+                                  </div>  
+                                  <div class="col-md-4 col-sm-6 col-xs-12">
+                                      <div class="info-box">
+                                          <span class="info-box-icon"><i class="fa fa-money"></i></span>
+              
+                                          <div class="info-box-content">
+                                              <span class="info-box-text">TOTAL DE SALDO</span>
+                                              <span class="info-box-number">{{totalSaldo}} Bs.</span>
+                                          </div>
+                                          <!-- /.info-box-content -->
+                                      </div>
+                                  </div>                   
+                              </div>
+                      <!-- /.row -->
+                  </div>
+                  <!-- /.box-footer -->
+              </div>
+              <!-- /.box -->
+          </div>
+          <!-- /.col -->
+      </div>
+      <!-- /.row -->
+  </section>
+  <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->

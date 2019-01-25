@@ -16,7 +16,12 @@ export class AppDepartamentoService {
   constructor(private _http: HttpClient) { }
 
   //gestion de Departamentos
-  
+  //Obtener un deppartamento con sus datos actuales y activos
+  getDepartamento(idDepartamento:string){
+    let url = `${this.listaDepartamentoURL}/${idDepartamento}`;
+    return this._http.get<Departamento[]>(url).pipe(map(res => res));
+  }
+
   getAllDepartamento(){
     let url = `${this.listaDepartamentoURL}/all/depts`;
     return this._http.get<Departamento[]>(url).pipe(map(res => res));

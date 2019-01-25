@@ -4,11 +4,11 @@
     <section class="content-header">
         <h1>
             Gestionar
-            <small>Usuarios</small>
+            <small>Departamentos</small>
         </h1>
         <ol class="breadcrumb">
             <li><a [routerLink]="['/home']"><i class="fa fa-home"></i> Home</a></li>
-            <li class="active">Gestión de usuarios</li>
+            <li class="active">Gestión de departamentos</li>
         </ol>
     </section>
     <div *ngIf="MessageDesable == true" class="pad no-print">
@@ -138,17 +138,19 @@
                         <h4>DATOS DEL DEPARTAEMNTO</h4>
                             <div class="col-md-5">
                                 <p><strong><i class="fa fa-slack margin-r-5"></i> Código departamento:</strong></p>
-                                <p><strong><i class="fa fa-building margin-r-5"></i> nombre del departamento:</strong></p>
+                                <p><strong><i class="fa fa-building margin-r-5"></i> Nombre del departamento:</strong></p>
+                                <p><strong><i class="fa fa-money margin-r-5"></i> Costo de hora:</strong></p>
                                 <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha de registro:</strong></p>
                                 <p><strong><i class="fa fa-step-forward margin-r-5"></i> Limite de estudiantes:</strong></p>
                                 <p><strong><i class="fa fa-play margin-r-5"></i> Cant. Est. trabajando:</strong></p>
-                                <p><strong><i class="fa  fa-forward margin-r-5"></i> Cupos:</strong></p>
+                                <p><strong><i class="fa fa-forward margin-r-5"></i> Cupos:</strong></p>
                                 <p><strong><i class="fa fa-dot-circle-o margin-r-5"></i> Estado del departamento:</strong></p>
                             </div>
                             <div class="col-md-7">
                                 <p>{{ codigoDepartamento }}</p>
                                 <p>{{ nombreDepartamento }}</p>
-                                <p>{{ fechaRegistroDepartamento | date: 'dd/MM/yyyy' }}</p>
+                                <p>{{ costoHora }} Bs.</p>
+                                <p>{{ fechaRegistroHistorialDep | date: 'dd/MM/yyyy' }}</p>
                                 <p>{{ limiteEstudiante }}</p>
                                 <p>{{ cantidadEstudiantes }}</p>
                                 <p>{{ cupos }}</p>
@@ -206,7 +208,7 @@
                                             <td>{{ i+1 }}.</td>
                                             <td>{{ departamento.nombreDepartamento }}</td>
                                             <td>{{ departamento.primerNombre }} {{ departamento.segundoNombre }} {{ departamento.primerApellido }} {{ departamento.segundoApellido }}</td>
-                                            <td>{{ departamento.costoHora }}</td>
+                                            <td>{{ departamento.costoHora }} Bs.</td>
                                             <td>{{ departamento.limiteEstudiante }}</td>
                                             <td>
                                                 <div class="progress progress-xs progress-striped active">

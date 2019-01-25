@@ -55,6 +55,7 @@ import { NavbarJFComponent } from './components/navbar-jf/navbar-jf.component';
 import { GestionarInformeHoyComponent } from './components/gestionar-informe-hoy/gestionar-informe-hoy.component';
 import { HoraPipe } from './pipes/hora.pipe';
 import { MinutoPipe } from './pipes/minuto.pipe';
+import { GestionarInformeAyerComponent } from './components/gestionar-informe-ayer/gestionar-informe-ayer.component';
 
 
 @NgModule({
@@ -86,7 +87,8 @@ import { MinutoPipe } from './pipes/minuto.pipe';
     NavbarJFComponent,
     GestionarInformeHoyComponent,
     HoraPipe,
-    MinutoPipe
+    MinutoPipe,
+    GestionarInformeAyerComponent
   ],
   imports: [
     BrowserModule,

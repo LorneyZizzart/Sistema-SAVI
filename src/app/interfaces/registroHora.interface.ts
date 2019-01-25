@@ -2,6 +2,7 @@ export interface RegistroHora {
     idRegistroHora?:string
     idConvenio?:string
     fechaEntrada?:string
+    fechaSalida?:string
     yearEntrada?:string
     monthEntrada?:string
     dayEntrada?:string

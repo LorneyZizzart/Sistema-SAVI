@@ -33,11 +33,12 @@ export class GestionarDepartamentoComponent implements OnInit {
     fechaNacimiento: string;
     estadoPersona;
     estadoDepartamento;
-    fechaRegistroDepartamento:string;
+    fechaRegistroHistorialDep:string;
     limiteEstudiante:string;
     nombreDepartamento:string;
     cantidadEstudiantes:string = "3"; //falta aun sumar and restar
     cupos:string = "5"; //falta aun sumar and restar
+    costoHora:string;
 
   
   //HISTORIAL DEPARTAMENTO
@@ -131,9 +132,10 @@ export class GestionarDepartamentoComponent implements OnInit {
         this.estadoPersona = departamento.estadoPersona;
         this.codigoDepartamento = departamento.idDepartamento;
         this.estadoDepartamento = departamento.estadoDepartamento;
-        this.fechaRegistroDepartamento = departamento.fechaRegistroDepartamento;
+        this.fechaRegistroHistorialDep = departamento.fechaRegistroHistorialDep;
         this.limiteEstudiante = departamento.limiteEstudiante;
         this.nombreDepartamento = departamento.nombreDepartamento;
+        this.costoHora = departamento.costoHora;
       }
     }
   }

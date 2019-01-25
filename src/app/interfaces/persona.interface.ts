@@ -25,5 +25,6 @@ export interface Persona {
   fechaFinal?:string;
   fotocopiaCarnet?:boolean;
   solicitudTrabajo?:boolean;
-
+//SE UTILIZA PARA REGISTRAR ASISTENCIA
+  idConvenio?:string;
 }

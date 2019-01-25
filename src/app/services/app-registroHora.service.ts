@@ -13,13 +13,13 @@ export class AppRegistroHoraService {
 
   constructor(private _http: HttpClient) { }
 
-  getInformeRegisterNow(nameDepartamento:string):Observable<RegistroHora[]>{
-    let url = `${this.listaRegistroHora}/dateNow/${nameDepartamento}`;
+  getInformeRegisterNow(idDepartamento:string):Observable<RegistroHora[]>{
+    let url = `${this.listaRegistroHora}/dateNow/${idDepartamento}`;
     return this._http.get<RegistroHora[]>(url).pipe(map(res => res));
   }
 
-  getInformeRegisterYesterday(nameDepartamento:string):Observable<RegistroHora[]>{
-    let url = `${this.listaRegistroHora}/dateYesterday/${nameDepartamento}`;
+  getInformeRegisterYesterday(idDepartamento:string):Observable<RegistroHora[]>{
+    let url = `${this.listaRegistroHora}/dateYesterday/${idDepartamento}`;
     return this._http.get<RegistroHora[]>(url).pipe(map(res => res));
   }
 
@@ -32,7 +32,17 @@ export class AppRegistroHoraService {
       .pipe ();
   }
 
-  deleteRegistroHora(key$:RegistroHora){
+  putRegistroSalida(idRegistro:string, registro:RegistroHora):Observable<RegistroHora[]>{
+    let body = JSON.stringify(registro);
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    let url = `${this.listaRegistroHora}/${idRegistro}`;
+    return this._http.put<RegistroHora[]>(url, body, { headers })
+      .pipe ();
+  }
+
+  deleteRegistroHora(key$:string){
     let url = `${this.listaRegistroHora}/${key$}`;
     return this._http.delete(url).pipe(map(res => res));
   }
