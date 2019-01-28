@@ -92,7 +92,7 @@
                                   <ul class="dropdown-menu" role="menu">
                                     <li><a data-toggle="modal" data-target="#modal-informacion" >Informacion</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="#">Imprimir</a></li>
+                                    <li><a href="#">Imorimir</a></li>
                                     <li><a href="#">Generar PDF</a></li>
                                   </ul>
                           </div>
@@ -117,7 +117,7 @@
                                       <th class="text-center">Marcar salida</th>
                                       <th>Opcion</th>
                                   </tr>
-                                  <tr *ngFor="let registro of newinformesRegistrosAyer; let i = index">
+                                  <tr *ngFor="let registro of informesRegistrosYesterday; let i = index">
                                       <td>{{i+1}}.</td>
                                       <td class="text-center">{{registro.idRegistroHora}}</td>
                                       <td>{{registro.primerNombre}}  {{registro.segundoNombre}} {{registro.primerApellido}} {{registro.segundoApellido}}</td>

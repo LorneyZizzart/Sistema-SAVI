@@ -69,6 +69,8 @@ export class GestionarDepartamentoComponent implements OnInit {
     idDepartamento:"",
     idPersona:""
   }
+    //Message de confirmacion de delete
+    messageYdelete:boolean = false;
   constructor( private _appDepartamentoService: AppDepartamentoService,
                 private _appDeptOrgService: AppOrganizacionService ) {
     this.getDepartamentos();
@@ -166,8 +168,20 @@ export class GestionarDepartamentoComponent implements OnInit {
       }, 2000);
   }
 
-  deleteDepartameto(){
-    
+  deleteDepartameto(idDepartamento:string){
+    this.codigoDepartamento = idDepartamento;
+  }
+  //una vez confirmado lo eliminamos
+  eliminarDepartamento(){
+    this._appDepartamentoService.deleteDepartamento(this.codigoDepartamento)
+    .subscribe((data : Departamento[]) => {console.log(data)})
+    this.messageYdelete = true;
+    setTimeout(() => {
+      this.getDepartamentos();
+    }, 2000);
+    setTimeout(() => {
+      this.messageYdelete = false;
+    }, 8000);
   }
 
   //GESTION HISTORIAL DEPARTAMENTOS

@@ -16,21 +16,29 @@ export class GestionarInformeAyerComponent implements OnInit {
   nombreDepartamento:string;
   //Registro de ayer
   informesRegistrosAyer:RegistroHora[];
+  newinformesRegistrosAyer:RegistroHora[];
 
   constructor( private _appRegistroHoraService:AppRegistroHoraService) {
-    this.getInformeRegistroYesterday(this.IdDepartamento);
+
 
    }
 
   ngOnInit() {
+    this.getInformeRegistroYesterday(this.IdDepartamento);
     this.fechaHoy = new Date();
   }
 
   getInformeRegistroYesterday(idDepartamento:string){
-    this._appRegistroHoraService.getInformeRegisterYesterday(idDepartamento)
-    .subscribe((registro : RegistroHora[]) => this.informesRegistrosAyer = registro);
+    this._appRegistroHoraService.getInformeRegisterYest(idDepartamento)
+    .subscribe((registro : RegistroHora[]) => {
+        this.informesRegistrosAyer = registro;
 
-    console.log("lista:", this.informesRegistrosAyer);
+       console.log("recibido: ",this.informesRegistrosAyer)
+    });
+    setTimeout(() => {
+    this.newinformesRegistrosAyer =  this.informesRegistrosAyer;
+    console.log("Lista: ",this.newinformesRegistrosAyer);
+    }, 2000);
   }
 
 }

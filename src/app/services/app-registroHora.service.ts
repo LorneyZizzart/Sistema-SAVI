@@ -18,8 +18,8 @@ export class AppRegistroHoraService {
     return this._http.get<RegistroHora[]>(url).pipe(map(res => res));
   }
 
-  getInformeRegisterYesterday(idDepartamento:string):Observable<RegistroHora[]>{
-    let url = `${this.listaRegistroHora}/dateYesterday/${idDepartamento}`;
+  getInformeRegisterYest(idDepartamento:string):Observable<RegistroHora[]>{
+    let url = `${this.listaRegistroHora}/dateYest/informe/${idDepartamento}`;
     return this._http.get<RegistroHora[]>(url).pipe(map(res => res));
   }
 

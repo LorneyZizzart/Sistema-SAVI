@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AppAreaService } from '../../services/app-area.service';
 import { Area } from '../../interfaces/area.interface';
+import { Persona } from '../../interfaces/persona.interface';
+import { AppTipoPersonaService } from '../../services/app-tipoPersona.service';
+
 
 
 @Component({
@@ -9,29 +12,34 @@ import { Area } from '../../interfaces/area.interface';
   styleUrls: ['./gestionar-area.component.css']
 })
 export class GestionarAreaComponent implements OnInit {
-  
+
+  //Id dep Departamento
+  IdDepartamento:string  = "1";
   nameDept:string = "";
   //GestionarArea
-  MessageDelete:boolean = false;
   MessageFailArea:boolean = false;
   MessageSuccessArea:boolean = false;
   MessageEnabled:Boolean = false;
   MessageDisabled:Boolean = false;
   listaAreaDepartamento:Area[];
-  private area:Area = {
-    idDepartamento: "",
-    nombreArea: ""
-  }
-  private estadoUpdate:Area = {
-    estadoArea: ""
-  }
+  private area:Area = {}
+  private estadoUpdate:Area = {}
 
-  constructor( private _appAreaService : AppAreaService) {
+  //Lista de estudiantes del departamento correspondiente
+  estudiantes:Persona[];
+  //PAra registrar asignar area
+  idConvenio:string;
+  idArea:string;
+  //Message de confirmacion de delete
+  messageYdelete:boolean = false;
+
+  constructor( private _appAreaService : AppAreaService, 
+               private _appTipoPersonaService : AppTipoPersonaService) {
     
    }
 
   ngOnInit() {
-    this.getAreaDepartamento("1");
+    this.getAreaDepartamento(this.IdDepartamento);
   }
 
   ngOnDestroy(): void {
@@ -49,6 +57,11 @@ export class GestionarAreaComponent implements OnInit {
         this.MessageEnabled = false;
       }, 8000);
     }
+  }
+
+  getEstudiantes(idDepartamento:string){
+    this._appTipoPersonaService.getListStudentDepto(idDepartamento)
+    .subscribe((estudiantes : Persona[]) => {this.estudiantes =  estudiantes});
   }
 
   getAreaDepartamento(idDepto:string){
@@ -91,15 +104,30 @@ export class GestionarAreaComponent implements OnInit {
   }
 
   editarArea(){}
-  deleteArea(idArea:Area){
-    this._appAreaService.deleteArea(idArea).subscribe((data : Area[])=>{console.log(data)})
-    this.MessageDelete = true;
+  deleteArea(idArea:string){
+    this.idArea = idArea;
+  }
+
+  eliminarArea(){
+    this._appAreaService.deleteArea(this.idArea)
+    .subscribe((data : Area[])=>{console.log(data)})
+    this.messageYdelete = true;
     setTimeout(() => {
-      this.getAreaDepartamento("1");
+    this.getAreaDepartamento(this.IdDepartamento);      
     }, 2000);
     setTimeout(() => {
-      this.MessageDelete = false;
+      this.messageYdelete = false;
     }, 8000);
   }
+
+  //gestionar asignacion area
+  saveAsignarArea(){
+    this.area.idConvenio = this.idConvenio;
+    this.area.idArea = this.idArea;
+
+    this._appAreaService.postAsignarArea(this.area)
+    .subscribe((area : Area[]) => {console.log(area)})
+  }
+
  
 }

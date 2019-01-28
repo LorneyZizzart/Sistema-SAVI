@@ -1,5 +1,6 @@
 export interface Persona {
   idPersona?: string;
+  codEstudiante?: string;
   primerNombre?: string;
   segundoNombre?: string;
   primerApellido?: string;

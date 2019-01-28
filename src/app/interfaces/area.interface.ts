@@ -7,4 +7,5 @@ export interface Area {
   nombreArea?:string
   fechaRegistroArea?:string
   estadoArea?:string
+  idConvenio?:string
 }

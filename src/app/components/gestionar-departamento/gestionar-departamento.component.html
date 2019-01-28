@@ -28,11 +28,16 @@
         </div>
     </div>
     <div *ngIf="MessageFailOrg == true" class="pad no-print">
-            <div class="callout callout-danger">
-                <h4><i class="icon fa fa-check"></i> Fallo en el registro</h4>
-                <p>Se ha producido un fallo al registrar el departamento.</p>
-            </div>
+        <div class="callout callout-danger">
+            <h4><i class="icon fa fa-check"></i> Fallo en el registro</h4>
+            <p>Se ha producido un fallo al registrar el departamento.</p>
         </div>
+    </div>
+    <div *ngIf="messageYdelete == true" class="pad no-print">
+        <div class="callout callout-success">
+            <h4><i class="icon fa fa-check"></i> El departamento fue eliminado satisfactoriamente</h4>
+        </div>
+    </div>
     <!---MODAL-->
     <div class="modal fade" id="modal-editar">
         <div class="modal-dialog">
@@ -164,6 +169,27 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="modal-eliminar">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Confirmar</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row text-center">
+                        <div class="col-md-6">
+                            <button type="button"  data-dismiss="modal" aria-label="Close" class="btn btn-danger">Cancelar</button>
+                        </div>
+                        <div class="col-md-6">
+                            <button (click)="eliminarDepartamento()" data-dismiss="modal" aria-label="Close" type="button" class="btn btn-success">Aceptar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Main content -->
     <section class="content">
@@ -197,12 +223,11 @@
                                             <th>Departamento</th>
                                             <th>Encargado</th>
                                             <th>Costo de hora</th>
-                                            <th>Limite de estudiantes</th>
+                                            <th style="width: 15px">Limite de estudiantes</th>
                                             <th>Cantidades de estudiantes</th>
                                             <th>Cupo</th>
-                                            <th>Estado</th>
-                                            <th>Editar</th>
-                                            <th>Información</th>
+                                            <th style="width: 10px">Estado</th>
+                                            <th style="width: 15%" class="text-center">Opciones</th>
                                         </tr>
                                         <tr *ngFor="let departamento of departamentos; let i = index">
                                             <td>{{ i+1 }}.</td>
@@ -216,13 +241,15 @@
                                                 </div>
                                             </td>
                                             <td class="text-center"><span class="badge bg-light-blue">{{ departamento.limiteEstudiante }}</span></td>
-                                            
-                                            <td>
-                                                <a *ngIf="departamento.estadoDepartamento == false" (click)="editEstadoDepartamento(departamento.idDepartamento, '1'); messageEnableDesable('inactivo')" class="btn btn-block btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
-                                                <a *ngIf="departamento.estadoDepartamento == true" (click)="editEstadoDepartamento(departamento.idDepartamento, '0'); messageEnableDesable('activo')" class="btn btn-block btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Desabilitar"><i class="fa fa-close"></i></a>
+                                            <td class="text-center">
+                                                <a *ngIf="departamento.estadoDepartamento == false" (click)="editEstadoDepartamento(departamento.idDepartamento, '1'); messageEnableDesable('inactivo')" class="btn  btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
+                                                <a *ngIf="departamento.estadoDepartamento == true" (click)="editEstadoDepartamento(departamento.idDepartamento, '0'); messageEnableDesable('activo')" class="btn btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Desabilitar"><i class="fa fa-close"></i></a>
                                             </td>
-                                            <td><a data-toggle="modal" data-target="#modal-editar" class="btn btn-block btn-default btn-margin" title="Editar"><i class="fa fa-edit"></i></a></td>
-                                            <td><a (click)="getInfoDepartamento(departamento.idDepartamento)" data-toggle="modal" class="btn btn-block btn-primary btn-margin" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a></td>
+                                            <td class="text-center">
+                                                <a (click)="getInfoDepartamento(departamento.idDepartamento)" data-toggle="modal" class="btn btn-primary btn-margin" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a>
+                                                <a data-toggle="modal" data-target="#modal-editar" class="btn btn-default btn-margin" title="Editar"><i class="fa fa-edit"></i></a>
+                                                <a (click)="deleteDepartameto(departamento.idDepartamento)" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger btn-margin" title="Eliminar"><i class="fa fa-trash"></i></a>
+                                            </td>
                                         </tr>
                                     </table>
                                 </div>

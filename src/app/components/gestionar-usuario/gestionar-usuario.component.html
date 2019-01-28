@@ -27,6 +27,16 @@
             <h4><i class="icon fa fa-check"></i> Usuario Deshabilitado</h4>
         </div>
     </div>
+    <div *ngIf="messageYdelete == true" class="pad no-print">
+        <div class="callout callout-success">
+            <h4><i class="icon fa fa-check"></i> El usuario fue eliminado satisfactoriamente</h4>
+        </div>
+    </div>
+    <div *ngIf="messageNdelete == true" class="pad no-print">
+        <div class="callout callout-danger">
+            <h4><i class="icon fa fa-check"></i> Se produjo un error al eliminar al usuario</h4>
+        </div>
+    </div>
     <!---MODAL-->
     <div class="modal fade" id="modal-informacion">
         <div class="modal-dialog">
@@ -80,32 +90,28 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="modal-password">
+    <div class="modal fade" id="modal-eliminar">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header text-center">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Usuario</h4>
+                    <h4 class="modal-title">Confirmar</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-5">
-                            <p><strong><i class="fa fa-user margin-r-5"></i> Usuario: </strong> {{ infoUser }}</p>
+                    <div class="row text-center">
+                        <div class="col-md-6">
+                            <button type="button"  data-dismiss="modal" aria-label="Close" class="btn btn-danger">Cancelar</button>
                         </div>
-                        <div class="col-md-7">
-                            <p><strong><i class="fa fa-unlock-alt margin-r-5"></i> Contraseña: </strong> {{ infoPassword }}</p>
-
+                        <div class="col-md-6">
+                            <button (click)="eliminarUser()" data-dismiss="modal" aria-label="Close" type="button" class="btn btn-success">Aceptar</button>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="modal-editar">
+    <!-- <div class="modal fade" id="modal-editar">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -114,7 +120,7 @@
                     <h4 class="modal-title">Editar</h4>
                 </div>
                 <div class="modal-body">
-                    <form [formGroup]="formPersona"  name="formularioEditPersona" class="form-horizontal">
+                    <form name="formularioEditPersona" class="form-horizontal">
 
                         <div class="row row-editar">
                             <div class="col-md-12">
@@ -214,7 +220,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     <!-- Main content -->
     <section class="content">
         <div class="row">
@@ -251,23 +257,23 @@
                                             <th>Nombre de usuario</th>
                                             <th>Rol de Usuario</th>
                                             <th>Estado</th>
-                                            <th>Editar</th>
-                                            <th>Contraseña</th>
-                                            <th>Información</th>
+                                            <th>Opciones</th>
                                         </tr>
                                         <tr *ngFor="let user of userPersona; let i = index">
                                             <td>{{ i+1 }}.</td>
                                             <td>{{ 650004819 + i*3 }}</td>
-                                            <td>{{ user.primerNombre }} {{ user.segundoNombre }} {{ user.primerApellido }} {{ user.segundoApellido }}</td>
+                                            <td>{{ user.primerNombre }} {{ user.segundoNombre | undefinedDato }} {{ user.primerApellido | undefinedDato }} {{ user.segundoApellido | undefinedDato }}</td>
                                             <td>{{ user.usuario }}</td>
                                             <td>{{ user.idRol | rolUser }}</td>
                                             <td>
-                                                <a *ngIf="user.estadoUsuario == true" (click)="editEstadoUser(user.idRol, user.usuario, user.password, 0, user.idUsuario); messageEnableDesable('activo')" class="btn btn-block btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
-                                                <a *ngIf="user.estadoUsuario == false" (click)="editEstadoUser(user.idRol, user.usuario, user.password, 1, user.idUsuario); messageEnableDesable('inactivo')" class="btn btn-block btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
+                                                <a *ngIf="user.estadoUsuario == true" (click)="editEstadoUser(user.idRol, user.usuario, user.password, 0, user.idUsuario); messageEnableDesable('activo')" class="btn btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
+                                                <a *ngIf="user.estadoUsuario == false" (click)="editEstadoUser(user.idRol, user.usuario, user.password, 1, user.idUsuario); messageEnableDesable('inactivo')" class="btn  btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
                                             </td>
-                                            <td><a (click)="buscarEstudianteEditar(user.idPersona)" data-toggle="modal" data-target="#modal-editar" class="btn btn-block btn-default btn-margin" title="Editar"><i class="fa fa-edit"></i></a></td>
-                                            <td><a (click)="buscarEstudiante(user.idPersona)" data-toggle="modal" class="btn btn-block btn-primary btn-margin" data-target="#modal-password" title="Ver"><i class="fa fa-eye"></i></a></td>
-                                            <td><a (click)="buscarEstudiante(user.idPersona)" data-toggle="modal" class="btn btn-block btn-primary btn-margin" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a></td>
+                                            <td>
+                                                <a (click)="buscarEstudiante(user.idPersona)" data-toggle="modal" class="btn btn-primary btn-margin" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a>
+                                                <a (click)="buscarEstudianteEditar(user.idPersona)" data-toggle="modal" data-target="#modal-editar" class="btn btn-default btn-margin" title="Editar"><i class="fa fa-edit"></i></a>
+                                                <a (click)="deleteUser(user.idUsuario)" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger btn-margin" title="Eliminar"><i class="fa fa-trash"></i></a>
+                                            </td>
                                         </tr>
                                     </table>
                                 </div>
@@ -284,7 +290,13 @@
 
                                     <div class="row">
                                         <div class="col-md-7">
+                                            <div class="form-group">
+                                                <label for="inputName" class="col-sm-3 control-label">Código de estudiante</label>
 
+                                                <div class="col-sm-9">
+                                                    <input [(ngModel)]="persona.codEstudiante" name="codEstudiante" type="text" class="form-control" id="pNombre" placeholder="">
+                                                </div>
+                                            </div>
                                             <div class="form-group">
                                                 <label for="inputName" class="col-sm-3 control-label">Primer nombre</label>
 
@@ -398,7 +410,7 @@
 
                                                 <div class="col-sm-9 select-student">
                                                     <select [(ngModel)]='idPersona' name="idPersona" class="form-control select2" style="width: 100%;">
-                                                    <option *ngFor="let persona of personas" [value]="persona.idPersona" >{{ persona.primerNombre }} {{ persona.segundoNombre }} {{ persona.primerApellido }} {{ persona.segundoApellido }}</option>
+                                                    <option *ngFor="let persona of personas" [value]="persona.idPersona" >{{ persona.primerNombre }} {{ persona.segundoNombre | undefinedDato}} {{ persona.primerApellido }} {{ persona.segundoApellido | undefinedDato}}</option>
                                                   </select>
                                                 </div>
                                             </div>
@@ -468,7 +480,7 @@
                                             <div class="col-sm-8 select-student">
                                                 <select [(ngModel)]='idPersona' name="idPersona" class="form-control select2" style="width: 100%;">
                                                 <option *ngFor="let persona of personas" [value]="persona.idPersona" >{{ persona.primerNombre }} {{
-                                                  persona.segundoNombre }} {{persona.primerApellido}} {{persona.segundoApellido}}</option>
+                                                  persona.segundoNombre | undefinedDato }} {{persona.primerApellido}} {{persona.segundoApellido | undefinedDato}}</option>
                                               </select>
                                             </div>
                                         </div>
@@ -518,7 +530,7 @@
                                             </div>
                                             <div class="col-md-12 text-center">
                                                 <button (click)="mensajeSuccess()" type="submit" class="btn btn-primary">
-                                              <i class="fa fa-save"></i> Guardar
+                                              <i class="fa fa-refresh"></i> Actualizar
                                             </button>
                                             </div>
 

@@ -51,7 +51,9 @@ export class GestionarConvenioComponent implements OnInit {
   estadoConvenio:string;
   fotocopiaCI;
   solicitudWork;
-
+  //Message de confirmacion de delete
+  messageYdelete:boolean = false;
+  messageNdelete:boolean = false;
 
 
   constructor( private _appConvenioService:AppConvenioService,
@@ -69,12 +71,6 @@ export class GestionarConvenioComponent implements OnInit {
     formulario.reset({
     });
   }
-  activaRegister(){
-    this.getEstudiantes();
-    setTimeout(() => {
-      this.getDepartamentos();
-    }, 2000)
-  }
 
   messageEnableDesable(value:string){
     if (value == 'inactivo') {
@@ -88,6 +84,12 @@ export class GestionarConvenioComponent implements OnInit {
         this.MessageEnableConvenio = false;
       }, 8000);
     }
+  }
+  activaRegister(){
+    this.getEstudiantes();
+    setTimeout(() => {
+      this.getDepartamentos();
+    }, 2000);
   }
   //GESTIONAR CONVENIO
 
@@ -127,6 +129,29 @@ export class GestionarConvenioComponent implements OnInit {
     //   .subscribe((data: Convenio[]) => { console.log(data) });
   }
 
+  deleteConvenio(idConvenio:string){
+    this.idConvenio = idConvenio;
+  }
+  //Una vez que confirme la eliminacion
+  eliminarConvenio(){
+    if(this.idConvenio != null){
+      this._appConvenioService.deleteConvenio(this.idConvenio)
+      .subscribe((data : Convenio[]) => {console.log(data)})
+      this.messageYdelete = true;
+      setTimeout(() => {
+        this.messageYdelete = false;
+      }, 8000);
+      setTimeout(() => {
+        this.getConvenios();
+      }, 2000);
+    }else{
+      this.messageNdelete = true;
+      setTimeout(() => {
+        this.messageNdelete =  false;
+      }, 8000);
+    }
+  }
+
   editEstadoConvenio(idConvenio:string, estado:string){
     this.convenio.estadoConvenio = estado;
     this._appConvenioService.putEstadoConvenio(this.convenio, idConvenio)
@@ -141,7 +166,6 @@ export class GestionarConvenioComponent implements OnInit {
   getEstudiantes(){
     this._appTipoPersonaService.getTipoPersona('5')
     .subscribe((estudiantes: Persona[]) => this.estudiantes = estudiantes);
-    console.log(this.estudiantes);
   }
 
   informacionEstudiante(idEstudiante){

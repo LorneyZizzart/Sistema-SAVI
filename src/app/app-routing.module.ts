@@ -16,6 +16,8 @@ import { GestionarRolComponent } from './components/gestionar-rol/gestionar-rol.
 import { GestionarTurnoComponent } from './components/gestionar-turno/gestionar-turno.component';
 import { GestionarInformeHoyComponent } from './components/gestionar-informe-hoy/gestionar-informe-hoy.component';
 import { GestionarInformeAyerComponent } from "./components/gestionar-informe-ayer/gestionar-informe-ayer.component";
+import { GestionarInformeYestComponent } from './components/gestionar-informe-yest/gestionar-informe-yest.component';
+
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -30,6 +32,7 @@ const routes: Routes = [
   { path: 'informeJefe', component: GestionarInformeJefeComponent },
   { path: 'organizacion', component: GestionarOrganizacionComponent },
   { path: 'informeHoy', component: GestionarInformeHoyComponent },
+  { path: 'informeYest', component: GestionarInformeYestComponent },
   { path: 'informeAyer', component: GestionarInformeAyerComponent },
   //Falta este modulo registroHora
   { path: 'registroHora', component: GestionarUsuarioComponent },

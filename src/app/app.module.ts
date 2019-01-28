@@ -56,6 +56,10 @@ import { GestionarInformeHoyComponent } from './components/gestionar-informe-hoy
 import { HoraPipe } from './pipes/hora.pipe';
 import { MinutoPipe } from './pipes/minuto.pipe';
 import { GestionarInformeAyerComponent } from './components/gestionar-informe-ayer/gestionar-informe-ayer.component';
+import { GestionarInformeYestComponent } from './components/gestionar-informe-yest/gestionar-informe-yest.component';
+import { UndefineHoraPipe } from './pipes/undefine-hora.pipe';
+import { UndefineSaldoPipe } from './pipes/undefine-saldo.pipe';
+import { UndefinedDatoPipe } from './pipes/undefined-dato.pipe';
 
 
 @NgModule({
@@ -88,7 +92,11 @@ import { GestionarInformeAyerComponent } from './components/gestionar-informe-ay
     GestionarInformeHoyComponent,
     HoraPipe,
     MinutoPipe,
-    GestionarInformeAyerComponent
+    GestionarInformeAyerComponent,
+    GestionarInformeYestComponent,
+    UndefineHoraPipe,
+    UndefineSaldoPipe,
+    UndefinedDatoPipe
   ],
   imports: [
     BrowserModule,

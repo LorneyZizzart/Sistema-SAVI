@@ -41,27 +41,9 @@ export class GestionarUsuarioComponent implements OnInit {
   estudiante:Persona[] = [];
 
   private persona: Persona = {
-    primerNombre: "",
-    segundoNombre: "",
-    primerApellido: "",
-    segundoApellido: "",
-    nacionalidad: "",
-    fechaNacimiento: "",
-    direccion: "",
-    ci: "",
-    celular: ""
   }
 
   private editpersona: Persona = {
-    primerNombre: "",
-    segundoNombre: "",
-    primerApellido: "",
-    segundoApellido: "",
-    nacionalidad: "",
-    fechaNacimiento: "",
-    direccion: "",
-    ci: "",
-    celular: ""
   }
 
   private user: User = {
@@ -70,6 +52,11 @@ export class GestionarUsuarioComponent implements OnInit {
     password: "",
     estado: "0"
   };
+
+  //Confirmacion de eliminar
+  messageYdelete:boolean = false;
+  messageNdelete:boolean = false;
+  idUsuario:string;
 
   constructor( private _appUserService: AppUserService,
               private _appPersonaService: AppPersonaService,
@@ -83,11 +70,6 @@ export class GestionarUsuarioComponent implements OnInit {
 
 
   ngOnDestroy(): void {
-    this.getPersonas();
-    this.saveUser();
-    this.editUsers();
-    this.savePersona();
-    this.editPersonas();
   }
 
   comparacionPassword():Boolean{
@@ -101,41 +83,35 @@ export class GestionarUsuarioComponent implements OnInit {
     formulario.reset({
     });
   }
-//ALERT SUCCESS
-mensajeSuccess(){
-  if (!this.MessageSuccess) {
-    this.MessageSuccess = true;
-    setTimeout(() => {
-      this.MessageSuccess = false;
-    }, 10000);
+  //ALERT SUCCESS
+  mensajeSuccess(){
+    if (!this.MessageSuccess) {
+      this.MessageSuccess = true;
+      setTimeout(() => {
+        this.MessageSuccess = false;
+      }, 10000);
+    }
   }
-}
 
-messageEnableDesable(value:string){
-  if (value == 'inactivo') {
-    this.MessageEnable = true;
-    setTimeout(() => {
-      this.MessageEnable = false;
-    }, 8000);
-  }else if (value == 'activo') {
-    this.MessageDesable = true;
-    setTimeout(() => {
-      this.MessageDesable = false;
-    }, 8000);
+  messageEnableDesable(value:string){
+    if (value == 'inactivo') {
+      this.MessageEnable = true;
+      setTimeout(() => {
+        this.MessageEnable = false;
+      }, 8000);
+    }else if (value == 'activo') {
+      this.MessageDesable = true;
+      setTimeout(() => {
+        this.MessageDesable = false;
+      }, 8000);
+    }
   }
-}
 
-//Gestionar Usuarios
+  //Gestionar Usuarios
   getUsers() {
     this._appUserService.getUsers().subscribe((users: Persona[]) => this.userPersona = users);
-    console.log(this.userPersona);
   }
-
-  // getUser(){
-  //   this._appUserService.getUser('1').subscribe((usuario: User[]) => this.usuario = usuario);
-  //   console.log(this.usuario);
-  // }
-buscarEstudiante(idPersona:string){
+  buscarEstudiante(idPersona:string){
 
     for (let estudiante of this.userPersona) {
       if(estudiante.idPersona == idPersona){
@@ -229,6 +205,10 @@ buscarEstudiante(idPersona:string){
     }, 2000);
   }
 
+  deleteUser(idUsuario:string){
+    this.idUsuario = idUsuario;
+  }
+
   //Gestionar Personas
   getPersonas() {
     this._appPersonaService.getPersonas().subscribe((personas:Persona[]) => this.personas = personas);
@@ -241,10 +221,23 @@ buscarEstudiante(idPersona:string){
     .subscribe((data :Persona[]) => {console.log(data)});
   }
 
-  editPersonas(){
-    console.log(this.editpersona);
-    this._appPersonaService.putPersona(this.editpersona, this.idPersona)
-    .subscribe((data :Persona[]) => {console.log(data)});
+  eliminarUser(){
+    if(this.idUsuario != null){
+      this._appUserService.deleteUser(this.idUsuario)
+        .subscribe((user : User[]) => { console.log(user)});
+      this.messageYdelete = true;
+      setTimeout(() => {
+        this.messageYdelete = false;
+      }, 8000);
+      setTimeout(() => {
+        this.getUsers();
+      }, 3000);
+    }else{
+      this.messageNdelete = true;
+      setTimeout(() => {
+      this.messageNdelete = false;
+      }, 8000);
+    }
   }
 
 }

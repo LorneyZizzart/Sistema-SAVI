@@ -33,6 +33,16 @@
             <h4><i class="icon fa fa-check"></i> Convenio habilitado</h4>
         </div>
     </div>
+    <div *ngIf="messageYdelete == true" class="pad no-print">
+        <div class="callout callout-success">
+            <h4><i class="icon fa fa-check"></i> El convenio fue eliminado satisfactoriamente</h4>
+        </div>
+    </div>
+    <div *ngIf="messageNdelete == true" class="pad no-print">
+        <div class="callout callout-danger">
+            <h4><i class="icon fa fa-check"></i> Se produjo un error al eliminar el convenio</h4>
+        </div>
+    </div>
     <!---MODAL-->
     <div class="modal fade" id="modal-horario">
         <div class="modal-dialog">
@@ -249,6 +259,27 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="modal-eliminar">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Confirmar</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row text-center">
+                        <div class="col-md-6">
+                            <button type="button"  data-dismiss="modal" aria-label="Close" class="btn btn-danger">Cancelar</button>
+                        </div>
+                        <div class="col-md-6">
+                            <button (click)="eliminarConvenio()" data-dismiss="modal" aria-label="Close" type="button" class="btn btn-success">Aceptar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Main content -->
     <section class="content">
         <div class="row">
@@ -268,21 +299,19 @@
                                 <div class="table-responsive pad">
                                     <table class="table table-bordered table-hover">
                                         <tr>
-                                            <th style="width: 10px">#</th>
+                                            <th style="width: 5px">#</th>
                                             <th>Nombre completo</th>
                                             <th>Departamento</th>
                                             <th>Tipo de beca</th>
-                                            <th>Fecha de inicio</th>
-                                            <th>Fecha final</th>
-                                            <th class="text-center">Fotocopia de carnet</th>
-                                            <th class="text-center">Solicitud de trabajo</th>
+                                            <th style="width: 15px" class="text-center">Fecha de inicio</th>
+                                            <th class="text-center">Fecha final</th>
+                                            <th style="width: 10px" class="text-center">Fotocopia de carnet</th>
+                                            <th style="width: 10px" class="text-center">Solicitud trabajo</th>
                                             <th class="text-center">Estado</th>
-                                            <th>Horario</th>
-                                            <th>Editar</th>
-                                            <th>Información</th>
+                                            <th style="width: 15%" class="text-center">Opciones</th>
                                         </tr>
                                         <tr *ngFor="let convenio of convenios; let i = index">
-                                            <td>{{ i+1 }}.</td>
+                                            <td class="text-center">{{ i+1 }}.</td>
                                             <td>{{ convenio.primerNombre }} {{ convenio.segundoNombre }} {{ convenio.primerApellido }} {{ convenio.segundoApellido }}</td>
                                             <td>{{ convenio.departamento }}</td>
                                             <td>{{ convenio.beca }}</td>
@@ -296,13 +325,15 @@
                                                 <span *ngIf="convenio.solicitudTrabajo != estado" class="badge bg-green"><i class="fa fa-check"></i></span>
                                                 <span *ngIf="convenio.solicitudTrabajo == estado" class="badge bg-red"><i class="fa fa-times"></i></span>
                                             </td>
-                                            <td>
-                                                <a *ngIf="convenio.estadoConvenio == true"  (click)="editEstadoConvenio(convenio.idConvenio, '0'); messageEnableDesable('inactivo')" class="btn btn-block btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
-                                                <a *ngIf="convenio.estadoConvenio == false" (click)="editEstadoConvenio(convenio.idConvenio, '1'); messageEnableDesable('activo')" class="btn btn-block btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
+                                            <td class="text-center">
+                                                <a *ngIf="convenio.estadoConvenio == true"  (click)="editEstadoConvenio(convenio.idConvenio, '0'); messageEnableDesable('inactivo')" class="btn btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
+                                                <a *ngIf="convenio.estadoConvenio == false" (click)="editEstadoConvenio(convenio.idConvenio, '1'); messageEnableDesable('activo')" class="btn btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
                                             </td>
-                                            <td><a data-toggle="modal" class="btn btn-block btn-primary btn-margin" data-target="#modal-horario" title="Ver"><i class="fa fa-eye"></i></a></td>
-                                            <td><a (click)="activaRegister()" data-toggle="modal" data-target="#modal-editar" class="btn btn-block btn-default btn-margin" title="Editar"><i class="fa fa-edit"></i></a></td>
-                                            <td><a (click)="informacionEstudiante(convenio.idPersona)" data-toggle="modal" class="btn btn-block btn-primary btn-margin" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a></td>
+                                            <td class="text-center">
+                                                <a (click)="informacionEstudiante(convenio.idPersona)" data-toggle="modal" class="btn btn-primary btn-margin" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a>
+                                                <a data-toggle="modal" data-target="#modal-editar" class="btn btn-default btn-margin" title="Editar"><i class="fa fa-edit"></i></a>
+                                                <a (click)="deleteConvenio(convenio.idConvenio)" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger btn-margin" title="Eliminar"><i class="fa fa-trash"></i></a>
+                                            </td>
                                         </tr>
                                     </table>
                                 </div>

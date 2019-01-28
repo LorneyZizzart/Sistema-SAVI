@@ -68,7 +68,7 @@
                 </div>
                 </div>
             <div class="modal-footer modal-footer-register">
-                <button (click)="prueba()" type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Registrar</button>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Registrar</button>
             </div>
         </form>
         </div>
@@ -155,7 +155,7 @@
                                       <li><a (click)="getEstudiantes(IdDepartamento)" data-toggle="modal" data-target="#modal-registrar" >Registrar</a></li>
                                       <li><a data-toggle="modal" data-target="#modal-informacion" >Informacion</a></li>
                                       <li class="divider"></li>
-                                      <li><a href="#">Imorimir</a></li>
+                                      <li><a href="#">Imprimir</a></li>
                                       <li><a href="#">Generar PDF</a></li>
                                     </ul>
                             </div>
@@ -176,9 +176,8 @@
                                         <th class="text-center">Area</th>
                                         <th>Total horas</th>
                                         <th>Total saldo</th>
-                                        <th class="text-center">Información</th>
                                         <th class="text-center">Marcar salida</th>
-                                        <th>Opcion</th>
+                                        <th>Opciones</th>
                                     </tr>
                                     <tr *ngFor="let registro of informesRegistrosNow; let i = index">
                                         <td>{{i+1}}.</td>
@@ -186,13 +185,15 @@
                                         <td>{{registro.primerNombre}}  {{registro.segundoNombre}} {{registro.primerApellido}} {{registro.segundoApellido}}</td>
                                         <td class="text-center">{{registro.horaEntrada | hora }}:{{registro.minutoEntrada | minuto}}</td>
                                         <td *ngIf="registro.horaSalida == null"></td>
-                                        <td *ngIf="registro.horaSalida" class="text-center">{{registro.horaSalida}}:{{registro.minutoSalida}}</td>
+                                        <td *ngIf="registro.horaSalida" class="text-center">{{registro.horaSalida | hora }}:{{registro.minutoSalida | minuto}}</td>
                                         <td>{{registro.nombreArea}}</td>
-                                        <td class="text-center">{{listHours[i+1]}}</td>
-                                        <td>{{listSaldo[i+1]}} Bs.</td>
-                                        <td><a class="btn btn-block btn-primary btn-margin" title="Ver"><i class="fa fa-eye"></i></a></td>
-                                        <td><a (click)="registrarSalida(registro.idRegistroHora)" class="btn btn-block btn-success btn-margin" title="Marcar salida"><i class="fa fa-sign-in"></i></a></td>
-                                        <td><a (click)="eliminarAsistencia(registro.idRegistroHora)" class="btn btn-block btn-danger btn-margin" title="Eliminar"><i class="fa fa-trash"></i></a></td>
+                                        <td class="text-center">{{listHours[i+1] | undefineHora}}</td>
+                                        <td>{{listSaldo[i+1] | undefineSaldo}} Bs.</td>
+                                        <td class="text-center"><a (click)="registrarSalida(registro.idRegistroHora)" class="btn btn-success btn-margin" title="Marcar salida"><i class="fa fa-sign-in"></i></a></td>
+                                        <td class="text-center">
+                                            <a class="btn btn-primary btn-margin" title="Ver"><i class="fa fa-eye"></i></a>
+                                            <a (click)="eliminarAsistencia(registro.idRegistroHora)" class="btn btn-danger btn-margin" title="Eliminar"><i class="fa fa-trash"></i></a>
+                                        </td>
                                     </tr>
                                 </table>
                             </div>

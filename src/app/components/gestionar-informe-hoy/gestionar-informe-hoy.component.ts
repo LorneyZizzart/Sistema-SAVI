@@ -59,8 +59,8 @@ export class GestionarInformeHoyComponent implements OnInit {
   ngOnInit() {
     this.getDepartament(this.IdDepartamento);
     this.getInformeRegisterNow(this.IdDepartamento);
-
   }
+
 
   calculadoraSaldo(hora, saldo){
     var hour = parseInt(hora.substr(0,2));
@@ -127,8 +127,16 @@ export class GestionarInformeHoyComponent implements OnInit {
     horatotal.setHours(horatotale[0]);
     horatotal.setMinutes(horatotale[1]);
     horatotal.setSeconds(horatotale[2]);
-    
-    return horatotal.getHours()+":"+horatotal.getMinutes()+":"+horatotal.getSeconds();
+    var hour = horatotal.getHours();
+    var min = horatotal.getMinutes();
+
+    if (hour < 10 && min < 10){
+      return "0"+hour+":"+"0"+min;
+    }else if (hour < 10 && min >= 10){
+      return "0"+hour+":"+min;
+    }else if (hour >= 10 && min < 10){
+      return hour+":"+"0"+min;
+    }
   }
 
   getInformeRegisterNow(idDepartamento:string){
@@ -169,8 +177,12 @@ export class GestionarInformeHoyComponent implements OnInit {
         this.totalSaldo = numMoney + this.totalSaldo;
         this.listSaldo.push(numMoney);
         this.listHours.push(processHours);
+      }else{
+        this.listSaldo.push("0");
+        this.listHours.push("00:00");
       }
     }
+    console.log(this.listSaldo);
   }
   //PARA OBTENER LOS DATOS DEL DEPARTAMENTO LUEGO SE PARA AL METODO infoDepartamento
   getDepartament(idDepartamento:string){
