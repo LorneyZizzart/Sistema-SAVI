@@ -5,6 +5,9 @@ import { AppDepartamentoService } from '../../services/app-departamento.service'
 import { Departamento } from '../../interfaces/departamento.interface';
 import { Persona } from '../../interfaces/persona.interface';
 import { AppTipoPersonaService } from '../../services/app-tipoPersona.service';
+import { InformeEstudiante } from '../../interfaces/informe-estudiante.interface';
+import { AppInformeEstudianteService } from '../../services/app-informe-estudiante.service';
+
 
 
 
@@ -18,6 +21,7 @@ export class GestionarInformeHoyComponent implements OnInit {
   
   //Variable global para almacenar el id del departamento
   IdDepartamento:string = "1"
+  fechaHoy:any;
   //FOOTER
   numStudent:number = 0;
   numHour:any = '00:00';
@@ -35,8 +39,9 @@ export class GestionarInformeHoyComponent implements OnInit {
   registro:RegistroHora = {};
   idConvenio:string;
   //Info del Departamento
+  idRegistro:string;
   codigoDepartamento:string;
-  nombreCompleto:string;
+  nombreJefe:string;
   estadoDepartamento;
   fechaRegistroHistorialDep:string;
   limiteEstudiante:string;
@@ -50,40 +55,67 @@ export class GestionarInformeHoyComponent implements OnInit {
   messageDelete:boolean = false;
   messageSuccess:boolean = false;
   messageFail:boolean = false;
+  //para guardar el informe de estudiante
+  informeEstudiante:InformeEstudiante = {}
+  //Info Estudiante
+  nombreCompleto:string;
+  nacionalidad: string;
+  direccion: string;
+  ci: string;
+  celular: string;
+  fechaNacimiento: string;
+  estadoPersona: boolean;
+  carrera:string
+  semestre:string
+  beca:string;
+  estadoConvenio:boolean;
+  fotocopiaCI;
+  solicitudWork;
+  fechaInicio;
+  fechaFinal;
+
 
   constructor(private _appRegistroHoraService:AppRegistroHoraService,
               private _appDepartamentoService:AppDepartamentoService,
-              private _appTipoPersonaService:AppTipoPersonaService ) { 
+              private _appTipoPersonaService:AppTipoPersonaService,
+              private _appInformeEstudianteService:AppInformeEstudianteService ) { 
   }
 
   ngOnInit() {
+    this.fechaHoy = new Date();
     this.getDepartament(this.IdDepartamento);
     this.getInformeRegisterNow(this.IdDepartamento);
+    this.getEstudiantes(this.IdDepartamento);
   }
 
 
   calculadoraSaldo(hora, saldo){
     var hour = parseInt(hora.substr(0,2));
     var min = parseInt(hora.substr(3,2));
-    var auxSaldo = parseInt(saldo);
+    var auxSaldo = parseFloat(saldo);
     var totalSald;
 
-    if(min >= 0 && min <= 30){
-      auxSaldo = auxSaldo/2;
-    }else if(min>=31 && min <= 60){
-      auxSaldo = saldo;
+    if(min >= 0 && min <= 7){
+      auxSaldo = 0 ;
+    }else if(min >=8 && min <= 10){
+      auxSaldo = auxSaldo/6 * 1;
+    }    else if(min >=11 && min <= 20){
+      auxSaldo = auxSaldo/6 * 2;
+    }else if(min >=21 && min <= 30){
+      auxSaldo = auxSaldo/6 * 3;
+    }else if(min >=31 && min <= 40){
+      auxSaldo = auxSaldo/6 * 4;
+    }else if(min >=41 && min <= 50){
+      auxSaldo = auxSaldo/6 * 5;
+    }else if(min >=51 && min <= 60){
+      auxSaldo = auxSaldo
     }
-    if(hour != 0){
+    
       var balance = hour * saldo;
       var saldo1 = parseFloat(balance.toString());
       var saldo2 = parseFloat(auxSaldo.toString());
       totalSald = saldo1 + saldo2;
-    }else if (hour == 0 && min < 45){
-      totalSald = 0;
-    }else if (hour == 0 && min > 44){
-      totalSald = parseInt(saldo);
-    }
-    
+
     return totalSald;
   }
 
@@ -129,25 +161,46 @@ export class GestionarInformeHoyComponent implements OnInit {
     horatotal.setSeconds(horatotale[2]);
     var hour = horatotal.getHours();
     var min = horatotal.getMinutes();
-
+    
     if (hour < 10 && min < 10){
       return "0"+hour+":"+"0"+min;
     }else if (hour < 10 && min >= 10){
       return "0"+hour+":"+min;
     }else if (hour >= 10 && min < 10){
       return hour+":"+"0"+min;
+    }else if (hour >= 10 && min >= 10){
+      return hour+":"+min;
     }
+  }
+
+  sumarHorasTotal(hora1, hora2) {
+    var horas1=hora1.split(":");
+    var horas2=hora2.split(":");
+    var horatotale = new Array();
+    for(let a=0;a<3;a++){
+    horas1[a]=(isNaN(parseInt(horas1[a])))?0:parseInt(horas1[a])
+    horas2[a]=(isNaN(parseInt(horas2[a])))?0:parseInt(horas2[a])
+    horatotale[a]=(horas1[a]+horas2[a]); // Suma o resta 
+    }
+    if(horatotale[1] > 60){
+      horatotale[1] = horatotale[1] - 60;
+      horatotale[0] = horatotale[0] + 1;
+    }
+    return horatotale[0]+":"+horatotale[1];
   }
 
   getInformeRegisterNow(idDepartamento:string){
     this._appRegistroHoraService.getInformeRegisterNow(idDepartamento)
     .subscribe((registro : RegistroHora[]) => {this.informesRegistrosNow = registro});
+    
     setTimeout(() => {
       this.listHours = ['00:00'];
+      this.listSaldo= ['0'];
       this.numStudent = 0;
       this.numHour= '00:00';
+      this.totalSaldo = 0;
       this.totalDatos();   
-      }, 4000);
+      }, 2000);
   }
 
   totalDatos(){
@@ -172,17 +225,16 @@ export class GestionarInformeHoyComponent implements OnInit {
         }else{auxMS = registro.minutoSalida;}
         horaFinal = auxHS + ":" + auxMS;
         processHours = this.restarHoras(horaInicio, horaFinal);
-        this.numHour = this.sumarHoras(this.numHour, processHours);
+        this.numHour = this.sumarHorasTotal(this.numHour, processHours);
         numMoney = this.calculadoraSaldo(processHours, this.costoHora);
         this.totalSaldo = numMoney + this.totalSaldo;
         this.listSaldo.push(numMoney);
         this.listHours.push(processHours);
       }else{
-        this.listSaldo.push("0");
-        this.listHours.push("00:00");
+        this.listSaldo.push('0');
+        this.listHours.push('00:00');
       }
     }
-    console.log(this.listSaldo);
   }
   //PARA OBTENER LOS DATOS DEL DEPARTAMENTO LUEGO SE PARA AL METODO infoDepartamento
   getDepartament(idDepartamento:string){
@@ -198,17 +250,48 @@ export class GestionarInformeHoyComponent implements OnInit {
     .subscribe((estudiantes : Persona[]) => {this.estudiantes = estudiantes});
   }
 
+  informacionEstudiante(idEstudiante){
+    for(let estudiante of this.estudiantes){
+      if(estudiante.idPersona == idEstudiante){
+        if (estudiante.segundoNombre == null && estudiante.segundoApellido != null ) {
+          this.nombreCompleto = estudiante.primerNombre + " " + estudiante.primerApellido + " " + estudiante.segundoApellido;
+        } else if (estudiante.segundoNombre == null && estudiante.segundoApellido == null){
+          this.nombreCompleto = estudiante.primerNombre + " " + estudiante.primerApellido; 
+        }else if (estudiante.segundoNombre != null && estudiante.segundoApellido == null){ 
+          this.nombreCompleto = estudiante.primerNombre + " " + estudiante.segundoNombre + " " + estudiante.primerApellido;   
+        }else{
+          this.nombreCompleto = estudiante.primerNombre + " " + estudiante.segundoNombre + " " + estudiante.primerApellido + " " + estudiante.segundoApellido;
+        }
+          this.nacionalidad = estudiante.nacionalidad;
+          this.direccion = estudiante.direccion;
+          this.celular = estudiante.celular;
+          this.ci = estudiante.ci;
+          this.fechaNacimiento = estudiante.fechaNacimiento;
+          this.estadoPersona = estudiante.estadoPersona;
+          this.carrera = estudiante.carrera;
+          this.semestre = estudiante.semestre;
+          this.nombreDepartamento = estudiante.departamento;
+          this.beca = estudiante.beca;
+          this.estadoConvenio = estudiante.estadoConvenio;
+          this.fechaInicio = estudiante.fechaInicio;
+          this.fechaFinal = estudiante.fechaFinal;
+          this.fotocopiaCI = estudiante.fotocopiaCarnet;
+          this.solicitudWork = estudiante.solicitudTrabajo;
+      }
+    }
+  }
+
   infoDepartamento(idDepartamento:string){
     for(let departamento of this.departamento){
       if(departamento.idDepartamento == idDepartamento){
         if (departamento.segundoNombre == null && departamento.segundoApellido != null ) {
-          this.nombreCompleto = departamento.primerNombre + " " + departamento.primerApellido + " " + departamento.segundoApellido;
+          this.nombreJefe = departamento.primerNombre + " " + departamento.primerApellido + " " + departamento.segundoApellido;
         } else if (departamento.segundoNombre == null && departamento.segundoApellido == null){
-          this.nombreCompleto = departamento.primerNombre + " " + departamento.primerApellido; 
+          this.nombreJefe = departamento.primerNombre + " " + departamento.primerApellido; 
         }else if (departamento.segundoNombre != null && departamento.segundoApellido == null){ 
-          this.nombreCompleto = departamento.primerNombre + " " + departamento.segundoNombre + " " + departamento.primerApellido;   
+          this.nombreJefe = departamento.primerNombre + " " + departamento.segundoNombre + " " + departamento.primerApellido;   
         }else{
-          this.nombreCompleto = departamento.primerNombre + " " + departamento.segundoNombre + " " + departamento.primerApellido + " " + departamento.segundoApellido;
+          this.nombreJefe = departamento.primerNombre + " " + departamento.segundoNombre + " " + departamento.primerApellido + " " + departamento.segundoApellido;
         }
           this.codigoDepartamento = departamento.idDepartamento;
           this.nombreDepartamento = departamento.nombreDepartamento;
@@ -253,8 +336,32 @@ export class GestionarInformeHoyComponent implements OnInit {
     }, 2000);
   }
 
+  registrarAprovacion(idRegistro:string, aprobado:string, fecha:string, idRegistroHora:string){
+    this.registro.aprovadoRegistroHora = aprobado;
+    this._appRegistroHoraService.putRegsitroAprovacion(idRegistro, this.registro)
+    .subscribe((data : RegistroHora[]) => {console.log(data)});
+
+    if(aprobado == '1'){
+      setTimeout(() => {
+      this.saveInformeEstudiante(idRegistro);        
+      }, 1000);
+    }else{
+      setTimeout(() => {
+        this.eliminarInformeEstudiante(fecha, idRegistroHora);     
+        }, 1000);
+    }
+
+    setTimeout(() => {
+      this.getInformeRegisterNow(this.IdDepartamento);
+    }, 2000);
+  }
+
   eliminarAsistencia(idRegistro:string){
-    this._appRegistroHoraService.deleteRegistroHora(idRegistro)
+   this.idRegistro = idRegistro;
+  }
+
+  confirmacionDelete(){
+    this._appRegistroHoraService.deleteRegistroHora(this.idRegistro)
     .subscribe((data : RegistroHora[]) => {console.log(data)});
     this.messageDelete = true;
     setTimeout(() => {
@@ -263,6 +370,27 @@ export class GestionarInformeHoyComponent implements OnInit {
     setTimeout(() => {
       this.getInformeRegisterNow(this.IdDepartamento);
     }, 2000);
+  }
+  //GESTION DE INFORME ESTUDIANTE
+  saveInformeEstudiante(idRegistroHora:string){
+    var i = 0;
+    for(var informe of this.informesRegistrosNow){
+      i++;
+      if(informe.idRegistroHora == idRegistroHora){
+        this.informeEstudiante.idRegistroHora = informe.idRegistroHora;
+        this.informeEstudiante.fecha = informe.fechaEntrada;
+        this.informeEstudiante.totalHoras = this.listHours[i];
+        this.informeEstudiante.totalSaldo = this.listSaldo[i];
+        
+        this._appInformeEstudianteService.postInformeEstudiante(this.informeEstudiante)
+        .subscribe((informe : InformeEstudiante[]) => {console.log(informe)});
+      }
+    }  
+  }
+
+  eliminarInformeEstudiante(fecha:string, idRegistroHora:string){
+    this._appInformeEstudianteService.deleteInformeEstudiante(fecha, idRegistroHora)
+    .subscribe((data : InformeEstudiante[]) => {console.log(data)});
   }
 
 }

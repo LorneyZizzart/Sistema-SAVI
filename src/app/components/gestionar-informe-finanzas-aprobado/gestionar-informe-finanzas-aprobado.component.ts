@@ -1,25 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import { InformeEstudiante } from '../../interfaces/informe-estudiante.interface';
-import { AppInformeEstudianteService } from '../../services/app-informe-estudiante.service';
 import { InformeFinanzas } from '../../interfaces/informe-finanzas.interface';
 import { AppInformeFinanzasService } from '../../services/app-informe-finanzas.service';
-
+import { InformeEstudiante } from '../../interfaces/informe-estudiante.interface';
+import { AppInformeEstudianteService } from '../../services/app-informe-estudiante.service';
 
 @Component({
-  selector: 'app-gestionar-informe-finanzas',
-  templateUrl: './gestionar-informe-finanzas.component.html',
-  styleUrls: ['./gestionar-informe-finanzas.component.css']
+  selector: 'app-gestionar-informe-finanzas-aprobado',
+  templateUrl: './gestionar-informe-finanzas-aprobado.component.html',
+  styleUrls: ['./gestionar-informe-finanzas-aprobado.component.css']
 })
-export class GestionarInformeFinanzasComponent implements OnInit {
+export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
+
   //iDUSUARIO
   IdUsuario:string = "4";
-  //FOOTER
-  numStudent:number = 0;
-  numHour:any = '00:00';
-  totalSaldo:any = 0;
-  //Lista de los estudiantes del total horas/saldos
-  listInformeEstudiante:InformeEstudiante[];
-  //Info Estudiante
+  informeFinanzas:InformeFinanzas[];
+   //FOOTER
+   numStudent:number = 0;
+   numHour:any = '00:00';
+   totalSaldo:any = 0;
+   //Info Estudiante
   nombreCompleto:string;
   nacionalidad: string;
   direccion: string;
@@ -38,17 +37,18 @@ export class GestionarInformeFinanzasComponent implements OnInit {
   fechaFinal;
   // aprobar informe estudiante x finanzas
   informeEstudiante:InformeEstudiante = {};
-  //save informe finanzas
-  informeFinanzas:InformeFinanzas = {};
   //messagge aprobacion and not 
-  MessageInformeAprobado:boolean=false;
   MessageInformeNoAprobado:boolean=false;
+  //para archivar
+  informesFinanzas:InformeFinanzas = {};
+  //messsage de archivar
+  MessageInformeArchivado:boolean = false;
 
   constructor( private _appInformeEstudianteService:AppInformeEstudianteService,
-              private _appInformeFinanzasService:AppInformeFinanzasService) { }
+    private _appInformeFinanzasService:AppInformeFinanzasService) { }
 
   ngOnInit() {
-    this.getInfomeEstudiante();
+    this.getInformFinanzas();
   }
 
   sumarHoras(hora1, hora2) {
@@ -68,18 +68,18 @@ export class GestionarInformeFinanzasComponent implements OnInit {
   }
 
   totalDatos(){
-    for(let registro of this.listInformeEstudiante){
+    for(let registro of this.informeFinanzas){
       this.numStudent++;
       this.numHour = this.sumarHoras(this.numHour, registro.totalHoras);
       this.totalSaldo = parseFloat(this.totalSaldo) + parseFloat(registro.totalSaldo);
     }
   }
 
-  //informe Estudiante
-  getInfomeEstudiante(){
-    this._appInformeEstudianteService.getInformeEstudianteAll()
-    .subscribe((informe : InformeEstudiante[]) => {this.listInformeEstudiante = informe})
+  getInformFinanzas(){
+    this._appInformeFinanzasService.getInformesFinanzas()
+    .subscribe((informe : InformeFinanzas[]) => {this.informeFinanzas = informe})
     setTimeout(() => {
+      console.log(this.informeFinanzas);
       this.numStudent = 0;
       this.numHour= '00:00';
       this.totalSaldo = 0;
@@ -88,7 +88,7 @@ export class GestionarInformeFinanzasComponent implements OnInit {
   }
 
   informacionEstudiante(idEstudiante){
-    for(let estudiante of this.listInformeEstudiante){
+    for(let estudiante of this.informeFinanzas){
       if(estudiante.idPersona == idEstudiante){
         if (estudiante.segundoNombre == null && estudiante.segundoApellido != null ) {
           this.nombreCompleto = estudiante.primerNombre + " " + estudiante.primerApellido + " " + estudiante.segundoApellido;
@@ -118,17 +118,6 @@ export class GestionarInformeFinanzasComponent implements OnInit {
     }
   }
 
-  registrarInformeFinanzas(idInformeEstudiante:string){
-    this.informeFinanzas.idUsuario = this.IdUsuario;
-    this.informeFinanzas.idInformeEstudiante = idInformeEstudiante;
-    this._appInformeFinanzasService.postInformeFinanzas(this.informeFinanzas)
-    .subscribe((informe : InformeFinanzas []) => {console.log(informe)});
-    this.MessageInformeAprobado=true;
-    setTimeout(() => {
-      this.MessageInformeAprobado=false;
-    }, 6000);
-  }
-  //no se utiliza este metodo en este componente
   eliminarInformeFinanzas(idInformeEstudiante:string){
     this._appInformeFinanzasService.deleteInformeFinanzas(idInformeEstudiante)
     .subscribe((data: InformeFinanzas[]) => {console.log(data)});
@@ -143,18 +132,28 @@ export class GestionarInformeFinanzasComponent implements OnInit {
     this._appInformeEstudianteService.putInformeEstudianteAprobarFinanzas(idInformeEstudiante, this.informeEstudiante)
     .subscribe((informe : InformeEstudiante[]) => {console.log(informe)});
 
-    if(opcion == "1"){
-      setTimeout(() => {
-        this.registrarInformeFinanzas(idInformeEstudiante);
-      }, 1000);
-    }else{
+    if(opcion == "0"){
       setTimeout(() => {
         this.eliminarInformeFinanzas(idInformeEstudiante);
       }, 1000);
     }
     setTimeout(() => {
-      this.getInfomeEstudiante();
+      this.getInformFinanzas();
     }, 2000);
   }
+
+  archivarInformeFinanzas(idInformeFinanzas:string){
+    this.informesFinanzas.archivar = "SI";
+    this._appInformeFinanzasService.putInformeFinanzasArchivar(idInformeFinanzas, this.informesFinanzas)
+    .subscribe((informe : InformeFinanzas[]) => {console.log(informe)});
+    this.MessageInformeArchivado = true;
+    setTimeout(() => {
+    this.MessageInformeArchivado = false;      
+    }, 6000);
+    setTimeout(() => {
+      this.getInformFinanzas();
+    }, 2000);
+  }
+
 
 }

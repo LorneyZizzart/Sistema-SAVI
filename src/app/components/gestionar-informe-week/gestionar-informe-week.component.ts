@@ -1,53 +1,57 @@
 import { Component, OnInit } from '@angular/core';
-import { RegistroHora } from '../../interfaces/registroHora.interface';
-import { AppRegistroHoraService } from '../../services/app-registroHora.service';
 import { AppDepartamentoService } from '../../services/app-departamento.service';
 import { Departamento } from '../../interfaces/departamento.interface';
-import { Persona } from '../../interfaces/persona.interface';
-import { AppTipoPersonaService } from '../../services/app-tipoPersona.service';
+import { AppRegistroHoraService } from '../../services/app-registroHora.service';
+import { RegistroHora } from '../../interfaces/registroHora.interface';
 import { InformeEstudiante } from '../../interfaces/informe-estudiante.interface';
 import { AppInformeEstudianteService } from '../../services/app-informe-estudiante.service';
+import { Persona } from '../../interfaces/persona.interface';
+import { AppTipoPersonaService } from '../../services/app-tipoPersona.service';
+
+
 
 
 @Component({
-  selector: 'app-gestionar-informe-ayer',
-  templateUrl: './gestionar-informe-ayer.component.html',
-  styleUrls: ['./gestionar-informe-ayer.component.css']
+  selector: 'app-gestionar-informe-week',
+  templateUrl: './gestionar-informe-week.component.html',
+  styleUrls: ['./gestionar-informe-week.component.css']
 })
-export class GestionarInformeAyerComponent implements OnInit {
+export class GestionarInformeWeekComponent implements OnInit {
 
   //Variable global para almacenar el id del departamento
-  IdDepartamento:string = "1"
-  fechaAyer:any;
-  nombreDepartamento:string;
-  //FOOTER
-  numStudent:number = 0;
-  numHour:any = '00:00';
-  totalSaldo:any = 0;
-  //info del departamento
-  departamento:Departamento [];
-  //list of hours the students
-  listHours:any[] = ['00:00'];
-  listSaldo:any[] = ['0'];
-  //Registro de ayer
-  informesRegistrosAyer:RegistroHora[];
-  newinformesRegistrosAyer:RegistroHora[];
+  IdDepartamento:string = "1";
+  IdUser:string = "1";
+  fechaAnterior:any;
+  fecha:any;
   //Info del Departamento
+  idRegistro:string;
   codigoDepartamento:string;
   nombreJefe:string;
   estadoDepartamento;
   fechaRegistroHistorialDep:string;
   limiteEstudiante:string;
+  nombreDepartamento:string;
   cantidadEstudiantes:string = "3"; //falta aun sumar and restar
   cupos:string = "5"; //falta aun sumar and restar
   costoHora:string;
+  //info del departamento
+  departamento:Departamento [];
+  //Registro de week
+  informesRegistrosWeek:RegistroHora[];
+  //FOOTER
+  numStudent:number = 0;
+  numHour:any = '00:00';
+  totalSaldo:any = 0;
+  //list of hours the students
+  listHours:any[] = ['00:00'];
+  listSaldo:any[] = ['0'];
   //Objeto para registrar asistencia del estudiante
   registro:RegistroHora = {};
-  //Message de registro de asistencia
   messageDelete:boolean = false;
-  idRegistro:string;
-  //para guardar el informe de estudiante
-  informeEstudiante:InformeEstudiante = {}
+  //Message de save InformeJefe
+  messageInformeSave:boolean = false;
+  //save informeEstudiante
+  informeEstudiante:InformeEstudiante = {};
   //Info Estudiante
   nombreCompleto:string;
   nacionalidad: string;
@@ -66,33 +70,35 @@ export class GestionarInformeAyerComponent implements OnInit {
   fechaFinal;
   //Lista de estudiantes del departameto
   estudiantes:Persona[];
+  
 
-  constructor( private _appRegistroHoraService:AppRegistroHoraService,
-              private _appDepartamentoService:AppDepartamentoService,
+  constructor(private _appDepartamentoService:AppDepartamentoService,
+              private _appRegistroHoraService:AppRegistroHoraService,
               private _appTipoPersonaService:AppTipoPersonaService,
-              private _appInformeEstudianteService:AppInformeEstudianteService) {
-   }
+              private _appInformeEstudianteService:AppInformeEstudianteService) { }
 
   ngOnInit() {
-    this.dateYesterday();
+    this.fecha = new Date();
+    this.fecha = new Date(this.fecha.getTime() - 24*60*60*1000)
+    this.starWeek();
     this.getDepartament(this.IdDepartamento);
-    this.getInformeRegistroYesterday(this.IdDepartamento);
+    this.getInformeRegisterWeek(this.IdDepartamento);
     setTimeout(() => {
-    this.getEstudiantes(this.IdDepartamento);      
+      this.getEstudiantes(this.IdDepartamento);
     }, 1000);
   }
 
-  dateYesterday(){
+  starWeek(){
     var fecha=new Date();
-    var fechaAyer=new Date(fecha.getTime() - (24*60*60*1000)*1);
-    var dd = fechaAyer.getDate();
-    var mm = fechaAyer.getMonth() + 1;
-    var yyy = fechaAyer.getFullYear();
+    var haceUnaSemana=new Date(fecha.getTime() - (24*60*60*1000)*7);
+    var dd = haceUnaSemana.getDate();
+    var mm = haceUnaSemana.getMonth() + 1;
+    var yyy = haceUnaSemana.getFullYear();
     var dia = dd.toString();
     var mes = mm.toString();
     if (dd < 10) { dia = '0' + dd; }
     if (mm < 10) { mes = '0' + mm; }
-    this.fechaAyer = dia+"/"+mes+"/"+yyy;
+    this.fechaAnterior = dia+"/"+mes+"/"+yyy;
   }
 
   calculadoraSaldo(hora, saldo){
@@ -178,7 +184,7 @@ export class GestionarInformeAyerComponent implements OnInit {
       return hour+":"+min;
     }
   }
-  
+
   sumarHorasTotal(hora1, hora2) {
     var horas1=hora1.split(":");
     var horas2=hora2.split(":");
@@ -198,7 +204,7 @@ export class GestionarInformeAyerComponent implements OnInit {
   totalDatos(){
     var horaInicio, horaFinal, auxHE, auxME, auxHS, auxMS, processHours = null;
     var numMoney;
-    for(let registro of this.informesRegistrosAyer){
+    for(let registro of this.informesRegistrosWeek){
       this.numStudent++;
       if(registro.horaSalida != null){
         if(registro.horaEntrada >= '0' && registro.horaEntrada < '10'){
@@ -227,21 +233,6 @@ export class GestionarInformeAyerComponent implements OnInit {
         this.listHours.push('00:00');
       }
     }
-  }
-
-  getInformeRegistroYesterday(idDepartamento:string){
-    this._appRegistroHoraService.getInformeRegisterYest(idDepartamento)
-    .subscribe((registro : RegistroHora[]) => {
-        this.informesRegistrosAyer = registro;
-    });
-    setTimeout(() => {
-      this.listHours = ['00:00'];
-      this.listSaldo= ['0'];
-      this.numStudent = 0;
-      this.numHour= '00:00';
-      this.totalSaldo = 0;
-      this.totalDatos();   
-      }, 4000);
   }
 
   //PARA OBTENER LOS DATOS DEL DEPARTAMENTO LUEGO SE PARA AL METODO infoDepartamento
@@ -274,12 +265,12 @@ export class GestionarInformeAyerComponent implements OnInit {
       }
     }
   }
-  //Obtener los estudiantes del departamento
+//Obtener los estudiantes del departamento
 getEstudiantes(idDepartamento:string){
-this._appTipoPersonaService.getListStudentDepto(idDepartamento)
-.subscribe((estudiantes : Persona[]) => {this.estudiantes = estudiantes});
-}
-
+  this._appTipoPersonaService.getListStudentDepto(idDepartamento)
+  .subscribe((estudiantes : Persona[]) => {this.estudiantes = estudiantes});
+  }
+  
 informacionEstudiante(idEstudiante){
   for(let estudiante of this.estudiantes){
     if(estudiante.idPersona == idEstudiante){
@@ -310,13 +301,25 @@ informacionEstudiante(idEstudiante){
     }
   }
 }
-
+  
+  getInformeRegisterWeek(idDepartamento:string){
+    this._appRegistroHoraService.getInformeRegisterWeek(idDepartamento)
+    .subscribe((registro : RegistroHora[]) => {this.informesRegistrosWeek = registro});
+    setTimeout(() => {
+      this.listHours = ['00:00'];
+      this.listSaldo= ['0'];
+      this.numStudent = 0;
+      this.numHour= '00:00';
+      this.totalSaldo = 0;
+      this.totalDatos();   
+      }, 4000);
+  }
 
   registrarAprovacion(idRegistro:string, aprobado:string, fecha:string, idRegistroHora:string){
     this.registro.aprovadoRegistroHora = aprobado;
     this._appRegistroHoraService.putRegsitroAprovacion(idRegistro, this.registro)
     .subscribe((data : RegistroHora[]) => {console.log(data)});
-  
+    
     if(aprobado == '1'){
       setTimeout(() => {
       this.saveInformeEstudiante(idRegistro);        
@@ -328,7 +331,7 @@ informacionEstudiante(idEstudiante){
     }
 
     setTimeout(() => {
-      this.getInformeRegistroYesterday(this.IdDepartamento);
+      this.getInformeRegisterWeek(this.IdDepartamento);
     }, 2000);
   }
 
@@ -344,14 +347,13 @@ informacionEstudiante(idEstudiante){
       this.messageDelete = false;
     }, 5000);
     setTimeout(() => {
-      this.getInformeRegistroYesterday(this.IdDepartamento);
+      this.getInformeRegisterWeek(this.IdDepartamento);
     }, 2000);
   }
 
-  //GESTION DE INFORME ESTUDIANTE
   saveInformeEstudiante(idRegistroHora:string){
     var i = 0;
-    for(var informe of this.informesRegistrosAyer){
+    for(var informe of this.informesRegistrosWeek){
       i++;
       if(informe.idRegistroHora == idRegistroHora){
         this.informeEstudiante.idRegistroHora = informe.idRegistroHora;

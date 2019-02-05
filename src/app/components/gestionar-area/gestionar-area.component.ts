@@ -32,7 +32,14 @@ export class GestionarAreaComponent implements OnInit {
   idArea:string;
   //Message de confirmacion de delete
   messageYdelete:boolean = false;
-
+  //Lista de las areas con sus respectivos estudiantes
+  studentArea:Area[];
+  //NOMBRE AREA
+  nombreArea:string;
+  IdArea:Area;
+  //message de asignacoin de area
+  MessageSuccessAsignacion:boolean = false;
+  MessageFailAsignacion:boolean = false;
   constructor( private _appAreaService : AppAreaService, 
                private _appTipoPersonaService : AppTipoPersonaService) {
     
@@ -40,6 +47,8 @@ export class GestionarAreaComponent implements OnInit {
 
   ngOnInit() {
     this.getAreaDepartamento(this.IdDepartamento);
+    this.getAsignacionArea(this.IdDepartamento);
+    
   }
 
   ngOnDestroy(): void {
@@ -67,11 +76,17 @@ export class GestionarAreaComponent implements OnInit {
   getAreaDepartamento(idDepto:string){
     this._appAreaService.getAreasDepartamento(idDepto)
     .subscribe((areas : Area[]) => {this.listaAreaDepartamento = areas});
+    setTimeout(() => {
+      for(let area of this.listaAreaDepartamento ){
+        this.nameDept = area.nombreDepartamento;
+      }
+    }, 2000);
+
   }
   
   saveArea(){
     if (this.area.nombreArea != null) {
-      this.area.idDepartamento = "1";
+      this.area.idDepartamento = this.IdDepartamento;
       this._appAreaService.postArea(this.area).subscribe((area:Area[])=>{console.log(area)});
 
       this.MessageSuccessArea = true;
@@ -121,13 +136,60 @@ export class GestionarAreaComponent implements OnInit {
   }
 
   //gestionar asignacion area
-  saveAsignarArea(){
-    this.area.idConvenio = this.idConvenio;
-    this.area.idArea = this.idArea;
-
-    this._appAreaService.postAsignarArea(this.area)
-    .subscribe((area : Area[]) => {console.log(area)})
+  getAsignacionArea(idDepartamento:string){
+    this._appAreaService.getAsignacionArea(idDepartamento)
+    .subscribe((area : Area []) => { this.studentArea = area})
   }
 
- 
+  saveAsignarArea(){
+    if(this.idConvenio != null && this.idArea != null){
+      this.area.idConvenio = this.idConvenio;
+      this.area.idArea = this.idArea;
+  
+      this._appAreaService.postAsignarArea(this.area)
+      .subscribe((area : Area[]) => {console.log(area)})
+
+      this.MessageSuccessAsignacion = true;
+      setTimeout(() => {
+      this.MessageSuccessAsignacion = false;        
+      }, 6000);
+    }else{
+      this.MessageFailAsignacion = true;
+      setTimeout(() => {
+      this.MessageFailAsignacion = false;        
+      }, 6000);
+    }
+    
+  }
+
+  verStudentArea(idArea:Area){    
+    // this.listStudent= [{id:0, area:[]}];
+    // var i = 1;
+
+    for(let student of this.studentArea){
+      if(student.idArea == idArea){
+        this.nombreArea = student.nombreArea;
+        // this.listStudent.push({id:i, area:[]});
+        // this.listStudent[i].area.push(student);
+        // i++;
+      }
+    }
+    this.IdArea = idArea;
+  }
+
+  editAsignacion(idAsignacion:string, estado:string){
+    this.area.estadoAsignacion = estado;
+    this._appAreaService.putAsignacionArea(idAsignacion, this.area)
+    .subscribe((data: Area[]) => {console.log(data)});
+    setTimeout(() => {
+      this.getAsignacionArea(this.IdDepartamento);
+    }, 2000);
+  }
+  deleteAsignacion(idAsignacion:string){
+    this._appAreaService.deleteAsignacionArea(idAsignacion)
+    .subscribe((data :Area[]) => {console.log(data)});
+    setTimeout(() => {
+      this.getAsignacionArea(this.IdDepartamento);
+    }, 2000);
+  }
 }

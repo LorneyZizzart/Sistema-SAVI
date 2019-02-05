@@ -25,11 +25,21 @@ import { AppTipoPersonaService } from './services/app-tipoPersona.service';
 import { KeysPipe } from './pipes/keys.pipe';
 import { RolUserPipe } from './pipes/rol-user.pipe';
 import { BoleanpPipe } from './pipes/boolean.pipe';
+import { EstadoPipe } from './pipes/estado.pipe';
+import { MesPipe } from './pipes/mes.pipe';
+import { HoraPipe } from './pipes/hora.pipe';
+import { MinutoPipe } from './pipes/minuto.pipe';
+import { UndefineHoraPipe } from './pipes/undefine-hora.pipe';
+import { UndefineSaldoPipe } from './pipes/undefine-saldo.pipe';
+import { UndefinedDatoPipe } from './pipes/undefined-dato.pipe';
+import { NameDayPipe } from './pipes/name-day.pipe';
 
 //Routing
 import { AppRoutingModule } from './app-routing.module';
 
+//Componentes
 import { AppComponent } from './app.component';
+import { NavbarJFComponent } from './components/navbar-jf/navbar-jf.component';
 import { HomeComponent } from './components/home/home.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { GestionarUsuarioComponent } from './components/gestionar-usuario/gestionar-usuario.component';
@@ -48,18 +58,13 @@ import { GestionarBecaComponent } from './components/gestionar-beca/gestionar-be
 import { GestionarAcreedorComponent } from './components/gestionar-acreedor/gestionar-acreedor.component';
 import { GestionarDescuentoComponent } from './components/gestionar-descuento/gestionar-descuento.component';
 import { GestionarRolComponent } from './components/gestionar-rol/gestionar-rol.component';
-
-import { EstadoPipe } from './pipes/estado.pipe';
-import { MesPipe } from './pipes/mes.pipe';
-import { NavbarJFComponent } from './components/navbar-jf/navbar-jf.component';
-import { GestionarInformeHoyComponent } from './components/gestionar-informe-hoy/gestionar-informe-hoy.component';
-import { HoraPipe } from './pipes/hora.pipe';
-import { MinutoPipe } from './pipes/minuto.pipe';
+import { GestionarInformeWeekComponent } from './components/gestionar-informe-week/gestionar-informe-week.component';
 import { GestionarInformeAyerComponent } from './components/gestionar-informe-ayer/gestionar-informe-ayer.component';
-import { GestionarInformeYestComponent } from './components/gestionar-informe-yest/gestionar-informe-yest.component';
-import { UndefineHoraPipe } from './pipes/undefine-hora.pipe';
-import { UndefineSaldoPipe } from './pipes/undefine-saldo.pipe';
-import { UndefinedDatoPipe } from './pipes/undefined-dato.pipe';
+import { GestionarInformeHoyComponent } from './components/gestionar-informe-hoy/gestionar-informe-hoy.component';
+import { GestionarInformeMonthComponent } from './components/gestionar-informe-month/gestionar-informe-month.component';
+import { GestionarInformeJefeArhivadoComponent } from './components/gestionar-informe-jefe-arhivado/gestionar-informe-jefe-arhivado.component';
+import { GestionarInformeFinanzasAprobadoComponent } from './components/gestionar-informe-finanzas-aprobado/gestionar-informe-finanzas-aprobado.component';
+import { GestionarInformeFinanzasArchivadoComponent } from './components/gestionar-informe-finanzas-archivado/gestionar-informe-finanzas-archivado.component';
 
 
 @NgModule({
@@ -93,10 +98,15 @@ import { UndefinedDatoPipe } from './pipes/undefined-dato.pipe';
     HoraPipe,
     MinutoPipe,
     GestionarInformeAyerComponent,
-    GestionarInformeYestComponent,
     UndefineHoraPipe,
     UndefineSaldoPipe,
-    UndefinedDatoPipe
+    UndefinedDatoPipe,
+    GestionarInformeWeekComponent,
+    NameDayPipe,
+    GestionarInformeMonthComponent,
+    GestionarInformeJefeArhivadoComponent,
+    GestionarInformeFinanzasAprobadoComponent,
+    GestionarInformeFinanzasArchivadoComponent
   ],
   imports: [
     BrowserModule,

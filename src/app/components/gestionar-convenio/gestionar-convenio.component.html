@@ -96,96 +96,96 @@
         </div>
     </div>
     <div class="modal fade" id="modal-editar">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Editar</h4>
-                    </div>
-                    <form (ngSubmit)="saveConvenio()" #registroConvenio="ngForm" name="RegistroConvenio" class="form-horizontal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Editar</h4>
+                </div>
+                <form (ngSubmit)="saveConvenio()" #registroConvenio="ngForm" name="RegistroConvenio" class="form-horizontal">
 
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="box-profile">
-                                    <img class="profile-user-img img-responsive img-circle" src="assets/img/avatar.png" alt="User profile picture">
-                                    <p class="text-muted text-center">650004813</p>
-                                </div>
-                            </div>
-                            <div class="col-md-9">
-                                <div class="box-header with-border">
-                                    <h3 class="modal-name">Jhonny Gutierrez Villca</h3>
-                                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="box-profile">
+                                <img class="profile-user-img img-responsive img-circle" src="assets/img/avatar.png" alt="User profile picture">
+                                <p class="text-muted text-center">650004813</p>
                             </div>
                         </div>
+                        <div class="col-md-9">
+                            <div class="box-header with-border">
+                                <h3 class="modal-name">Jhonny Gutierrez Villca</h3>
+                            </div>
+                        </div>
+                    </div>
 
-                            <div class="row form-edit">
+                        <div class="row form-edit">
+                            <div class="col-md-12">
+                                    <div class="form-group">
+                                            <label>Departamento:</label>
+                                            <select [(ngModel)]="idDepartamento" name="departamento" class="form-control select2" style="width: 100%;">
+                                                <option *ngFor="let departamento of departamentos" [value]="departamento.idDepartamento" >{{ departamento.nombreDepartamento }}</option>
+                                            </select>
+                                            </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Beca:</label>
+                                    <select [(ngModel)]="idBeca" name="beca" class="form-control select2" style="width: 100%;">
+                                            <option value="1">Beca Industrial </option>
+                                            <option value="2">Beca Institucional</option>
+                                    </select>
+                                </div>                                    
+                            </div>
                                 <div class="col-md-12">
-                                        <div class="form-group">
-                                                <label>Departamento:</label>
-                                                <select [(ngModel)]="idDepartamento" name="departamento" class="form-control select2" style="width: 100%;">
-                                                    <option *ngFor="let departamento of departamentos" [value]="departamento.idDepartamento" >{{ departamento.nombreDepartamento }}</option>
-                                                </select>
-                                              </div>
+                                    <div class="form-group">
+                                        <label>Fecha inicio:</label>                                    
+                                        <div class="input-group date">
+                                            <div class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                            </div>
+                                            <input [(ngModel)]="convenio.fechaInicio" name="dateInicio" type="text" class="form-control pull-right" id="datepicker" placeholder="2001/01/01">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Beca:</label>
-                                        <select [(ngModel)]="idBeca" name="beca" class="form-control select2" style="width: 100%;">
-                                                <option value="1">Beca Industrial </option>
-                                                <option value="2">Beca Institucional</option>
-                                        </select>
-                                    </div>                                    
-                                </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label>Fecha inicio:</label>                                    
+                                            <label>Fecha final:</label>                                    
                                             <div class="input-group date">
                                                 <div class="input-group-addon">
                                                 <i class="fa fa-calendar"></i>
                                                 </div>
-                                                <input [(ngModel)]="convenio.fechaInicio" name="dateInicio" type="text" class="form-control pull-right" id="datepicker" placeholder="2001/01/01">
+                                                <input [(ngModel)]="convenio.fechaFinal" name="dateFinal" type="text" class="form-control pull-right" id="datepickers" placeholder="2001/01/01">
                                             </div>
                                         </div>
+                                </div>
+                            <div class="col-md-12 text-center">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" [(ngModel)]="solicitud" name="solicitud" class="minimal" che> Solicitud de trabajo
+                                        </label>
                                     </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                                <label>Fecha final:</label>                                    
-                                                <div class="input-group date">
-                                                    <div class="input-group-addon">
-                                                    <i class="fa fa-calendar"></i>
-                                                    </div>
-                                                    <input [(ngModel)]="convenio.fechaFinal" name="dateFinal" type="text" class="form-control pull-right" id="datepickers" placeholder="2001/01/01">
-                                                </div>
-                                            </div>
-                                    </div>
-                                <div class="col-md-12 text-center">
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label>
-                                                <input type="checkbox" [(ngModel)]="solicitud" name="solicitud" class="minimal" che> Solicitud de trabajo
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label>
-                                                <input type="checkbox" [(ngModel)]="fotocopiaCarnet" name="fotocopiaCarnet" class="minimal"> Fotocopia de carnet
-                                            </label>
-                                        </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" [(ngModel)]="fotocopiaCarnet" name="fotocopiaCarnet" class="minimal"> Fotocopia de carnet
+                                        </label>
                                     </div>
                                 </div>
                             </div>
-                    </div>
-                    <div class="modal-footer text-center modal-footer-edit">
-                        <button type="submit" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-refresh"></i> Actualizar</button>
-                    </div>
-                </form>
-
+                        </div>
                 </div>
+                <div class="modal-footer text-center modal-footer-edit">
+                    <button type="submit" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-refresh"></i> Actualizar</button>
+                </div>
+            </form>
+
             </div>
         </div>
+    </div>
     <div class="modal fade" id="modal-informacion">
         <div class="modal-dialog">
             <div class="modal-content">

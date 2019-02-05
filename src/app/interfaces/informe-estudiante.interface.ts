@@ -1,13 +1,35 @@
 export interface InformeEstudiante {
   idInformeEstudiante?:string
-  idInformeJefe?:string
+  idRegistroHora?:string
   idConvenio?:string
-  fechaInicio?:string
-  fechaFinal?:string
+  fecha?:string
   totalHoras?:string
   totalSaldo?:string
-  observaciones?:string
-  aprobadoJefeDep?:boolean
-  aprobadoFinanzas?:boolean
-  estado?:boolean
+  aprobadoJefeDep?:string
+  aprobadoFinanzas?:string
+  archivar?:string
+  //datos personales
+  idPersona?: string;
+  codEstudiante?:string
+  primerNombre?: string;
+  segundoNombre?: string;
+  primerApellido?: string;
+  segundoApellido?: string;
+  nacionalidad?: string;
+  direccion?: string;
+  ci?: string;
+  celular?: string;
+  fechaNacimiento?: string;
+  estadoPersona?: boolean;
+  carrera?:string
+  semestre?:string
+  idDepartamento?:string
+  departamento?:string
+  idBeca?:string
+  beca?:string
+  fechaInicio?:any
+  fechaFinal?:any
+  fotocopiaCarnet?:string
+  solicitudTrabajo?:string
+  estadoConvenio?:string
 }

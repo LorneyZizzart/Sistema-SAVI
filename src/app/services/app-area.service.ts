@@ -61,6 +61,11 @@ export class AppAreaService {
     return this._http.delete(url).pipe(map(res => res));
   }
 //gestion asignacion area
+  getAsignacionArea(idDepartamento:string){
+    let url = `${this.listaAreaDepartamento}/asignacionArea/crud/${idDepartamento}`;
+    return this._http.get<Area[]>(url).pipe(map(res => res));
+  }  
+
   postAsignarArea(area:Area):Observable<Area[]>{
     let body = JSON.stringify(area);
     let headers = new HttpHeaders({
@@ -69,5 +74,20 @@ export class AppAreaService {
     let url = `${this.listaAreaDepartamento}/asignacionArea/crud`;
     return this._http.post<Area[]>(url, body, { headers })
       .pipe ();
+  }
+
+  putAsignacionArea(idAsignacion:string, area:Area):Observable<Area[]>{
+    let body = JSON.stringify(area);
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    let url = `${this.listaAreaDepartamento}/asignacionArea/crud/${idAsignacion}`;
+    return this._http.put<Area[]>(url, body, { headers })
+      .pipe ();
+  }
+
+  deleteAsignacionArea(idAsignacion){
+    let url = `${this.listaAreaDepartamento}/asignacionArea/crud/${idAsignacion}`;
+    return this._http.delete(url).pipe(map(res => res));
   }
 }

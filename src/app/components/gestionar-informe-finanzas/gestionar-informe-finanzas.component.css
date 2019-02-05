@@ -1,0 +1,16 @@
+.modal-name {
+    margin-top: 5%;
+}
+.modal-header {
+    color: beige;
+    background: #3C8DBC;
+}
+
+.modal-body {
+    background: #ECF0F5;
+    padding-left: 8%;
+}
+
+.modal-footer {
+    background: #ECF0F5;
+}

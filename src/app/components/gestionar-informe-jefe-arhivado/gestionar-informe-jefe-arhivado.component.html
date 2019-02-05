@@ -4,86 +4,19 @@
   <section class="content-header">
       <h1>
           Departamento
-          <small> de Finanzas</small>
+          <small> de {{ nombreDepartamento }}</small>
       </h1>
       <ol class="breadcrumb">
           <li><a [routerLink]="['/home']"><i class="fa fa-home"></i> Home</a></li>
-          <li class="active">Informe recividas</li>
+          <li class="active">Informe archivados de horas de los estudiantes </li>
       </ol>
   </section>
-<div *ngIf="MessageInformeAprobado == true" class="pad no-print">
-    <div class="callout callout-success">
-        <h4><i class="icon fa fa-check"></i> El informe fue aprobado</h4>
+    <div *ngIf="MessageSuccessArchivar == true" class="pad no-print">
+        <div class="callout callout-warning">
+            <h4><i class="icon fa fa-info"></i> El informe fue desarchivado</h4>
+        </div>
     </div>
-</div>
-<div *ngIf="MessageInformeNoAprobado == true" class="pad no-print">
-    <div class="callout callout-warning">
-        <h4><i class="icon fa fa-close"></i> El informe fue desaprobado</h4>
-    </div>
-</div>
 <!-- Modal -->
-<div class="modal fade" id="modal-informacion">
-  <div class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title">Mas información...</h4>
-          </div>
-          <div class="infoConvenio modal-body">
-              <div class="row">
-                  <div class="col-md-3">
-                      <div class="box-profile">
-                          <img class="profile-user-img img-responsive img-circle" src="assets/img/departamento.png" alt="User profile picture">
-                      </div>
-                  </div>
-                  <div class="col-md-9">
-                      <div class="box-header with-border">
-                          <h3 class="modal-name"><strong>DEPARTAEMNTO {{ nombreDepartamento | uppercase }}</strong> </h3>
-                      </div>
-                  </div>
-              </div>
-              <div class="row">
-                  <hr>
-                  <h4>DATOS DEL JEFE DEL DEPARTAEMNTO</h4>
-                      <div class="col-md-5">
-                          <p><strong><i class="fa fa-user margin-r-5"></i> Nombre completo:</strong></p>    
-                      </div>
-                      <div class="col-md-7">
-                          <p>{{ nombreJefe }}</p>  
-                      </div>
-              </div>
-              <div class="row">
-                  <hr>
-                  <h4>DATOS DEL DEPARTAEMNTO</h4>
-                      <div class="col-md-5">
-                          <p><strong><i class="fa fa-slack margin-r-5"></i> Código departamento:</strong></p>
-                          <p><strong><i class="fa fa-building margin-r-5"></i> Nombre del departamento:</strong></p>
-                          <p><strong><i class="fa fa-money margin-r-5"></i> Costo de hora:</strong></p>
-                          <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha de actualizacion:</strong></p>
-                          <p><strong><i class="fa fa-step-forward margin-r-5"></i> Limite de estudiantes:</strong></p>
-                          <p><strong><i class="fa fa-play margin-r-5"></i> Cant. Est. trabajando:</strong></p>
-                          <p><strong><i class="fa fa-forward margin-r-5"></i> Cupos:</strong></p>
-                          <p><strong><i class="fa fa-dot-circle-o margin-r-5"></i> Estado del departamento:</strong></p>
-                      </div>
-                      <div class="col-md-7">
-                          <p>{{ codigoDepartamento }}</p>
-                          <p>{{ nombreDepartamento }}</p>
-                          <p>{{ costoHora }} Bs.</p>
-                          <p>{{ fechaRegistroHistorialDep | date: 'dd/MM/yyyy' }}</p>
-                          <p>{{ limiteEstudiante }}</p>
-                          <p>{{ cantidadEstudiantes }}</p>
-                          <p>{{ cupos }}</p>
-                          <p>{{ estadoDepartamento | estado }}</p>
-                      </div>
-                  </div>
-              </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
-          </div>
-      </div>
-  </div>
-</div>
 <div class="modal fade" id="modal-informacionStudiante">
   <div class="modal-dialog">
       <div class="modal-content">
@@ -163,23 +96,23 @@
           <div class="col-md-12">
               <div class="box box-primary">
                   <div class="box-header with-border">
-                      <h4 class="page-header"><i class="fa fa-paste"></i> Informe de horas y saldos de los estudiantes de todos los departamentos</h4>
+                      <h4 class="page-header"><i class="fa fa-folder"></i> Informes archivados de horas de los estudiantes</h4>
 
                       <div class="btn-opciones box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                        </button>                          
+                        </button>
+                          
                       </div>
                   </div>
                   <!-- /.box-header -->
                   <div class="box-body">
-                      <p>Lista de horas y saldos totales de los estudiantes que trabajan en la Universidad</p>                     
+                      <p>Lista de informes archivos de las horas y saldos totales</p>                     
                           <div class="table-responsive pad">
                               <table class="table table-bordered table-hover ">
                                   <tr>
                                       <th style="width: 10px">#</th>
                                       <th class="text-center">Cod.</th>
                                       <th>Nombre completo</th>
-                                      <th>Departamento</th>
                                       <th>Fecha de ingreso</th>
                                       <th style="width: 6%">Total horas</th>
                                       <th style="width: 6%">Total saldo</th>
@@ -191,7 +124,6 @@
                                       <td>{{i+1}}.</td>
                                       <td class="text-center">{{informe.codEstudiante}}</td>
                                       <td>{{informe.primerNombre}}  {{informe.segundoNombre}} {{informe.primerApellido}} {{informe.segundoApellido}}</td>
-                                      <td>{{informe.departamento}}</td>
                                       <td>{{informe.fecha | nameDay }}</td>
                                       <td class="text-center">{{informe.totalHoras}}</td>
                                       <td class="text-center">{{informe.totalSaldo}} Bs.</td>
@@ -199,54 +131,16 @@
                                           <span *ngIf="informe.aprobadoJefeDep != null" class="badge bg-green"><i class="fa fa-check"></i></span>
                                       </td>
                                       <td class="text-center">
-                                          <a *ngIf="informe.aprobadoFinanzas == false" (click)="aprobarInformeEstudiante(informe.idInformeEstudiante, '1')" class="btn btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Aprobar"><i class="fa fa-check"></i></a>
-                                          <a *ngIf="informe.aprobadoFinanzas == true" (click)="aprobarInformeEstudiante(informe.idInformeEstudiante, '0')" class="btn btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="No Aprobar"><i class="fa fa-close"></i></a>
+                                        <span *ngIf="informe.aprobadoFinanzas == true" class="badge bg-green"><i class="fa fa-check"></i></span>
+                                        <span *ngIf="informe.aprobadoFinanzas == false" class="badge bg-red"><i class="fa fa-times"></i></span>
                                     </td>
                                       <td class="text-center">
                                           <a (click)="informacionEstudiante(informe.idPersona)" data-toggle="modal" data-target="#modal-informacionStudiante"  class="btn btn-primary btn-margin" title="Ver"><i class="fa fa-eye"></i></a>
+                                          <a (click)="archivarInforme(informe.idInformeEstudiante)" class="btn btn-success btn-margin" title="Desarchivar"><i class="fa fa-folder-open"></i></a>
                                       </td>
                                   </tr>
                               </table>
                           </div>
-                  </div>
-                  <!-- ./box-body -->
-                  <div class="box-footer">
-                          <div class="row">
-                                  <div class="col-md-4 col-sm-6 col-xs-12">
-                                          <div class="info-box border-right">
-                                              <span class="info-box-icon"><i class="fa fa-users"></i></span>
-                  
-                                              <div class="info-box-content">
-                                                  <span class="info-box-text">CANTIDAD DE ESTUDIANTE</span>
-                                                  <span class="info-box-number">{{numStudent}}</span>
-                                              </div>
-                                              <!-- /.info-box-content -->
-                                          </div>
-                                  </div>  
-                                  <div class="col-md-4 col-sm-6 col-xs-12">
-                                      <div class="info-box border-right">
-                                          <span class="info-box-icon"><i class="fa fa-clock-o"></i></span>
-              
-                                          <div class="info-box-content">
-                                              <span class="info-box-text">TOTAL DE HORAS</span>
-                                              <span class="info-box-number">{{numHour}}</span>
-                                          </div>
-                                          <!-- /.info-box-content -->
-                                      </div>
-                                  </div>  
-                                  <div class="col-md-4 col-sm-6 col-xs-12">
-                                      <div class="info-box">
-                                          <span class="info-box-icon"><i class="fa fa-money"></i></span>
-              
-                                          <div class="info-box-content">
-                                              <span class="info-box-text">TOTAL DE SALDO</span>
-                                              <span class="info-box-number">{{totalSaldo}} Bs.</span>
-                                          </div>
-                                          <!-- /.info-box-content -->
-                                      </div>
-                                  </div>                   
-                              </div>
-                      <!-- /.row -->
                   </div>
                   <!-- /.box-footer -->
               </div>

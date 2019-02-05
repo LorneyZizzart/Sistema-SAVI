@@ -8,82 +8,20 @@
       </h1>
       <ol class="breadcrumb">
           <li><a [routerLink]="['/home']"><i class="fa fa-home"></i> Home</a></li>
-          <li class="active">Informe recividas</li>
+          <li class="active">Informe aprobados</li>
       </ol>
   </section>
-<div *ngIf="MessageInformeAprobado == true" class="pad no-print">
-    <div class="callout callout-success">
-        <h4><i class="icon fa fa-check"></i> El informe fue aprobado</h4>
-    </div>
-</div>
 <div *ngIf="MessageInformeNoAprobado == true" class="pad no-print">
     <div class="callout callout-warning">
         <h4><i class="icon fa fa-close"></i> El informe fue desaprobado</h4>
     </div>
 </div>
-<!-- Modal -->
-<div class="modal fade" id="modal-informacion">
-  <div class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title">Mas información...</h4>
-          </div>
-          <div class="infoConvenio modal-body">
-              <div class="row">
-                  <div class="col-md-3">
-                      <div class="box-profile">
-                          <img class="profile-user-img img-responsive img-circle" src="assets/img/departamento.png" alt="User profile picture">
-                      </div>
-                  </div>
-                  <div class="col-md-9">
-                      <div class="box-header with-border">
-                          <h3 class="modal-name"><strong>DEPARTAEMNTO {{ nombreDepartamento | uppercase }}</strong> </h3>
-                      </div>
-                  </div>
-              </div>
-              <div class="row">
-                  <hr>
-                  <h4>DATOS DEL JEFE DEL DEPARTAEMNTO</h4>
-                      <div class="col-md-5">
-                          <p><strong><i class="fa fa-user margin-r-5"></i> Nombre completo:</strong></p>    
-                      </div>
-                      <div class="col-md-7">
-                          <p>{{ nombreJefe }}</p>  
-                      </div>
-              </div>
-              <div class="row">
-                  <hr>
-                  <h4>DATOS DEL DEPARTAEMNTO</h4>
-                      <div class="col-md-5">
-                          <p><strong><i class="fa fa-slack margin-r-5"></i> Código departamento:</strong></p>
-                          <p><strong><i class="fa fa-building margin-r-5"></i> Nombre del departamento:</strong></p>
-                          <p><strong><i class="fa fa-money margin-r-5"></i> Costo de hora:</strong></p>
-                          <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha de actualizacion:</strong></p>
-                          <p><strong><i class="fa fa-step-forward margin-r-5"></i> Limite de estudiantes:</strong></p>
-                          <p><strong><i class="fa fa-play margin-r-5"></i> Cant. Est. trabajando:</strong></p>
-                          <p><strong><i class="fa fa-forward margin-r-5"></i> Cupos:</strong></p>
-                          <p><strong><i class="fa fa-dot-circle-o margin-r-5"></i> Estado del departamento:</strong></p>
-                      </div>
-                      <div class="col-md-7">
-                          <p>{{ codigoDepartamento }}</p>
-                          <p>{{ nombreDepartamento }}</p>
-                          <p>{{ costoHora }} Bs.</p>
-                          <p>{{ fechaRegistroHistorialDep | date: 'dd/MM/yyyy' }}</p>
-                          <p>{{ limiteEstudiante }}</p>
-                          <p>{{ cantidadEstudiantes }}</p>
-                          <p>{{ cupos }}</p>
-                          <p>{{ estadoDepartamento | estado }}</p>
-                      </div>
-                  </div>
-              </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
-          </div>
-      </div>
-  </div>
+<div *ngIf="MessageInformeArchivado == true" class="pad no-print">
+    <div class="callout callout-success">
+        <h4><i class="icon fa fa-check"></i> El informe fue archivado</h4>
+    </div>
 </div>
+<!-- Modal -->
 <div class="modal fade" id="modal-informacionStudiante">
   <div class="modal-dialog">
       <div class="modal-content">
@@ -187,7 +125,7 @@
                                       <th class="text-center" style="width: 6%">Aprovación Finanzas</th>
                                       <th class="text-center" style="width: 20%px">Opciones</th>
                                   </tr>
-                                  <tr *ngFor="let informe of listInformeEstudiante; let i = index">
+                                  <tr *ngFor="let informe of informeFinanzas; let i = index">
                                       <td>{{i+1}}.</td>
                                       <td class="text-center">{{informe.codEstudiante}}</td>
                                       <td>{{informe.primerNombre}}  {{informe.segundoNombre}} {{informe.primerApellido}} {{informe.segundoApellido}}</td>
@@ -199,11 +137,11 @@
                                           <span *ngIf="informe.aprobadoJefeDep != null" class="badge bg-green"><i class="fa fa-check"></i></span>
                                       </td>
                                       <td class="text-center">
-                                          <a *ngIf="informe.aprobadoFinanzas == false" (click)="aprobarInformeEstudiante(informe.idInformeEstudiante, '1')" class="btn btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Aprobar"><i class="fa fa-check"></i></a>
                                           <a *ngIf="informe.aprobadoFinanzas == true" (click)="aprobarInformeEstudiante(informe.idInformeEstudiante, '0')" class="btn btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="No Aprobar"><i class="fa fa-close"></i></a>
                                     </td>
                                       <td class="text-center">
                                           <a (click)="informacionEstudiante(informe.idPersona)" data-toggle="modal" data-target="#modal-informacionStudiante"  class="btn btn-primary btn-margin" title="Ver"><i class="fa fa-eye"></i></a>
+                                          <a *ngIf="informe.aprobadoJefeDep != NULL" (click)="archivarInformeFinanzas(informe.idInformeFinanzas)" class="btn btn-success btn-margin" title="Archivar"><i class="fa fa-folder"></i></a>
                                       </td>
                                   </tr>
                               </table>

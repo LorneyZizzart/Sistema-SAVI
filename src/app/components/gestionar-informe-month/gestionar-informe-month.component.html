@@ -8,9 +8,15 @@
       </h1>
       <ol class="breadcrumb">
           <li><a [routerLink]="['/home']"><i class="fa fa-home"></i> Home</a></li>
-          <li class="active">Informe de hoy</li>
+          <li class="active">Informe de la semana</li>
       </ol>
   </section>
+
+  <div *ngIf="messageDelete == true" class="pad no-print">
+      <div class="callout callout-success">
+          <h4><i class="icon fa fa-check"></i> El registro fue eliminado</h4>
+      </div>
+  </div>
 <!-- Modal -->
 <div class="modal fade" id="modal-informacion">
   <div class="modal-dialog">
@@ -75,25 +81,25 @@
   </div>
 </div>
 <div class="modal fade" id="modal-eliminar">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header text-center">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Confirmar</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row text-center">
-                    <div class="col-md-6">
-                        <button type="button"  data-dismiss="modal" aria-label="Close" class="btn btn-danger">Cancelar</button>
-                    </div>
-                    <div class="col-md-6">
-                        <button (click)="confirmacionDelete()" data-dismiss="modal" aria-label="Close" type="button" class="btn btn-success">Aceptar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header text-center">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Confirmar</h4>
+          </div>
+          <div class="modal-body">
+              <div class="row text-center">
+                  <div class="col-md-6">
+                      <button type="button"  data-dismiss="modal" aria-label="Close" class="btn btn-danger">Cancelar</button>
+                  </div>
+                  <div class="col-md-6">
+                      <button (click)="confirmacionDelete()" data-dismiss="modal" aria-label="Close" type="button" class="btn btn-success">Aceptar</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
 </div>
 <div class="modal fade" id="modal-informacionStudiante">
     <div class="modal-dialog">
@@ -174,7 +180,7 @@
           <div class="col-md-12">
               <div class="box box-primary">
                   <div class="box-header with-border">
-                      <h4 class="page-header"><i class="fa fa-list-ul"></i> Registro de asistencia del {{ fechaAyer }}</h4>
+                      <h4 class="page-header"><i class="fa fa-list-ul"></i> Registro de asistencia de  {{fechaAnterior }}  -  {{fechaHoy | date: 'dd/MM/yyyy' }}</h4>
 
                       <div class="btn-opciones box-tools pull-right">
                             <div class="btn-group">
@@ -198,35 +204,37 @@
                       <p>Lista de los estudiantes que ingresaron hoy.</p>                     
                           <div class="table-responsive pad">
                               <table class="table table-bordered table-hover ">
-                                <tr>
-                                    <th style="width: 10px">#</th>
-                                    <th class="text-center">Cod.</th>
-                                    <th>Nombre completo</th>
-                                    <th class="text-center">Hora de ingreso</th>
-                                    <th class="text-center">Hora de salida</th>
-                                    <th>Total horas</th>
-                                    <th>Total saldo</th>
-                                    <th class="text-center">Aprovación</th>
-                                    <th>Opciones</th>
-                                </tr>
-                                <tr *ngFor="let registro of informesRegistrosAyer; let i = index">
-                                    <td>{{i+1}}.</td>
-                                    <td class="text-center">{{registro.idRegistroHora}}</td>
-                                    <td>{{registro.primerNombre}}  {{registro.segundoNombre}} {{registro.primerApellido}} {{registro.segundoApellido}}</td>
-                                    <td class="text-center">{{registro.horaEntrada | hora }}:{{registro.minutoEntrada | minuto}}</td>
-                                    <td *ngIf="registro.horaSalida == null"></td>
-                                    <td *ngIf="registro.horaSalida" class="text-center">{{registro.horaSalida | hora }}:{{registro.minutoSalida | minuto}}</td>
-                                    <td class="text-center">{{listHours[i+1] | undefineHora}}</td>
-                                    <td class="text-center">{{listSaldo[i+1] | undefineSaldo}} Bs.</td>
-                                    <td class="text-center">
-                                            <a *ngIf="registro.aprovadoRegistroHora == true" (click)="registrarAprovacion(registro.idRegistroHora, '0', registro.fechaEntrada, registro.idRegistroHora)" class="btn btn-success btn-margin" title="Aprobado"><i class="fa fa-check"></i></a>
-                                            <a *ngIf="registro.aprovadoRegistroHora == false" (click)="registrarAprovacion(registro.idRegistroHora, '1', registro.fechaEntrada, registro.idRegistroHora)" class="btn btn-danger btn-margin" title="No aprobado"><i class="fa fa-close"></i></a>
-                                        </td>
-                                    <td class="text-center">
-                                        <a (click)="informacionEstudiante(registro.idPersona)" class="btn btn-primary btn-margin" data-toggle="modal" data-target="#modal-informacionStudiante" title="Ver"><i class="fa fa-eye"></i></a>
-                                        <a (click)="eliminarAsistencia(registro.idRegistroHora)" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger btn-margin" title="Eliminar"><i class="fa fa-trash"></i></a>
-                                    </td>
-                                </tr>
+                                  <tr>
+                                      <th style="width: 10px">#</th>
+                                      <th class="text-center">Cod.</th>
+                                      <th>Nombre completo</th>
+                                      <th>Fecha de ingreso</th>
+                                      <th class="text-center" style="width: 6%">Hora ingreso</th>
+                                      <th class="text-center" style="width: 6%">Hora salida</th>
+                                      <th style="width: 6%">Total horas</th>
+                                      <th style="width: 6%">Total saldo</th>
+                                      <th class="text-center">Aprovación</th>
+                                      <th style="width: 20%px">Opciones</th>
+                                  </tr>
+                                  <tr *ngFor="let registro of informesRegistrosMonth; let i = index">
+                                      <td>{{i+1}}.</td>
+                                      <td class="text-center">{{registro.idRegistroHora}}</td>
+                                      <td>{{registro.primerNombre}}  {{registro.segundoNombre}} {{registro.primerApellido}} {{registro.segundoApellido}}</td>
+                                      <td>{{registro.fechaEntrada | nameDay }}</td>
+                                      <td class="text-center">{{registro.horaEntrada | hora }}:{{registro.minutoEntrada | minuto}}</td>
+                                      <td *ngIf="registro.horaSalida == null"></td>
+                                      <td *ngIf="registro.horaSalida" class="text-center">{{registro.horaSalida | hora }}:{{registro.minutoSalida | minuto}}</td>
+                                      <td class="text-center">{{listHours[i+1] | undefineHora}}</td>
+                                      <td class="text-center">{{listSaldo[i+1] | undefineSaldo}} Bs.</td>
+                                      <td class="text-center">
+                                          <a *ngIf="registro.aprovadoRegistroHora == true" (click)="registrarAprovacion(registro.idRegistroHora, '0')" class="btn btn-success btn-margin" title="Aprobado"><i class="fa fa-check"></i></a>
+                                          <a *ngIf="registro.aprovadoRegistroHora == false" (click)="registrarAprovacion(registro.idRegistroHora, '1')" class="btn btn-danger btn-margin" title="No aprobado"><i class="fa fa-close"></i></a>
+                                      </td>
+                                      <td class="text-center">
+                                          <a (click)="informacionEstudiante(registro.idPersona)" class="btn btn-primary btn-margin" data-toggle="modal" data-target="#modal-informacionStudiante" title="Ver"><i class="fa fa-eye"></i></a>
+                                          <a (click)="eliminarAsistencia(registro.idRegistroHora)" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger btn-margin" title="Eliminar"><i class="fa fa-trash"></i></a>
+                                      </td>
+                                  </tr>
                               </table>
                           </div>
                   </div>

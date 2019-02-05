@@ -23,6 +23,15 @@ export class AppRegistroHoraService {
     return this._http.get<RegistroHora[]>(url).pipe(map(res => res));
   }
 
+  getInformeRegisterWeek(idDepartamento:string):Observable<RegistroHora[]>{
+    let url = `${this.listaRegistroHora}/dateWeek/informe/${idDepartamento}`;
+    return this._http.get<RegistroHora[]>(url).pipe(map(res => res));
+  }
+  getInformeRegisterMonth(idDepartamento:string):Observable<RegistroHora[]>{
+    let url = `${this.listaRegistroHora}/dateMonth/informe/${idDepartamento}`;
+    return this._http.get<RegistroHora[]>(url).pipe(map(res => res));
+  }
+
   postRegistroHora(registro:RegistroHora):Observable<RegistroHora[]>{
     let body = JSON.stringify(registro);
     let headers = new HttpHeaders({
@@ -38,6 +47,16 @@ export class AppRegistroHoraService {
       'Content-Type': 'application/json'
     });
     let url = `${this.listaRegistroHora}/${idRegistro}`;
+    return this._http.put<RegistroHora[]>(url, body, { headers })
+      .pipe ();
+  }
+
+  putRegsitroAprovacion(idRegistro:string, registro:RegistroHora):Observable<RegistroHora[]>{
+    let body = JSON.stringify(registro);
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    let url = `${this.listaRegistroHora}/aprovado/${idRegistro}`;
     return this._http.put<RegistroHora[]>(url, body, { headers })
       .pipe ();
   }

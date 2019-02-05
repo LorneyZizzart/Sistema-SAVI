@@ -1,7 +1,7 @@
 export interface InformeJefe {
   idInformeJefe?:string
   idDepartamento?:string
-  fechaEnvio?:string
+  fechaRegistro?:string
   detalle?:string
   observacion?:string
 }

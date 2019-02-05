@@ -14,3 +14,16 @@
 .btn-save{
     margin-top: -2px;
 }
+a.btn-min-red{
+    color: rgba(255, 0, 0, 0.671);
+}
+a.btn-min-red:hover{
+    font-size: 100%;
+    color: rgba(8, 8, 8, 0.671);
+}
+a.btn-min-green{
+    color: rgba(0, 128, 0, 0.671);
+}
+a.btn-min-green:hover{
+    color: rgba(8, 8, 8, 0.671);
+}

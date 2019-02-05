@@ -148,41 +148,26 @@
             <li [routerLinkActive]="['is-active']">
                 <a [routerLink]="['user']">
                     <i class="fa fa-user"></i> <span>Usuario</span>
-                    <span class="pull-right-container">
-          </span>
                 </a>
             </li>
             <li [routerLinkActive]="['is-active']">
                 <a [routerLink]="['convenio']">
                     <i class="fa fa-file-archive-o"></i> <span>Convenio</span>
-                    <span class="pull-right-container">
-                </span>
                 </a>
             </li>
             <li>
                 <a [routerLink]="['departamento']">
-                    <i class="fa fa-building"></i> <span>Departamento</span>
-                    <span class="pull-right-container">
-          </span>
+                    <i class="fa fa-building"></i> <span>Departamento</span>                    
                 </a>
             </li>
             <li>
                 <a [routerLink]="['area']">
-                    <i class="fa fa-user"></i> <span>Areas de Departamento</span>
-                    <span class="pull-right-container">
-          </span>
-                </a>
-            </li>
-            <li>
-                <a [routerLink]="['estudiante']">
-                    <i class="fa fa-user"></i> <span>Estudiante</span>
-                    <span class="pull-right-container">
-          </span>
+                    <i class="fa fa-user"></i> <span>Areas de Departamento</span>                    
                 </a>
             </li>
             <li class="treeview">
                 <a href="#">
-                    <i class="fa fa-tasks"></i> <span>Informes</span>
+                    <i class="fa fa-tasks"></i> <span>Registros</span>
                     <span class="pull-right-container">
                     <i class="fa fa-angle-left pull-right"></i>
           </span>
@@ -190,16 +175,35 @@
                 <ul class="treeview-menu">
                     <li><a [routerLink]="['informeHoy']" ><i class="fa fa-file-text-o"></i>Hoy</a></li>
                     <li><a [routerLink]="['informeAyer']"><i class="fa fa-file-text-o"></i>Ayer</a></li>
-                    <li><a><i class="fa fa-circle-o"></i>Últimos 7 días</a></li>
-                    <li><a><i class="fa fa-circle-o"></i>Últimos 30 dias</a></li>
-                    <li><a><i class="fa fa-circle-o"></i>Rango personalizado</a></li>
+                    <li><a [routerLink]="['informeWeek']"><i class="fa fa-file-text-o"></i>Últimos 7 días</a></li>
+                    <li><a [routerLink]="['informeMonth']"><i class="fa fa-file-text-o"></i>Últimos 30 dias</a></li>
+                    <li><a><i class="fa fa-file-text-o"></i>Rango personalizado</a></li>
                 </ul>
             </li>
-            <li>
-                <a>
-                    <i class="fa fa-user"></i> <span>Informes recividos</span>
-                    <span class="pull-right-container"></span>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-file-zip-o"></i> <span>Informes</span>
+                    <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                    </span>
                 </a>
+                <ul class="treeview-menu">
+                    <li><a [routerLink]="['informeJefe']" ><i class="fa fa-paste"></i>Informes aprovabados</a></li>
+                    <li><a [routerLink]="['informeJefeArchivado']"><i class="fa fa-folder"></i>Informes archivados</a></li>
+                </ul>
+            </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-file-zip-o"></i> <span>Informes Finanzas</span>
+                    <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a [routerLink]="['informeFinanzas']" ><i class="fa fa-file-text"></i>Informes recividas</a></li>
+                    <li><a [routerLink]="['informeFinanzasAprobado']"><i class="fa fa-paste"></i>Informes aprobadas</a></li>
+                    <li><a [routerLink]="['informeFinanzasArchivado']"><i class="fa fa-folder"></i>Informes archivadas</a></li>
+                </ul>
             </li>
             <li>
                 <a [routerLink]="['turno']">
