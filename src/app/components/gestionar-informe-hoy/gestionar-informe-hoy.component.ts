@@ -1,4 +1,5 @@
 import { Component, OnInit, ɵConsole } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { AppRegistroHoraService } from '../../services/app-registroHora.service';
 import { RegistroHora } from '../../interfaces/registroHora.interface';
 import { AppDepartamentoService } from '../../services/app-departamento.service';
@@ -7,10 +8,6 @@ import { Persona } from '../../interfaces/persona.interface';
 import { AppTipoPersonaService } from '../../services/app-tipoPersona.service';
 import { InformeEstudiante } from '../../interfaces/informe-estudiante.interface';
 import { AppInformeEstudianteService } from '../../services/app-informe-estudiante.service';
-
-
-
-
 
 @Component({
   selector: 'app-gestionar-informe-hoy',
@@ -73,7 +70,14 @@ export class GestionarInformeHoyComponent implements OnInit {
   solicitudWork;
   fechaInicio;
   fechaFinal;
-
+  areas:any[] = [];
+  observacionesRegistroHora:string;
+  //Confirmacion
+  idRegistroHora:string;
+  fecha:string;
+  //title de observacion
+  titleObservation:string;
+  btnConfirmacion:string;
 
   constructor(private _appRegistroHoraService:AppRegistroHoraService,
               private _appDepartamentoService:AppDepartamentoService,
@@ -88,54 +92,59 @@ export class GestionarInformeHoyComponent implements OnInit {
     this.getEstudiantes(this.IdDepartamento);
   }
 
+  //resetear el FORMULARIO no estamos usando
+  resetForm(formulario: NgForm) {
+    formulario.reset({
+    });
+  }
 
   calculadoraSaldo(hora, saldo){
     var hour = parseInt(hora.substr(0,2));
     var min = parseInt(hora.substr(3,2));
-    var auxSaldo = parseFloat(saldo);
+    var auxSaldo = parseInt(saldo);
     var totalSald;
 
-    if(min >= 0 && min <= 7){
-      auxSaldo = 0 ;
-    }else if(min >=8 && min <= 10){
-      auxSaldo = auxSaldo/6 * 1;
-    }    else if(min >=11 && min <= 20){
-      auxSaldo = auxSaldo/6 * 2;
-    }else if(min >=21 && min <= 30){
-      auxSaldo = auxSaldo/6 * 3;
-    }else if(min >=31 && min <= 40){
-      auxSaldo = auxSaldo/6 * 4;
-    }else if(min >=41 && min <= 50){
-      auxSaldo = auxSaldo/6 * 5;
-    }else if(min >=51 && min <= 60){
-      auxSaldo = auxSaldo
+    for (let i = 0; i <= 60; i++) {
+      if(min == i){
+        auxSaldo = auxSaldo/60 * i
+        break;
+      }
     }
     
-      var balance = hour * saldo;
-      var saldo1 = parseFloat(balance.toString());
-      var saldo2 = parseFloat(auxSaldo.toString());
-      totalSald = saldo1 + saldo2;
+    var balance = hour * saldo;
+    var saldo1 = parseFloat(balance.toString());
+    var saldo2 = parseFloat((auxSaldo.toFixed(2)).toString());
+    totalSald = saldo1 + saldo2;
 
     return totalSald;
   }
 
-  restarHoras(inicio, fin) {
-    var inicioMinutos = parseInt(inicio.substr(3,2));
-    var inicioHoras = parseInt(inicio.substr(0,2));
-    var finMinutos = parseInt(fin.substr(3,2));
-    var finHoras = parseInt(fin.substr(0,2));
-  
-    var transcurridoMinutos = finMinutos - inicioMinutos;
-    var transcurridoHoras = finHoras - inicioHoras;
+  horasTranscurrido(day1, hora1, day2, hora2){
+    var inicioMinutos = parseInt(hora1.substr(3,2));
+    var inicioHoras = parseInt(hora1.substr(0,2));
+    var finMinutos = parseInt(hora2.substr(3,2));
+    var finHoras = parseInt(hora2.substr(0,2));
+    var horastotal;
     
-    if (transcurridoMinutos < 0) {
-      transcurridoHoras--;
-      transcurridoMinutos = 60 + transcurridoMinutos;
+    var transcurridoMinutos;
+
+    if(day1 < day2){
+      var hora = inicioHoras - 24;
+      horastotal = (-hora) + finHoras;      
+    }else if (day1 == day2){
+      horastotal = finHoras - inicioHoras;
     }
 
+    if(inicioMinutos > finMinutos){
+      transcurridoMinutos = inicioMinutos - finMinutos;
+    }else{
+      transcurridoMinutos = finMinutos - inicioMinutos; 
+    }
+
+    var transcurridoHoras = horastotal; 
     var horas = transcurridoHoras.toString();
     var minutos = transcurridoMinutos.toString();
-    
+
     if (horas.length < 2) {
       horas = "0"+horas;
     }
@@ -144,6 +153,7 @@ export class GestionarInformeHoyComponent implements OnInit {
       minutos = "0"+minutos;
     }
     return horas+":"+minutos;  
+
   }
 
   sumarHoras(hora1, hora2) {
@@ -186,6 +196,12 @@ export class GestionarInformeHoyComponent implements OnInit {
       horatotale[1] = horatotale[1] - 60;
       horatotale[0] = horatotale[0] + 1;
     }
+    if(horatotale[0] < 10){
+      horatotale[0] = "0"+horatotale[0];
+    }
+    if(horatotale[1] < 10){
+      horatotale[1] = "0"+horatotale[1];
+    }
     return horatotale[0]+":"+horatotale[1];
   }
 
@@ -200,7 +216,7 @@ export class GestionarInformeHoyComponent implements OnInit {
       this.numHour= '00:00';
       this.totalSaldo = 0;
       this.totalDatos();   
-      }, 2000);
+      }, 3000);
   }
 
   totalDatos(){
@@ -224,7 +240,7 @@ export class GestionarInformeHoyComponent implements OnInit {
           auxMS = "0" + registro.minutoSalida;
         }else{auxMS = registro.minutoSalida;}
         horaFinal = auxHS + ":" + auxMS;
-        processHours = this.restarHoras(horaInicio, horaFinal);
+        processHours = this.horasTranscurrido(registro.dayEntrada, horaInicio, registro.daySalida, horaFinal);
         this.numHour = this.sumarHorasTotal(this.numHour, processHours);
         numMoney = this.calculadoraSaldo(processHours, this.costoHora);
         this.totalSaldo = numMoney + this.totalSaldo;
@@ -235,6 +251,7 @@ export class GestionarInformeHoyComponent implements OnInit {
         this.listHours.push('00:00');
       }
     }
+    this.totalSaldo = this.totalSaldo.toFixed(2);
   }
   //PARA OBTENER LOS DATOS DEL DEPARTAMENTO LUEGO SE PARA AL METODO infoDepartamento
   getDepartament(idDepartamento:string){
@@ -246,11 +263,12 @@ export class GestionarInformeHoyComponent implements OnInit {
   }
   //Obtener los estudiantes del departamento
   getEstudiantes(idDepartamento:string){
-    this._appTipoPersonaService.getListStudentDepto(idDepartamento)
+    this._appTipoPersonaService.getInfoEstudiantes(idDepartamento)
     .subscribe((estudiantes : Persona[]) => {this.estudiantes = estudiantes});
   }
 
-  informacionEstudiante(idEstudiante){
+  informacionEstudiante(idRegistroHora, idEstudiante){
+    this.areas = [];
     for(let estudiante of this.estudiantes){
       if(estudiante.idPersona == idEstudiante){
         if (estudiante.segundoNombre == null && estudiante.segundoApellido != null ) {
@@ -277,6 +295,12 @@ export class GestionarInformeHoyComponent implements OnInit {
           this.fechaFinal = estudiante.fechaFinal;
           this.fotocopiaCI = estudiante.fotocopiaCarnet;
           this.solicitudWork = estudiante.solicitudTrabajo;
+          this.areas.push(estudiante.nombreArea);
+      }
+    }
+    for(let registro of this.informesRegistrosNow){
+      if(registro.idPersona == idEstudiante && registro.idRegistroHora == idRegistroHora){
+        this.observacionesRegistroHora = registro.observacionRegistroHora;
       }
     }
   }
@@ -336,18 +360,30 @@ export class GestionarInformeHoyComponent implements OnInit {
     }, 2000);
   }
 
-  registrarAprovacion(idRegistro:string, aprobado:string, fecha:string, idRegistroHora:string){
-    this.registro.aprovadoRegistroHora = aprobado;
-    this._appRegistroHoraService.putRegsitroAprovacion(idRegistro, this.registro)
+  registrarAprobacion(idRegistro:string, aprobado:string, fecha:string, idRegistroHora:string){
+    this.idRegistro = idRegistro;
+    this.fecha = fecha;
+    this.idRegistroHora = idRegistroHora;
+    this.registro.aprobadoRegistroHora = aprobado;
+    this.btnConfirmacion = 'aprovacion';
+    if(aprobado == '1'){
+      this.titleObservation = 'Argumentos de aprovación';
+    }else{
+      this.titleObservation = 'Argumentos de desaprovación';      
+    }
+  }
+
+  confirmarAprovacion(){
+    this._appRegistroHoraService.putRegsitroAprovacion(this.idRegistro, this.registro)
     .subscribe((data : RegistroHora[]) => {console.log(data)});
 
-    if(aprobado == '1'){
+    if(this.registro.aprobadoRegistroHora == '1'){
       setTimeout(() => {
-      this.saveInformeEstudiante(idRegistro);        
+      this.saveInformeEstudiante(this.idRegistro);        
       }, 1000);
     }else{
       setTimeout(() => {
-        this.eliminarInformeEstudiante(fecha, idRegistroHora);     
+        this.eliminarInformeEstudiante(this.fecha, this.idRegistroHora);     
         }, 1000);
     }
 
@@ -358,10 +394,12 @@ export class GestionarInformeHoyComponent implements OnInit {
 
   eliminarAsistencia(idRegistro:string){
    this.idRegistro = idRegistro;
+   this.titleObservation = 'Argumentos de eliminación';
+   this.btnConfirmacion = 'delete';
   }
 
   confirmacionDelete(){
-    this._appRegistroHoraService.deleteRegistroHora(this.idRegistro)
+    this._appRegistroHoraService.deleteRegistroHora(this.idRegistro, this.registro)
     .subscribe((data : RegistroHora[]) => {console.log(data)});
     this.messageDelete = true;
     setTimeout(() => {
@@ -376,14 +414,15 @@ export class GestionarInformeHoyComponent implements OnInit {
     var i = 0;
     for(var informe of this.informesRegistrosNow){
       i++;
-      if(informe.idRegistroHora == idRegistroHora){
-        this.informeEstudiante.idRegistroHora = informe.idRegistroHora;
-        this.informeEstudiante.fecha = informe.fechaEntrada;
-        this.informeEstudiante.totalHoras = this.listHours[i];
-        this.informeEstudiante.totalSaldo = this.listSaldo[i];
+      if(informe.idRegistroHora == idRegistroHora){       
+          this.informeEstudiante.idRegistroHora = informe.idRegistroHora;
+          this.informeEstudiante.fecha = informe.fechaEntrada;
+          this.informeEstudiante.totalHoras = this.listHours[i];
+          this.informeEstudiante.totalSaldo = this.listSaldo[i];
         
-        this._appInformeEstudianteService.postInformeEstudiante(this.informeEstudiante)
-        .subscribe((informe : InformeEstudiante[]) => {console.log(informe)});
+          this._appInformeEstudianteService.postInformeEstudiante(this.informeEstudiante)
+          .subscribe((informe : InformeEstudiante[]) => {console.log(informe)});
+                
       }
     }  
   }

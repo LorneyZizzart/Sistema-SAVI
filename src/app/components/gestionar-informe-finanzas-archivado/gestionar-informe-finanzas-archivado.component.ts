@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { InformeFinanzas } from '../../interfaces/informe-finanzas.interface';
 import { AppInformeFinanzasService } from '../../services/app-informe-finanzas.service';
+import { Persona } from '../../interfaces/persona.interface';
+import { AppTipoPersonaService } from '../../services/app-tipoPersona.service';
 
 @Component({
   selector: 'app-gestionar-informe-finanzas-archivado',
@@ -24,19 +26,25 @@ export class GestionarInformeFinanzasArchivadoComponent implements OnInit {
   carrera:string
   semestre:string
   beca:string;
-  estadoConvenio:string;
+  estadoConvenio:boolean;
   nombreDepartamento:string;
   fotocopiaCI;
   solicitudWork;
   fechaInicio;
   fechaFinal;
+  observacionesRegistroHora:string;
+  areas:any[] = [];
   //message de desarchivado
   MessageInformeDesarchivado:boolean = false;
+  //Lista de estudiantes del departameto
+  estudiantes:Persona[];
 
-  constructor(private _appInformeFinanzasService:AppInformeFinanzasService) { }
+  constructor(private _appInformeFinanzasService:AppInformeFinanzasService,
+              private _appTipoPersonaService:AppTipoPersonaService) { }
 
   ngOnInit() {
     this.getInformFinanzas();
+    this.getEstudiantes();
   }
 
   getInformFinanzas(){
@@ -57,8 +65,14 @@ export class GestionarInformeFinanzasArchivadoComponent implements OnInit {
     }, 2000);
   }
 
-  informacionEstudiante(idEstudiante){
-    for(let estudiante of this.informeFinanzas){
+  getEstudiantes(){
+    this._appTipoPersonaService.getInfoStudentFinanzas()
+    .subscribe((estudiantes : Persona[]) => {this.estudiantes = estudiantes});
+  }
+
+  informacionEstudiante(idRegistroHora, idEstudiante){
+    this.areas = [];
+    for(let estudiante of this.estudiantes){
       if(estudiante.idPersona == idEstudiante){
         if (estudiante.segundoNombre == null && estudiante.segundoApellido != null ) {
           this.nombreCompleto = estudiante.primerNombre + " " + estudiante.primerApellido + " " + estudiante.segundoApellido;
@@ -84,6 +98,12 @@ export class GestionarInformeFinanzasArchivadoComponent implements OnInit {
           this.fechaFinal = estudiante.fechaFinal;
           this.fotocopiaCI = estudiante.fotocopiaCarnet;
           this.solicitudWork = estudiante.solicitudTrabajo;
+          this.areas.push(estudiante.nombreArea);
+      }
+    }
+    for(let registro of this.informeFinanzas){
+      if(registro.idPersona == idEstudiante && registro.idRegistroHora == idRegistroHora){
+        this.observacionesRegistroHora = registro.observacionRegistroHora;
       }
     }
   }

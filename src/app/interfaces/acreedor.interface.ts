@@ -1,6 +1,7 @@
 export interface Acreedor {
   idAcreedor?:string;
-  idInformeFinanzas?:string;
+  idInformeEstudiante?:string;
+  idConvenio?:string
   idUsuario?:string;
   fechaAsignado?:string;
   montoBs?:string;

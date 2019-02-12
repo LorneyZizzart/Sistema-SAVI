@@ -14,148 +14,183 @@
 <div *ngIf="MessageInformeAprobado == true" class="pad no-print">
     <div class="callout callout-success">
         <h4><i class="icon fa fa-check"></i> El informe fue aprobado</h4>
+        <p>Al aprobar se encuentra listo para acreditar el saldo al estudiante.</p>
     </div>
 </div>
 <div *ngIf="MessageInformeNoAprobado == true" class="pad no-print">
-    <div class="callout callout-warning">
-        <h4><i class="icon fa fa-close"></i> El informe fue desaprobado</h4>
+    <div class="callout callout-info">
+        <h4><i class="icon fa fa-info"></i> El informe fue desaprobado</h4>
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="modal-informacion">
-  <div class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title">Mas información...</h4>
-          </div>
-          <div class="infoConvenio modal-body">
-              <div class="row">
-                  <div class="col-md-3">
-                      <div class="box-profile">
-                          <img class="profile-user-img img-responsive img-circle" src="assets/img/departamento.png" alt="User profile picture">
-                      </div>
-                  </div>
-                  <div class="col-md-9">
-                      <div class="box-header with-border">
-                          <h3 class="modal-name"><strong>DEPARTAEMNTO {{ nombreDepartamento | uppercase }}</strong> </h3>
-                      </div>
-                  </div>
-              </div>
-              <div class="row">
-                  <hr>
-                  <h4>DATOS DEL JEFE DEL DEPARTAEMNTO</h4>
-                      <div class="col-md-5">
-                          <p><strong><i class="fa fa-user margin-r-5"></i> Nombre completo:</strong></p>    
-                      </div>
-                      <div class="col-md-7">
-                          <p>{{ nombreJefe }}</p>  
-                      </div>
-              </div>
-              <div class="row">
-                  <hr>
-                  <h4>DATOS DEL DEPARTAEMNTO</h4>
-                      <div class="col-md-5">
-                          <p><strong><i class="fa fa-slack margin-r-5"></i> Código departamento:</strong></p>
-                          <p><strong><i class="fa fa-building margin-r-5"></i> Nombre del departamento:</strong></p>
-                          <p><strong><i class="fa fa-money margin-r-5"></i> Costo de hora:</strong></p>
-                          <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha de actualizacion:</strong></p>
-                          <p><strong><i class="fa fa-step-forward margin-r-5"></i> Limite de estudiantes:</strong></p>
-                          <p><strong><i class="fa fa-play margin-r-5"></i> Cant. Est. trabajando:</strong></p>
-                          <p><strong><i class="fa fa-forward margin-r-5"></i> Cupos:</strong></p>
-                          <p><strong><i class="fa fa-dot-circle-o margin-r-5"></i> Estado del departamento:</strong></p>
-                      </div>
-                      <div class="col-md-7">
-                          <p>{{ codigoDepartamento }}</p>
-                          <p>{{ nombreDepartamento }}</p>
-                          <p>{{ costoHora }} Bs.</p>
-                          <p>{{ fechaRegistroHistorialDep | date: 'dd/MM/yyyy' }}</p>
-                          <p>{{ limiteEstudiante }}</p>
-                          <p>{{ cantidadEstudiantes }}</p>
-                          <p>{{ cupos }}</p>
-                          <p>{{ estadoDepartamento | estado }}</p>
-                      </div>
-                  </div>
-              </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
-          </div>
-      </div>
-  </div>
-</div>
 <div class="modal fade" id="modal-informacionStudiante">
-  <div class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title">Mas información...</h4>
-          </div>
-          <div class="infoConvenio modal-body">
-              <div class="row">
-                  <div class="col-md-3">
-                      <div class="box-profile">
-                          <img class="profile-user-img img-responsive img-circle" src="assets/img/avatar.png" alt="User profile picture">
-                          <p class="text-muted text-center">650004813</p>
-                      </div>
-                  </div>
-                  <div class="col-md-9">
-                      <div class="box-header with-border">
-                          <h3 class="modal-name"><strong>{{ nombreCompleto }}</strong> </h3>
-                      </div>
-                  </div>
-              </div>
-              <div class="row">
-                  <h6 class="page-header">DATOS PERSONALES</h6>
-                      <div class="col-md-5">
-                          <p><strong><i class="fa fa-credit-card margin-r-5"></i> Carnet de Identidad:</strong></p>                                        
-                          <p><strong><i class="fa fa-flag-checkered margin-r-5"></i> Nacionalidad:</strong></p>
-                          <p><strong><i class="fa fa-map-marker margin-r-5"></i> Dirección:</strong></p>
-                          <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha nacimiento:</strong></p>
-                          <p><strong><i class="fa fa-phone margin-r-5"></i> Celular:</strong></p>
-                          <p><strong><i class="fa fa-dot-circle-o margin-r-5"></i> Estado de registro:</strong></p>
-                      </div>
-                      <div class="col-md-7">
-                          <p>{{ ci }}</p>   
-                          <p>{{ nacionalidad }}</p>
-                          <p>{{ direccion }}</p>
-                          <p>{{ fechaNacimiento | date: 'dd/MM/yyyy' }}</p>
-                          <p>{{ celular }}</p>
-                          <p>{{ estadoPersona | estado}}</p>
-                      </div>
-              </div>
-              <div class="row">
-                  <h6 class="page-header">DATOS DEL CONVENIO</h6>
-                      <div class="col-md-5">
-                          <p *ngIf="carrera"><strong><i class="fa fa-book margin-r-5"></i> Carrera:</strong></p>
-                          <p *ngIf="semestre"><strong><i class="fa fa-star margin-r-5"></i> Semestre:</strong></p>
-                          <p><strong><i class="fa fa-building margin-r-5"></i> Departamento:</strong></p>
-                          <p><strong><i class="fa fa-tag margin-r-5"></i> Beca:</strong></p>
-                          <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha inicio:</strong></p>
-                          <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha final:</strong></p>
-                          <p><strong><i class="fa fa-file margin-r-5"></i> Fotocopia de carnet:</strong></p>
-                          <p><strong><i class="fa fa-file-text margin-r-5"></i> Solicitud de trabajo:</strong></p>
-                          <p><strong><i class="fa fa-dot-circle-o margin-r-5"></i> Estado del convenio:</strong></p>
-                      </div>
-                      <div class="col-md-7">
-                          <p *ngIf="carrera">{{ carrera }}</p>
-                          <p *ngIf="semestre">{{ semestre }}</p>
-                          <p>{{ nombreDepartamento }}</p>
-                          <p>{{ beca }}</p>
-                          <p>{{ fechaInicio | date: 'dd/MM/yyyy'}}</p>
-                          <p>{{ fechaFinal | date: 'dd/MM/yyyy'}}</p>
-                          <p>{{ fotocopiaCI | boleano }}</p>
-                          <p>{{ solicitudWork | boleano }}</p>
-                          <p>{{ estadoConvenio | estado }}</p>
-                      </div>
-                  </div>
-              </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
-          </div>
-      </div>
-  </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Mas información...</h4>
+            </div>
+        <div class="infoConvenio modal-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="box-profile">
+                        <img class="profile-user-img img-responsive img-circle" src="assets/img/avatar.png" alt="User profile picture">
+                        <p class="text-muted text-center">{{ codEstudiante }}</p>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="box-header with-border">
+                        <h3 class="modal-name"><strong>{{ nombreCompleto }}</strong> </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <h6 class="page-header">DATOS PERSONALES</h6>
+                    <div class="col-md-5">
+                        <p><strong><i class="fa fa-credit-card margin-r-5"></i> Carnet de Identidad:</strong></p>                                        
+                        <p><strong><i class="fa fa-flag-checkered margin-r-5"></i> Nacionalidad:</strong></p>
+                        <p><strong><i class="fa fa-map-marker margin-r-5"></i> Dirección:</strong></p>
+                        <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha nacimiento:</strong></p>
+                        <p><strong><i class="fa fa-phone margin-r-5"></i> Celular:</strong></p>
+                        <p><strong><i class="fa fa-dot-circle-o margin-r-5"></i> Estado de registro:</strong></p>
+                    </div>
+                    <div class="col-md-7">
+                        <p>{{ ci }}</p>   
+                        <p>{{ nacionalidad }}</p>
+                        <p>{{ direccion }}</p>
+                        <p>{{ fechaNacimiento | date: 'dd/MM/yyyy' }}</p>
+                        <p>{{ celular }}</p>
+                        <p>{{ estadoPersona | estado}}</p>
+                    </div>
+            </div>
+            <div class="row">
+                <h6 class="page-header">DATOS DEL CONVENIO</h6>
+                    <div class="col-md-5">
+                        <p *ngIf="carrera"><strong><i class="fa fa-book margin-r-5"></i> Carrera:</strong></p>
+                        <p *ngIf="semestre"><strong><i class="fa fa-star margin-r-5"></i> Semestre:</strong></p>
+                        <p><strong><i class="fa fa-building margin-r-5"></i> Departamento:</strong></p>
+                        <p><strong><i class="fa fa-wrench margin-r-5"></i> Area de trabajo:</strong></p>
+                        <p><strong><i class="fa fa-tag margin-r-5"></i> Beca:</strong></p>
+                        <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha inicio:</strong></p>
+                        <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha final:</strong></p>
+                        <p><strong><i class="fa fa-file margin-r-5"></i> Fotocopia de carnet:</strong></p>
+                        <p><strong><i class="fa fa-file-text margin-r-5"></i> Solicitud de trabajo:</strong></p>
+                        <p><strong><i class="fa fa-dot-circle-o margin-r-5"></i> Estado del convenio:</strong></p>
+                    </div>
+                    <div class="col-md-7">
+                        <p *ngIf="carrera">{{ carrera }}</p>
+                        <p *ngIf="semestre">{{ semestre }}</p>
+                        <p>{{ nombreDepartamento }}</p>
+                        <div *ngIf="areas.length == 0" class="container-area">
+                            <p>Sin asiganción de área</p>                                
+                        </div>
+                        <div *ngIf="areas.length > 0" class="container-area">
+                            <p *ngFor="let area of areas; let i = index" class="areas">
+                                {{ area }} &nbsp;-&nbsp;
+                            </p>                                
+                        </div>
+                        <p>{{ beca }}</p>
+                        <p>{{ fechaInicio | date: 'dd/MM/yyyy'}}</p>
+                        <p>{{ fechaFinal | date: 'dd/MM/yyyy'}}</p>
+                        <p>{{ fotocopiaCI | boleano }}</p>
+                        <p>{{ solicitudWork | boleano }}</p>
+                        <p>{{ estadoConvenio | estado }}</p>
+                    </div>
+                </div>
+                <div *ngIf="observacionesRegistroHora != null" class="row info-observaciones">
+                    <div class="col-md-12">
+                        <p ><strong><i class="fa fa-eye margin-r-5"></i> Observaciones de registro de asistencia</strong></p>
+                    </div>
+                    <div class="col-md-12">
+                        <p>{{ observacionesRegistroHora }}</p> 
+                    </div>                        
+                </div>
+            </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+        </div>
+    </div>
+</div>
+</div>
+<div class="modal fade" id="modal-acreditacion">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Aprobación de la acreditacón</h4>
+            </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="box-profile">
+                        <img class="profile-user-img img-responsive img-circle" src="assets/img/avatar.png" alt="User profile picture">
+                        <p class="text-muted text-center">{{ codEstudiante }}</p>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="box-header with-border">
+                        <h3 class="modal-name"><strong>{{ nombreCompleto }}</strong> </h3>
+                    </div>
+                </div>                
+            </div>
+            <div class="row">
+                <div class="col-md-6 group-acreditacion">
+                    <p><strong><i class="fa fa-clock-o margin-r-5"></i> Horas:</strong></p>
+                    <div class="input-acreditacion">
+                        <p>12:00</p>
+                    </div>                    
+                </div>
+                <div class="col-md-6 group-acreditacion">
+                    <p ><strong><i class="fa fa-money margin-r-5"></i> Saldo:</strong></p>
+                    <div class="input-acreditacion">
+                        <p>15 Bs.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                    <label>Reducir:</label>
+
+                    <div class="input-group">
+                        <input type="text" class="form-control timepicker" placeholder="00:00">
+
+                        <div class="input-group-addon">
+                        <i class="fa fa-clock-o"></i>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="col-md-4 group-acreditacion">
+                    <p><strong><i class="fa fa-clock-o margin-r-5"></i> Total Horas:</strong></p>
+                    <div class="input-acreditacion">
+                        <p>12:00</p>
+                    </div>                    
+                </div>
+                <div class="col-md-4 group-acreditacion">
+                    <p ><strong><i class="fa fa-money margin-r-5"></i> Total Saldo:</strong></p>
+                    <div class="input-acreditacion">
+                        <p>15 Bs.</p>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Observación</label>
+                    <textarea class="form-control" rows="3" placeholder="obsevaciones ..."></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer text-center acreditacion">
+            <div class="col-md-6">
+                <button type="button"  data-dismiss="modal" aria-label="Close" class="btn btn-danger"><i class="fa fa-close"></i> Cancelar</button>
+            </div>
+            <div class="col-md-6">
+                <button data-dismiss="modal" aria-label="Close" type="button" class="btn btn-success"><i class="fa fa-save"></i> Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
   <!-- Main content -->
   <section class="content">
@@ -172,7 +207,8 @@
                   </div>
                   <!-- /.box-header -->
                   <div class="box-body">
-                      <p>Lista de horas y saldos totales de los estudiantes que trabajan en la Universidad</p>                     
+                      <p>Lista de horas y saldos totales de los estudiantes que trabajan en la Universidad. &nbsp;Opciones: <a class="btn-success"><i class="fa fa-check"></i></a> Aprobar&nbsp;&nbsp;  
+                        <a class="btn-danger"><i class="fa fa-close"></i></a> No aprobar </p>                   
                           <div class="table-responsive pad">
                               <table class="table table-bordered table-hover ">
                                   <tr>
@@ -180,9 +216,9 @@
                                       <th class="text-center">Cod.</th>
                                       <th>Nombre completo</th>
                                       <th>Departamento</th>
-                                      <th>Fecha de ingreso</th>
+                                      <th>Fecha</th>
                                       <th style="width: 6%">Total horas</th>
-                                      <th style="width: 6%">Total saldo</th>
+                                      <th style="width: 9%">Total saldo</th>
                                       <th class="text-center" style="width: 6%">Aprovación Jefe</th>
                                       <th class="text-center" style="width: 6%">Aprovación Finanzas</th>
                                       <th class="text-center" style="width: 20%px">Opciones</th>
@@ -190,7 +226,7 @@
                                   <tr *ngFor="let informe of listInformeEstudiante; let i = index">
                                       <td>{{i+1}}.</td>
                                       <td class="text-center">{{informe.codEstudiante}}</td>
-                                      <td>{{informe.primerNombre}}  {{informe.segundoNombre}} {{informe.primerApellido}} {{informe.segundoApellido}}</td>
+                                      <td>{{informe.primerApellido}} {{informe.segundoApellido}} {{informe.primerNombre}}  {{informe.segundoNombre}}</td>
                                       <td>{{informe.departamento}}</td>
                                       <td>{{informe.fecha | nameDay }}</td>
                                       <td class="text-center">{{informe.totalHoras}}</td>
@@ -199,11 +235,11 @@
                                           <span *ngIf="informe.aprobadoJefeDep != null" class="badge bg-green"><i class="fa fa-check"></i></span>
                                       </td>
                                       <td class="text-center">
-                                          <a *ngIf="informe.aprobadoFinanzas == false" (click)="aprobarInformeEstudiante(informe.idInformeEstudiante, '1')" class="btn btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Aprobar"><i class="fa fa-check"></i></a>
-                                          <a *ngIf="informe.aprobadoFinanzas == true" (click)="aprobarInformeEstudiante(informe.idInformeEstudiante, '0')" class="btn btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="No Aprobar"><i class="fa fa-close"></i></a>
+                                          <a (click)="aprobarInformeEstudiante(informe.idRegistroHora, informe.idInformeEstudiante, '1', informe.idConvenio, informe.totalSaldo); informacionEstudiante(informe.idRegistroHora, informe.idPersona)" data-toggle="modal" data-target="#modal-acreditacion" class="btn btn-success btn-margin" title="Aprobar"><i class="fa fa-check"></i></a>
+                                          <a (click)="aprobarInformeEstudiante(informe.idRegistroHora, informe.idInformeEstudiante, '0', informe.idConvenio, informe.totalSaldo)" class="btn btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="No aprobar"><i class="fa fa-close"></i></a>
                                     </td>
                                       <td class="text-center">
-                                          <a (click)="informacionEstudiante(informe.idPersona)" data-toggle="modal" data-target="#modal-informacionStudiante"  class="btn btn-primary btn-margin" title="Ver"><i class="fa fa-eye"></i></a>
+                                          <a (click)="informacionEstudiante(informe.idRegistroHora, informe.idPersona)" data-toggle="modal" data-target="#modal-informacionStudiante" class="btn btn-primary btn-margin" title="Ver"><i class="fa fa-eye"></i></a>
                                       </td>
                                   </tr>
                               </table>

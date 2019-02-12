@@ -3,6 +3,8 @@ import { InformeFinanzas } from '../../interfaces/informe-finanzas.interface';
 import { AppInformeFinanzasService } from '../../services/app-informe-finanzas.service';
 import { InformeEstudiante } from '../../interfaces/informe-estudiante.interface';
 import { AppInformeEstudianteService } from '../../services/app-informe-estudiante.service';
+import { Persona } from '../../interfaces/persona.interface';
+import { AppTipoPersonaService } from '../../services/app-tipoPersona.service';
 
 @Component({
   selector: 'app-gestionar-informe-finanzas-aprobado',
@@ -29,26 +31,33 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
   carrera:string
   semestre:string
   beca:string;
-  estadoConvenio:string;
+  estadoConvenio:boolean;
   nombreDepartamento:string;
   fotocopiaCI;
   solicitudWork;
   fechaInicio;
   fechaFinal;
+  observacionesRegistroHora
+  areas:any[] = [];
   // aprobar informe estudiante x finanzas
   informeEstudiante:InformeEstudiante = {};
   //messagge aprobacion and not 
   MessageInformeNoAprobado:boolean=false;
+  MessageInformeAprobado:boolean=false;
   //para archivar
   informesFinanzas:InformeFinanzas = {};
   //messsage de archivar
   MessageInformeArchivado:boolean = false;
+  //Lista de estudiantes del departameto
+  estudiantes:Persona[];
 
   constructor( private _appInformeEstudianteService:AppInformeEstudianteService,
-    private _appInformeFinanzasService:AppInformeFinanzasService) { }
+              private _appTipoPersonaService:AppTipoPersonaService,
+              private _appInformeFinanzasService:AppInformeFinanzasService) { }
 
   ngOnInit() {
     this.getInformFinanzas();
+    this.getEstudiantes();
   }
 
   sumarHoras(hora1, hora2) {
@@ -72,6 +81,7 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
       this.numStudent++;
       this.numHour = this.sumarHoras(this.numHour, registro.totalHoras);
       this.totalSaldo = parseFloat(this.totalSaldo) + parseFloat(registro.totalSaldo);
+      this.totalSaldo = this.totalSaldo.toFixed(2);
     }
   }
 
@@ -87,8 +97,14 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
     }, 2000);
   }
 
-  informacionEstudiante(idEstudiante){
-    for(let estudiante of this.informeFinanzas){
+  getEstudiantes(){
+    this._appTipoPersonaService.getInfoStudentFinanzas()
+    .subscribe((estudiantes : Persona[]) => {this.estudiantes = estudiantes});
+  }
+
+  informacionEstudiante(idRegistroHora, idEstudiante){
+    this.areas = [];
+    for(let estudiante of this.estudiantes){
       if(estudiante.idPersona == idEstudiante){
         if (estudiante.segundoNombre == null && estudiante.segundoApellido != null ) {
           this.nombreCompleto = estudiante.primerNombre + " " + estudiante.primerApellido + " " + estudiante.segundoApellido;
@@ -114,6 +130,12 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
           this.fechaFinal = estudiante.fechaFinal;
           this.fotocopiaCI = estudiante.fotocopiaCarnet;
           this.solicitudWork = estudiante.solicitudTrabajo;
+          this.areas.push(estudiante.nombreArea);
+      }
+    }
+    for(let registro of this.informeFinanzas){
+      if(registro.idPersona == idEstudiante && registro.idRegistroHora == idRegistroHora){
+        this.observacionesRegistroHora = registro.observacionRegistroHora;
       }
     }
   }
@@ -121,10 +143,7 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
   eliminarInformeFinanzas(idInformeEstudiante:string){
     this._appInformeFinanzasService.deleteInformeFinanzas(idInformeEstudiante)
     .subscribe((data: InformeFinanzas[]) => {console.log(data)});
-    this.MessageInformeNoAprobado=true;
-    setTimeout(() => {
-      this.MessageInformeNoAprobado=false;
-    }, 6000);
+    
   }
 
   aprobarInformeEstudiante(idInformeEstudiante:string, opcion:string){
@@ -132,11 +151,18 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
     this._appInformeEstudianteService.putInformeEstudianteAprobarFinanzas(idInformeEstudiante, this.informeEstudiante)
     .subscribe((informe : InformeEstudiante[]) => {console.log(informe)});
 
-    if(opcion == "0"){
+    if(opcion == '0'){
+      this.MessageInformeNoAprobado=true;
       setTimeout(() => {
-        this.eliminarInformeFinanzas(idInformeEstudiante);
-      }, 1000);
+        this.MessageInformeNoAprobado=false;
+      }, 6000);
+    }else if(opcion == '1'){
+      this.MessageInformeAprobado=true;
+      setTimeout(() => {
+        this.MessageInformeAprobado=false;
+      }, 6000);
     }
+
     setTimeout(() => {
       this.getInformFinanzas();
     }, 2000);
@@ -154,6 +180,5 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
       this.getInformFinanzas();
     }, 2000);
   }
-
 
 }

@@ -18,3 +18,26 @@
 .row-informe{
     margin-right: 3%;
 }
+
+.info-observaciones{
+    margin-top: 1.5%;
+    padding-top: 1%;
+    background: rgb(245, 247, 181);
+    margin-right: 2%;
+}
+
+.modal-footer-register {
+    text-align: center;
+    margin: auto;
+}
+
+.form-register{
+    margin: 0 5% 0 0;  
+}
+.container-area{
+    margin-bottom: 2.5%;
+}
+
+.areas{
+    display: inline;
+}

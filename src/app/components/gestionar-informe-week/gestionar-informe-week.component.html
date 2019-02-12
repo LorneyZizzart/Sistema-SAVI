@@ -153,6 +153,7 @@
                         <p *ngIf="carrera"><strong><i class="fa fa-book margin-r-5"></i> Carrera:</strong></p>
                         <p *ngIf="semestre"><strong><i class="fa fa-star margin-r-5"></i> Semestre:</strong></p>
                         <p><strong><i class="fa fa-building margin-r-5"></i> Departamento:</strong></p>
+                        <p><strong><i class="fa fa-wrench margin-r-5"></i> Area de trabajo:</strong></p>
                         <p><strong><i class="fa fa-tag margin-r-5"></i> Beca:</strong></p>
                         <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha inicio:</strong></p>
                         <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha final:</strong></p>
@@ -164,6 +165,14 @@
                         <p *ngIf="carrera">{{ carrera }}</p>
                         <p *ngIf="semestre">{{ semestre }}</p>
                         <p>{{ nombreDepartamento }}</p>
+                        <div *ngIf="areas.length == 0" class="container-area">
+                                <p>Sin asiganción de área</p>                                
+                        </div>
+                        <div *ngIf="areas.length > 0" class="container-area">
+                            <p *ngFor="let area of areas; let i = index" class="areas">
+                                {{ area }} &nbsp;-&nbsp;
+                            </p>                                
+                        </div>
                         <p>{{ beca }}</p>
                         <p>{{ fechaInicio | date: 'dd/MM/yyyy'}}</p>
                         <p>{{ fechaFinal | date: 'dd/MM/yyyy'}}</p>
@@ -172,6 +181,14 @@
                         <p>{{ estadoConvenio | estado }}</p>
                     </div>
                 </div>
+                <div *ngIf="observacionesRegistroHora != null" class="row info-observaciones">
+                    <div class="col-md-12">
+                        <p ><strong><i class="fa fa-eye margin-r-5"></i> Observaciones de registro de asistencia</strong></p>
+                    </div>
+                    <div class="col-md-12">
+                        <p>{{ observacionesRegistroHora }}</p> 
+                    </div>                        
+                </div>
             </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
@@ -179,13 +196,46 @@
     </div>
 </div>
 </div>
+<div class="modal fade" id="modal-aprobacion">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">{{ titleObservation }}</h4>
+            </div>
+            <form (ngSubmit)="registrarAsistencia()" #formAprobacion="ngForm" name="formAprobacion" class="form-horizontal">
+                <div class="infoConvenio modal-body">    
+                    <div class="row form-register">
+                        <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Observación</label>
+                                <textarea [(ngModel)]="registro.observacionRegistroHora" name="registro.observacionRegistroHora" class="form-control" rows="3" placeholder="obsevaciones ..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row text-center">
+                        <div class="col-md-6">
+                            <button type="button"  data-dismiss="modal" aria-label="Close" class="btn btn-danger">Cancelar</button>
+                        </div>
+                        <div class="col-md-6">
+                            <button *ngIf="btnConfirmacion == 'aprovacion'"  (click)="confirmarAprovacion()" data-dismiss="modal" aria-label="Close" type="button" class="btn btn-success">Guardar</button>
+                            <button *ngIf="btnConfirmacion == 'delete'" (click)="confirmacionDelete()" data-dismiss="modal" aria-label="Close" type="button" class="btn btn-success">Guardar</button>
+                        </div>
+                    </div>
+                </div>                    
+            </form>
+        </div>
+    </div>
+</div>
   <!-- Main content -->
   <section class="content">
       <div class="row">
           <div class="col-md-12">
               <div class="box box-primary">
                   <div class="box-header with-border">
-                      <h4 class="page-header"><i class="fa fa-list-ul"></i> Registro de asistencia de  {{fechaAnterior }}  -  {{ fecha | date: 'dd/MM/yyyy' }}</h4>
+                      <h4 class="page-header"><i class="fa fa-list-ul"></i> Registro de asistencia de  {{fechaAnterior }}  -  {{ fechaPosterior | date: 'dd/MM/yyyy' }}</h4>
 
                       <div class="btn-opciones box-tools pull-right">
                             <div class="btn-group">
@@ -206,7 +256,8 @@
                   </div>
                   <!-- /.box-header -->
                   <div class="box-body">
-                      <p>Lista de los estudiantes que ingresaron hoy.</p>                     
+                    <p class="text-left">Registro de los estudiantes que ingresaron en la semana. &nbsp;Descripción: <a class="btn-success"><i class="fa fa-check"></i></a> Aprobado&nbsp;&nbsp;  
+                        <a class="btn-danger"><i class="fa fa-close"></i></a> No aproba </p>                 
                           <div class="table-responsive pad">
                               <table class="table table-bordered table-hover ">
                                   <tr>
@@ -217,14 +268,14 @@
                                       <th class="text-center" style="width: 6%">Hora ingreso</th>
                                       <th class="text-center" style="width: 6%">Hora salida</th>
                                       <th style="width: 6%">Total horas</th>
-                                      <th style="width: 6%">Total saldo</th>
-                                      <th class="text-center">Aprovación</th>
+                                      <th style="width: 9%">Total saldo</th>
+                                      <th class="text-center">Aprobación</th>
                                       <th style="width: 20%px">Opciones</th>
                                   </tr>
                                   <tr *ngFor="let registro of informesRegistrosWeek; let i = index">
                                       <td>{{i+1}}.</td>
                                       <td class="text-center">{{registro.idRegistroHora}}</td>
-                                      <td>{{registro.primerNombre}}  {{registro.segundoNombre}} {{registro.primerApellido}} {{registro.segundoApellido}}</td>
+                                      <td>{{registro.primerApellido}} {{registro.segundoApellido}} {{registro.primerNombre}}  {{registro.segundoNombre}}</td>
                                       <td>{{registro.fechaEntrada | nameDay }}</td>
                                       <td class="text-center">{{registro.horaEntrada | hora }}:{{registro.minutoEntrada | minuto}}</td>
                                       <td *ngIf="registro.horaSalida == null"></td>
@@ -232,12 +283,14 @@
                                       <td class="text-center">{{listHours[i+1] | undefineHora}}</td>
                                       <td class="text-center">{{listSaldo[i+1] | undefineSaldo}} Bs.</td>
                                       <td class="text-center">
-                                          <a *ngIf="registro.aprovadoRegistroHora == true" (click)="registrarAprovacion(registro.idRegistroHora, '0', registro.fechaEntrada, registro.idRegistroHora)" class="btn btn-success btn-margin" title="Aprobado"><i class="fa fa-check"></i></a>
-                                          <a *ngIf="registro.aprovadoRegistroHora == false" (click)="registrarAprovacion(registro.idRegistroHora, '1', registro.fechaEntrada, registro.idRegistroHora)" class="btn btn-danger btn-margin" title="No aprobado"><i class="fa fa-close"></i></a>
+                                          <a *ngIf="registro.aprobadoRegistroHora == true" (click)="registrarAprobacion(registro.idRegistroHora, '0', registro.fechaEntrada, registro.idRegistroHora); resetForm(formAprobacion)" class="btn btn-success btn-margin" data-toggle="modal" data-target="#modal-aprobacion"  title="Aprobado"><i class="fa fa-check"></i></a>
+                                          <a *ngIf="registro.aprobadoRegistroHora == false && registro.horaSalida != NULL" (click)="registrarAprobacion(registro.idRegistroHora, '1', registro.fechaEntrada, registro.idRegistroHora); resetForm(formAprobacion)" data-toggle="modal" data-target="#modal-aprobacion" class="btn btn-danger btn-margin" title="No aprobado"><i class="fa fa-close"></i></a>
+                                            <a *ngIf="registro.aprobadoRegistroHora == false && registro.horaSalida == NULL" class="btn btn-danger btn-margin disabled" title="No aprobado"><i class="fa fa-close"></i></a>
                                       </td>
                                       <td class="text-center">
-                                          <a (click)="informacionEstudiante(registro.idPersona)" data-toggle="modal" data-target="#modal-informacionStudiante" class="btn btn-primary btn-margin" title="Ver"><i class="fa fa-eye"></i></a>                                          
-                                          <a (click)="eliminarAsistencia(registro.idRegistroHora)" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger btn-margin" title="Eliminar"><i class="fa fa-trash"></i></a>
+                                          <a (click)="informacionEstudiante(registro.idRegistroHora, registro.idPersona)" data-toggle="modal" data-target="#modal-informacionStudiante" class="btn btn-primary btn-margin" title="Ver"><i class="fa fa-eye"></i></a>                                          
+                                          <a *ngIf="registro.aprobadoRegistroHora == false" (click)="eliminarAsistencia(registro.idRegistroHora); resetForm(formAprobacion)" data-toggle="modal" data-target="#modal-aprobacion" class="btn btn-danger btn-margin" title="Eliminar"><i class="fa fa-trash"></i></a>
+                                          <a *ngIf="registro.aprobadoRegistroHora == true" class="btn btn-danger btn-margin disabled" title="Eliminar"><i class="fa fa-trash"></i></a>
                                       </td>
                                   </tr>
                               </table>

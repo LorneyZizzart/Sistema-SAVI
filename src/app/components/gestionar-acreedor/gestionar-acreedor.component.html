@@ -1,3 +1,161 @@
-<p>
-    gestionar-acreedor works!
-</p>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Departamento
+            <small> de Finanzas</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a [routerLink]="['/home']"><i class="fa fa-home"></i> Home</a></li>
+            <li class="active">Informe recividas</li>
+        </ol>
+    </section>
+  <div *ngIf="MessageInformeAprobado == true" class="pad no-print">
+      <div class="callout callout-success">
+          <h4><i class="icon fa fa-check"></i> El informe fue aprobado</h4>
+          <p>Al aprobar se encuentra listo para acreditar el saldo al estudiante.</p>
+      </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="modal-informacionStudiante">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Mas información...</h4>
+            </div>
+            <div class="infoConvenio modal-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="box-profile">
+                            <img class="profile-user-img img-responsive img-circle" src="assets/img/avatar.png" alt="User profile picture">
+                            <p class="text-muted text-center">650004813</p>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="box-header with-border">
+                            <h3 class="modal-name"><strong>{{ nombreCompleto }}</strong> </h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <h6 class="page-header">DATOS PERSONALES</h6>
+                        <div class="col-md-5">
+                            <p><strong><i class="fa fa-credit-card margin-r-5"></i> Carnet de Identidad:</strong></p>                                        
+                            <p><strong><i class="fa fa-flag-checkered margin-r-5"></i> Nacionalidad:</strong></p>
+                            <p><strong><i class="fa fa-map-marker margin-r-5"></i> Dirección:</strong></p>
+                            <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha nacimiento:</strong></p>
+                            <p><strong><i class="fa fa-phone margin-r-5"></i> Celular:</strong></p>
+                            <p><strong><i class="fa fa-dot-circle-o margin-r-5"></i> Estado de registro:</strong></p>
+                        </div>
+                        <div class="col-md-7">
+                            <p>{{ ci }}</p>   
+                            <p>{{ nacionalidad }}</p>
+                            <p>{{ direccion }}</p>
+                            <p>{{ fechaNacimiento | date: 'dd/MM/yyyy' }}</p>
+                            <p>{{ celular }}</p>
+                            <p>{{ estadoPersona | estado}}</p>
+                        </div>
+                </div>
+                <div class="row">
+                    <h6 class="page-header">DATOS DEL CONVENIO</h6>
+                        <div class="col-md-5">
+                            <p *ngIf="carrera"><strong><i class="fa fa-book margin-r-5"></i> Carrera:</strong></p>
+                            <p *ngIf="semestre"><strong><i class="fa fa-star margin-r-5"></i> Semestre:</strong></p>
+                            <p><strong><i class="fa fa-building margin-r-5"></i> Departamento:</strong></p>
+                            <p><strong><i class="fa fa-wrench margin-r-5"></i> Area de trabajo:</strong></p>
+                            <p><strong><i class="fa fa-tag margin-r-5"></i> Beca:</strong></p>
+                            <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha inicio:</strong></p>
+                            <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha final:</strong></p>
+                            <p><strong><i class="fa fa-file margin-r-5"></i> Fotocopia de carnet:</strong></p>
+                            <p><strong><i class="fa fa-file-text margin-r-5"></i> Solicitud de trabajo:</strong></p>
+                            <p><strong><i class="fa fa-dot-circle-o margin-r-5"></i> Estado del convenio:</strong></p>
+                        </div>
+                        <div class="col-md-7">
+                            <p *ngIf="carrera">{{ carrera }}</p>
+                            <p *ngIf="semestre">{{ semestre }}</p>
+                            <p>{{ nombreDepartamento }}</p>
+                            <div *ngIf="areas.length == 0" class="container-area">
+                                <p>Sin asiganción de área</p>                                
+                            </div>
+                            <div *ngIf="areas.length > 0" class="container-area">
+                                <p *ngFor="let area of areas; let i = index" class="areas">
+                                    {{ area }} &nbsp;-&nbsp;
+                                </p>                                
+                            </div>
+                            <p>{{ beca }}</p>
+                            <p>{{ fechaInicio | date: 'dd/MM/yyyy'}}</p>
+                            <p>{{ fechaFinal | date: 'dd/MM/yyyy'}}</p>
+                            <p>{{ fotocopiaCI | boleano }}</p>
+                            <p>{{ solicitudWork | boleano }}</p>
+                            <p>{{ estadoConvenio | estado }}</p>
+                        </div>
+                    </div>
+                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+  </div>
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h4 class="page-header"><i class="fa a-clone"></i> Lista de saldos de los estudiantes de todos los departamentos</h4>
+  
+                        <div class="btn-opciones box-tools pull-right">
+                          <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                          </button>                          
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <p>Lista de saldos totales de los estudiantes que trabajan en la Universidad</p>                     
+                            <div class="table-responsive pad">
+                                <table class="table table-bordered table-hover ">
+                                    <tr>
+                                        <th style="width: 10px">#</th>
+                                        <th class="text-center">Cod.</th>
+                                        <th>Nombre completo</th>
+                                        <th>Departamento</th>
+                                        <th>Fecha</th>
+                                        <th>Saldo total</th>
+                                        <th class="text-center" style="width: 6%">Estado</th>
+                                        <th class="text-center" style="width: 20%px">Opciones</th>
+                                    </tr>
+                                    <tr *ngFor="let informe of acreedores; let i = index">
+                                        <td>{{i+1}}.</td>
+                                        <td class="text-center">{{informe.codEstudiante}}</td>
+                                        <td>{{informe.primerApellido}} {{informe.segundoApellido}} {{informe.primerNombre}}  {{informe.segundoNombre}}</td>
+                                        <td>{{informe.departamento}}</td>
+                                        <td>{{informe.fechaAsignado | date: 'dd/MM/yyyy' }}</td>
+                                        <td class="text-center">{{informe.montoBs}} Bs.</td>
+                                        <td class="text-center">
+                                            <a *ngIf="informe.estado == true" (click)="editEstadoArea(area.idArea, '0')" class="btn btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
+                                            <a *ngIf="informe.estado == false" (click)="editEstadoArea(area.idArea, '1')" class="btn btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
+                                        </td>
+                                        <td class="text-center">
+                                            <a (click)="informacionEstudiante(informe.idPersona)" data-toggle="modal" data-target="#modal-informacionStudiante"  class="btn btn-primary btn-margin" title="Ver"><i class="fa fa-eye"></i></a>
+                                            <a class="btn btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  

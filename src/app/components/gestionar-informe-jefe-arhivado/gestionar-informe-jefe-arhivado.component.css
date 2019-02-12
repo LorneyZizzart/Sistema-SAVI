@@ -14,3 +14,18 @@
 .modal-footer {
     background: #ECF0F5;
 }
+
+.info-observaciones{
+    margin-top: 1.5%;
+    padding-top: 1%;
+    background: rgb(245, 247, 181);
+    margin-right: 2%;
+}
+
+.container-area{
+    margin-bottom: 2.5%;
+}
+
+.areas{
+    display: inline;
+}

@@ -20,6 +20,7 @@ export interface Persona {
   estadoUsuario?: string
 //Se utiliza para dar info del estudiante en convenio
   departamento?:string;
+  nombreArea?:string
   beca?:string;
   estadoConvenio?:boolean;
   fechaInicio?:string;

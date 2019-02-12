@@ -22,7 +22,18 @@ export class AppTipoPersonaService {
   getMaxIdPersona() {
     return this._http.get(this.listaTipoPersonaURL).pipe(map(res => res));
   }
-  //Para listar lso estudiantes x departamento
+
+  getInfoStudentFinanzas(){
+    let url = `${this.listaTipoPersonaURL}/finanzas/infoEstudiante/`;
+    return this._http.get<Persona[]>(url).pipe(map(res => res));
+  }
+
+  getInfoEstudiantes(idDepartamento:string){
+    let url = `${this.listaTipoPersonaURL}/infoEstudiante/${idDepartamento}`;
+    return this._http.get<Persona[]>(url).pipe(map(res => res));
+  }
+
+  //Para listar lso estudiantes x departamento para asignar a una area
   getListStudentDepto(idDepartamento:string){
     let url = `${this.listaTipoPersonaURL}/estDep/${idDepartamento}`;
     return this._http.get<Persona[]>(url).pipe(map(res => res));

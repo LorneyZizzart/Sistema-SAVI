@@ -2,7 +2,11 @@ export interface InformeFinanzas {
   idInformeFinanzas?:string
   idUsuario?:string
   idInformeEstudiante?:string
+  totalHorasF?:string
+  totalSaldoF?:string
+  obsrevacionFinanzas?:string
   fechaAprobada?:string
+  acreditado?:string
   archivar?:string
   //convenio
   idConvenio?:string
@@ -37,5 +41,7 @@ export interface InformeFinanzas {
   aprobadoFinanzas?:string
   totalHoras?:string
   totalSaldo?:string
-
+  //RegistroHora
+  idRegistroHora?:string
+  observacionRegistroHora?:string
 }

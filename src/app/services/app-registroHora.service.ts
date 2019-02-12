@@ -61,8 +61,23 @@ export class AppRegistroHoraService {
       .pipe ();
   }
 
-  deleteRegistroHora(key$:string){
-    let url = `${this.listaRegistroHora}/${key$}`;
-    return this._http.delete(url).pipe(map(res => res));
+  putRegsitroAprobarFinanzas(idRegistro:string, registro:RegistroHora):Observable<RegistroHora[]>{
+    let body = JSON.stringify(registro);
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    let url = `${this.listaRegistroHora}/aprobarFinanzas/${idRegistro}`;
+    return this._http.put<RegistroHora[]>(url, body, { headers })
+      .pipe ();
+  }
+
+  deleteRegistroHora(idRegistro:string, registro:RegistroHora):Observable<RegistroHora[]>{
+    let body = JSON.stringify(registro);
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    let url = `${this.listaRegistroHora}/delete/${idRegistro}`;
+    return this._http.put<RegistroHora[]>(url, body, { headers })
+      .pipe ();
   }
 }

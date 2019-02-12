@@ -9,8 +9,43 @@
 .modal-body {
     background: #ECF0F5;
     padding-left: 8%;
+    padding-right: 8%;
 }
 
 .modal-footer {
     background: #ECF0F5;
+}
+
+.acreditacion{
+    text-align: center;
+    margin: auto;
+    padding-bottom: 4%;
+}
+
+.info-observaciones{
+    margin-top: 1.5%;
+    padding-top: 1%;
+    background: rgb(245, 247, 181);
+    margin-right: 2%;
+}
+
+.container-area{
+    margin-bottom: 2.5%;
+}
+
+.areas{
+    display: inline;
+}
+
+.group-acreditacion{
+    margin: 0 0 2% 0;
+}
+
+.input-acreditacion{
+    margin: -2% 0 0 0;
+    border: 1px solid #ccc;
+    background: rgb(255, 255, 255);
+    text-align: center;
+    padding-top: 3%;
+    height: 40%;
 }

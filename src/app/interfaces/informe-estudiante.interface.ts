@@ -8,6 +8,8 @@ export interface InformeEstudiante {
   aprobadoJefeDep?:string
   aprobadoFinanzas?:string
   archivar?:string
+  //registro Hora
+  observacionRegistroHora?:string
   //datos personales
   idPersona?: string;
   codEstudiante?:string

@@ -18,77 +18,94 @@
 </div>
 <!-- Modal -->
 <div class="modal fade" id="modal-informacionStudiante">
-  <div class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title">Mas información...</h4>
-          </div>
-          <div class="infoConvenio modal-body">
-              <div class="row">
-                  <div class="col-md-3">
-                      <div class="box-profile">
-                          <img class="profile-user-img img-responsive img-circle" src="assets/img/avatar.png" alt="User profile picture">
-                          <p class="text-muted text-center">650004813</p>
-                      </div>
-                  </div>
-                  <div class="col-md-9">
-                      <div class="box-header with-border">
-                          <h3 class="modal-name"><strong>{{ nombreCompleto }}</strong> </h3>
-                      </div>
-                  </div>
-              </div>
-              <div class="row">
-                  <h6 class="page-header">DATOS PERSONALES</h6>
-                      <div class="col-md-5">
-                          <p><strong><i class="fa fa-credit-card margin-r-5"></i> Carnet de Identidad:</strong></p>                                        
-                          <p><strong><i class="fa fa-flag-checkered margin-r-5"></i> Nacionalidad:</strong></p>
-                          <p><strong><i class="fa fa-map-marker margin-r-5"></i> Dirección:</strong></p>
-                          <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha nacimiento:</strong></p>
-                          <p><strong><i class="fa fa-phone margin-r-5"></i> Celular:</strong></p>
-                          <p><strong><i class="fa fa-dot-circle-o margin-r-5"></i> Estado de registro:</strong></p>
-                      </div>
-                      <div class="col-md-7">
-                          <p>{{ ci }}</p>   
-                          <p>{{ nacionalidad }}</p>
-                          <p>{{ direccion }}</p>
-                          <p>{{ fechaNacimiento | date: 'dd/MM/yyyy' }}</p>
-                          <p>{{ celular }}</p>
-                          <p>{{ estadoPersona | estado}}</p>
-                      </div>
-              </div>
-              <div class="row">
-                  <h6 class="page-header">DATOS DEL CONVENIO</h6>
-                      <div class="col-md-5">
-                          <p *ngIf="carrera"><strong><i class="fa fa-book margin-r-5"></i> Carrera:</strong></p>
-                          <p *ngIf="semestre"><strong><i class="fa fa-star margin-r-5"></i> Semestre:</strong></p>
-                          <p><strong><i class="fa fa-building margin-r-5"></i> Departamento:</strong></p>
-                          <p><strong><i class="fa fa-tag margin-r-5"></i> Beca:</strong></p>
-                          <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha inicio:</strong></p>
-                          <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha final:</strong></p>
-                          <p><strong><i class="fa fa-file margin-r-5"></i> Fotocopia de carnet:</strong></p>
-                          <p><strong><i class="fa fa-file-text margin-r-5"></i> Solicitud de trabajo:</strong></p>
-                          <p><strong><i class="fa fa-dot-circle-o margin-r-5"></i> Estado del convenio:</strong></p>
-                      </div>
-                      <div class="col-md-7">
-                          <p *ngIf="carrera">{{ carrera }}</p>
-                          <p *ngIf="semestre">{{ semestre }}</p>
-                          <p>{{ nombreDepartamento }}</p>
-                          <p>{{ beca }}</p>
-                          <p>{{ fechaInicio | date: 'dd/MM/yyyy'}}</p>
-                          <p>{{ fechaFinal | date: 'dd/MM/yyyy'}}</p>
-                          <p>{{ fotocopiaCI | boleano }}</p>
-                          <p>{{ solicitudWork | boleano }}</p>
-                          <p>{{ estadoConvenio | estado }}</p>
-                      </div>
-                  </div>
-              </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
-          </div>
-      </div>
-  </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Mas información...</h4>
+            </div>
+        <div class="infoConvenio modal-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="box-profile">
+                        <img class="profile-user-img img-responsive img-circle" src="assets/img/avatar.png" alt="User profile picture">
+                        <p class="text-muted text-center">650004813</p>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="box-header with-border">
+                        <h3 class="modal-name"><strong>{{ nombreCompleto }}</strong> </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <h6 class="page-header">DATOS PERSONALES</h6>
+                    <div class="col-md-5">
+                        <p><strong><i class="fa fa-credit-card margin-r-5"></i> Carnet de Identidad:</strong></p>                                        
+                        <p><strong><i class="fa fa-flag-checkered margin-r-5"></i> Nacionalidad:</strong></p>
+                        <p><strong><i class="fa fa-map-marker margin-r-5"></i> Dirección:</strong></p>
+                        <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha nacimiento:</strong></p>
+                        <p><strong><i class="fa fa-phone margin-r-5"></i> Celular:</strong></p>
+                        <p><strong><i class="fa fa-dot-circle-o margin-r-5"></i> Estado de registro:</strong></p>
+                    </div>
+                    <div class="col-md-7">
+                        <p>{{ ci }}</p>   
+                        <p>{{ nacionalidad }}</p>
+                        <p>{{ direccion }}</p>
+                        <p>{{ fechaNacimiento | date: 'dd/MM/yyyy' }}</p>
+                        <p>{{ celular }}</p>
+                        <p>{{ estadoPersona | estado}}</p>
+                    </div>
+            </div>
+            <div class="row">
+                <h6 class="page-header">DATOS DEL CONVENIO</h6>
+                    <div class="col-md-5">
+                        <p *ngIf="carrera"><strong><i class="fa fa-book margin-r-5"></i> Carrera:</strong></p>
+                        <p *ngIf="semestre"><strong><i class="fa fa-star margin-r-5"></i> Semestre:</strong></p>
+                        <p><strong><i class="fa fa-building margin-r-5"></i> Departamento:</strong></p>
+                        <p><strong><i class="fa fa-wrench margin-r-5"></i> Area de trabajo:</strong></p>
+                        <p><strong><i class="fa fa-tag margin-r-5"></i> Beca:</strong></p>
+                        <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha inicio:</strong></p>
+                        <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha final:</strong></p>
+                        <p><strong><i class="fa fa-file margin-r-5"></i> Fotocopia de carnet:</strong></p>
+                        <p><strong><i class="fa fa-file-text margin-r-5"></i> Solicitud de trabajo:</strong></p>
+                        <p><strong><i class="fa fa-dot-circle-o margin-r-5"></i> Estado del convenio:</strong></p>
+                    </div>
+                    <div class="col-md-7">
+                        <p *ngIf="carrera">{{ carrera }}</p>
+                        <p *ngIf="semestre">{{ semestre }}</p>
+                        <p>{{ nombreDepartamento }}</p>
+                        <div *ngIf="areas.length == 0" class="container-area">
+                            <p>Sin asiganción de área</p>                                
+                        </div>
+                        <div *ngIf="areas.length > 0" class="container-area">
+                            <p *ngFor="let area of areas; let i = index" class="areas">
+                                {{ area }} &nbsp;-&nbsp;
+                            </p>                                
+                        </div>
+                        <p>{{ beca }}</p>
+                        <p>{{ fechaInicio | date: 'dd/MM/yyyy'}}</p>
+                        <p>{{ fechaFinal | date: 'dd/MM/yyyy'}}</p>
+                        <p>{{ fotocopiaCI | boleano }}</p>
+                        <p>{{ solicitudWork | boleano }}</p>
+                        <p>{{ estadoConvenio | estado }}</p>
+                    </div>
+                </div>
+                <div *ngIf="observacionesRegistroHora != null" class="row info-observaciones">
+                    <div class="col-md-12">
+                        <p ><strong><i class="fa fa-eye margin-r-5"></i> Observaciones de registro de asistencia</strong></p>
+                    </div>
+                    <div class="col-md-12">
+                        <p>{{ observacionesRegistroHora }}</p> 
+                    </div>                        
+                </div>
+            </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+        </div>
+    </div>
+</div>
 </div>
   <!-- Main content -->
   <section class="content">
@@ -113,17 +130,17 @@
                                       <th class="text-center">Cod.</th>
                                       <th>Nombre completo</th>
                                       <th>Departamento</th>
-                                      <th>Fecha de ingreso</th>
+                                      <th>Fecha</th>
                                       <th style="width: 6%">Total horas</th>
-                                      <th style="width: 6%">Total saldo</th>
+                                      <th style="width: 9%">Total saldo</th>
                                       <th class="text-center" style="width: 6%">Aprovación Jefe</th>
                                       <th class="text-center" style="width: 6%">Aprovación Finanzas</th>
-                                      <th class="text-center" style="width: 20%px">Opciones</th>
+                                      <th class="text-center" style="width: 10%">Opciones</th>
                                   </tr>
                                   <tr *ngFor="let informe of informeFinanzas; let i = index">
                                       <td>{{i+1}}.</td>
                                       <td class="text-center">{{informe.codEstudiante}}</td>
-                                      <td>{{informe.primerNombre}}  {{informe.segundoNombre}} {{informe.primerApellido}} {{informe.segundoApellido}}</td>
+                                      <td>{{informe.primerApellido}} {{informe.segundoApellido}} {{informe.primerNombre}}  {{informe.segundoNombre}}</td>
                                       <td>{{informe.departamento}}</td>
                                       <td>{{informe.fecha | nameDay }}</td>
                                       <td class="text-center">{{informe.totalHoras}}</td>
@@ -133,9 +150,10 @@
                                       </td>
                                       <td class="text-center">
                                           <span *ngIf="informe.aprobadoFinanzas == true" class="badge bg-green"><i class="fa fa-check"></i></span>
+                                          <span *ngIf="informe.aprobadoFinanzas == false" class="badge bg-red"><i class="fa fa-close"></i></span>
                                     </td>
                                       <td class="text-center">
-                                          <a (click)="informacionEstudiante(informe.idPersona)" data-toggle="modal" data-target="#modal-informacionStudiante"  class="btn btn-primary btn-margin" title="Ver"><i class="fa fa-eye"></i></a>
+                                          <a (click)="informacionEstudiante(informe.idRegistroHora, informe.idPersona)" data-toggle="modal" data-target="#modal-informacionStudiante"  class="btn btn-primary btn-margin" title="Ver"><i class="fa fa-eye"></i></a>
                                           <a *ngIf="informe.aprobadoJefeDep != NULL" (click)="archivarInformeFinanzas(informe.idInformeFinanzas)" class="btn btn-success btn-margin" title="Desarchivar"><i class="fa fa-folder-open"></i></a>
                                       </td>
                                   </tr>

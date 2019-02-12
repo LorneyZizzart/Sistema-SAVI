@@ -16,8 +16,9 @@ export interface RegistroHora {
     minutoSalida?:string
     segundoSalida?:string
     observacionRegistroHora?:string
-    aprovadoRegistroHora?
+    aprobadoRegistroHora?
     estadoRegistroHora?:string
+    aprobadoFinanzas?:string
     idPersona?:string
     primerNombre?:string
     segundoNombre?:string

@@ -3,6 +3,8 @@ import { AppDepartamentoService } from '../../services/app-departamento.service'
 import { Departamento } from '../../interfaces/departamento.interface';
 import { InformeEstudiante } from '../../interfaces/informe-estudiante.interface';
 import { AppInformeEstudianteService } from '../../services/app-informe-estudiante.service';
+import { Persona } from '../../interfaces/persona.interface';
+import { AppTipoPersonaService } from '../../services/app-tipoPersona.service';
 
 @Component({
   selector: 'app-gestionar-informe-jefe',
@@ -43,22 +45,30 @@ export class GestionarInformeJefeComponent implements OnInit {
   carrera:string
   semestre:string
   beca:string;
-  estadoConvenio:string;
+  estadoConvenio:boolean;
   fotocopiaCI;
   solicitudWork;
   fechaInicio;
   fechaFinal;
+  observacionesRegistroHora:string;
+  areas:any[] = [];
   //
   informeEstudiante:InformeEstudiante = {};
   //message
   MessageSuccessArchivar:boolean = false;
+  //Lista de estudiantes del departameto
+  estudiantes:Persona[];
 
   constructor(private _appDepartamentoService:AppDepartamentoService,
+    private _appTipoPersonaService:AppTipoPersonaService,
     private _appInformeEstudianteService:AppInformeEstudianteService) { }
 
   ngOnInit() {
     this.getDepartament(this.IdDepartamento);
     this.getInfomeEstudiante(this.IdDepartamento);
+    setTimeout(() => {
+      this.getEstudiantes(this.IdDepartamento);
+    }, 1000);
   }
 
   sumarHoras(hora1, hora2) {
@@ -82,6 +92,7 @@ export class GestionarInformeJefeComponent implements OnInit {
       this.numStudent++;
       this.numHour = this.sumarHoras(this.numHour, registro.totalHoras);
       this.totalSaldo = parseFloat(this.totalSaldo) + parseFloat(registro.totalSaldo);
+      this.totalSaldo = this.totalSaldo.toFixed(2);
     }
   }
 
@@ -116,8 +127,14 @@ export class GestionarInformeJefeComponent implements OnInit {
     }
   }
 
-  informacionEstudiante(idEstudiante){
-    for(let estudiante of this.listInformeEstudiante){
+  getEstudiantes(idDepartamento:string){
+    this._appTipoPersonaService.getInfoEstudiantes(idDepartamento)
+    .subscribe((estudiantes : Persona[]) => {this.estudiantes = estudiantes});
+  }
+
+  informacionEstudiante(idRegistroHora, idEstudiante){
+    this.areas = [];
+    for(let estudiante of this.estudiantes){
       if(estudiante.idPersona == idEstudiante){
         if (estudiante.segundoNombre == null && estudiante.segundoApellido != null ) {
           this.nombreCompleto = estudiante.primerNombre + " " + estudiante.primerApellido + " " + estudiante.segundoApellido;
@@ -143,6 +160,12 @@ export class GestionarInformeJefeComponent implements OnInit {
           this.fechaFinal = estudiante.fechaFinal;
           this.fotocopiaCI = estudiante.fotocopiaCarnet;
           this.solicitudWork = estudiante.solicitudTrabajo;
+          this.areas.push(estudiante.nombreArea);
+      }
+    }
+    for(let registro of this.listInformeEstudiante){
+      if(registro.idPersona == idEstudiante && registro.idRegistroHora == idRegistroHora){
+        this.observacionesRegistroHora = registro.observacionRegistroHora;
       }
     }
   }
