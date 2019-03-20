@@ -32,7 +32,7 @@ export interface InformeFinanzas {
   fotocopiaCarnet?:string
   solicitudTrabajo?:string
   estadoConvenio?:string
-  //informeJefe
+  //informeEstudiante
   idInformeJefe?:string
   fecha?:string
   detalle?:string

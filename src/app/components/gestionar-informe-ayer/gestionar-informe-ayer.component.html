@@ -1,3 +1,5 @@
+<div class="wrapper">
+    <app-navbar-jf></app-navbar-jf>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
@@ -254,7 +256,7 @@
                         <a class="btn-danger"><i class="fa fa-close"></i></a> No aproba </p>                     
                           <div class="table-responsive pad">
                               <table class="table table-bordered table-hover ">
-                                <tr>
+                                <tr class="fila-tabla">
                                     <th style="width: 10px">#</th>
                                     <th class="text-center">Cod.</th>
                                     <th>Nombre completo</th>
@@ -275,12 +277,16 @@
                                     <td *ngIf="registro.horaSalida" class="text-center">{{registro.horaSalida | hora }}:{{registro.minutoSalida | minuto}}</td>
                                     <td class="text-center">{{listHours[i+1] | undefineHora}}</td>
                                     <td class="text-center">{{listSaldo[i+1] | undefineSaldo}} Bs</td>
-                                    <td class="text-center"><a (click)="registrarSalida(registro.idRegistroHora)" class="btn btn-success btn-margin" title="Marcar salida"><i class="fa fa-sign-in"></i></a></td>
                                     <td class="text-center">
-                                            <a *ngIf="registro.aprobadoRegistroHora == true" (click)="registrarAprovacion(registro.idRegistroHora, '0', registro.fechaEntrada, registro.idRegistroHora); resetForm(formAprobacion)" data-toggle="modal" data-target="#modal-aprobacion" class="btn btn-success btn-margin" title="Aprobado"><i class="fa fa-check"></i></a>
-                                            <a *ngIf="registro.aprobadoRegistroHora == false && registro.horaSalida != NULL" (click)="registrarAprovacion(registro.idRegistroHora, '1', registro.fechaEntrada, registro.idRegistroHora); resetForm(formAprobacion)" data-toggle="modal" data-target="#modal-aprobacion" class="btn btn-danger btn-margin" title="No aprobado"><i class="fa fa-close"></i></a>
-                                            <a *ngIf="registro.aprobadoRegistroHora == false && registro.horaSalida == NULL" class="btn btn-danger btn-margin disabled" title="No aprobado"><i class="fa fa-close"></i></a>
-                                        </td>
+                                        <a *ngIf="registro.aprobadoFinanzas == false" (click)="registrarSalida(registro.idRegistroHora)" class="btn btn-success btn-margin" title="Marcar salida"><i class="fa fa-sign-in"></i></a>
+                                        <a *ngIf="registro.aprobadoFinanzas == true" class="btn btn-success btn-margin disabled" title="Marcar salida"><i class="fa fa-sign-in"></i></a>
+                                    </td>
+                                    <td class="text-center">
+                                        <a *ngIf="registro.aprobadoRegistroHora == true && registro.aprobadoFinanzas == false" (click)="registrarAprovacion(registro.idPersona, registro.idRegistroHora, '0', registro.fechaEntrada, registro.idRegistroHora); resetForm(formAprobacion)" data-toggle="modal" data-target="#modal-aprobacion" class="btn btn-success btn-margin" title="Aprobado"><i class="fa fa-check"></i></a>
+                                        <a *ngIf="registro.aprobadoRegistroHora == true && registro.aprobadoFinanzas == true" class="btn btn-success btn-margin disabled" title="Aprobado"><i class="fa fa-check"></i></a>
+                                        <a *ngIf="registro.aprobadoRegistroHora == false && registro.horaSalida != NULL" (click)="registrarAprovacion(registro.idPersona, registro.idRegistroHora, '1', registro.fechaEntrada, registro.idRegistroHora); resetForm(formAprobacion)" data-toggle="modal" data-target="#modal-aprobacion" class="btn btn-danger btn-margin" title="No aprobado"><i class="fa fa-close"></i></a>
+                                        <a *ngIf="registro.aprobadoRegistroHora == false && registro.horaSalida == NULL" class="btn btn-danger btn-margin disabled" title="No aprobado"><i class="fa fa-close"></i></a>
+                                    </td>
                                     <td class="text-center">
                                         <a (click)="informacionEstudiante(registro.idRegistroHora, registro.idPersona)" class="btn btn-primary btn-margin" data-toggle="modal" data-target="#modal-informacionStudiante" title="Ver"><i class="fa fa-eye"></i></a>
                                         <a *ngIf="registro.aprobadoRegistroHora == false" (click)="eliminarAsistencia(registro.idRegistroHora); resetForm(formAprobacion)" data-toggle="modal" data-target="#modal-aprobacion" class="btn btn-danger btn-margin" title="Eliminar"><i class="fa fa-trash"></i></a>
@@ -338,5 +344,8 @@
       <!-- /.row -->
   </section>
   <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+<app-footer></app-footer> 
 </div>
 <!-- /.content-wrapper -->

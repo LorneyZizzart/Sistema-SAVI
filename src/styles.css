@@ -2,5 +2,9 @@ body {
     margin-bottom: 0%;
 }
 
+.fila-tabla{
+    background: rgba(0,0,0,0.2);
+}
+
 
 /* You can add global styles to this file, and also import other style files */

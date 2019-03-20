@@ -3,5 +3,7 @@ export interface Descuento {
   idAcreedor?:string
   idUsuario?:string
   fechaDescuento?:string
-  montoBs?:string
+  montoDescuento?:string
+  editDescuento?:string
+  observacion?:string
 }

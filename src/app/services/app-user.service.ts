@@ -23,10 +23,15 @@ export class AppUserService {
     return this._http.get<Persona[]>(this.listaUserURL).pipe(map(res => res));
     }
 
-  getUser(key$:string):Observable<User[]>{
+  getUser(key$:string):Observable<Persona[]>{
       let url = `${this.listaUserURL}/${key$}`;
-      return this._http.get<User[]>(url);
+      return this._http.get<Persona[]>(url);
     }
+  
+  getVerificarUser(user, password):Observable<User[]>{
+      let url = `${this.listaUserURL}/${user}/${password}`;
+      return this._http.get<User[]>(url);
+  }
 
   postUser(user:User):Observable<User[]>{
       let body = JSON.stringify(user);

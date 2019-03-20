@@ -1,0 +1,62 @@
+<div class="login-box">
+  <div class="login-logo">
+    <img class="img-responsive img-login" src="assets/img/userLogin.png" alt="User profile picture">
+  </div>
+  <!-- /.login-logo -->
+  <div class="login-box-body">
+    <p class="login-box-msg">
+      <strong>Iniciar sesión</strong></p>
+
+    <form (ngSubmit)="verificarUsuario()" #verficarUser="ngForm" name="frmVerificarUser" >
+      <div class="form-group has-feedback">
+        <input [(ngModel)]="user.usuario" name="user.usuario" type="text" class="form-control" placeholder="Usuario">
+        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+      </div>
+      <div class="form-group has-feedback">
+        <input [(ngModel)]="user.password" name="user.password" type="password" class="form-control" placeholder="Contraseña">
+        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+      </div>
+      <div class="row opciones-login">
+        <div class="col-xs-8">
+          <div class="checkbox icheck">
+            <label>
+              <input type="checkbox">Recuérdame
+            </label>
+          </div>
+        </div>
+        <!-- /.col -->
+        <div class="col-xs-4">
+          <button type="submit" class="btn btn-primary btn-block btn-flat">Ingresar</button>
+        </div>
+        <!-- /.col -->
+      </div>
+    </form>
+    <a href="#">Olvidé mi contraseña</a><br>
+  </div>
+  <!-- /.login-box-body -->
+</div>
+
+<div *ngIf="alertUserIncorrect" id="growls-default">
+  <div class="growl growl-error growl-large">
+    <div class="growl-close">×</div>
+    <div class="growl-title"><i class="icon fa fa-close"></i> Error</div>
+    <div class="growl-message">El usuario y la contraseña no son validos</div>
+  </div>
+</div>
+
+<div *ngIf="alertLoading" id="growls-default">
+    <div class="growl growl-info growl-large">
+      <div class="growl-close">×</div>
+      <div class="growl-title"><i class="icon fa fa-spinner fa-spin"></i> Cargando...</div>
+      <div class="growl-message">Comprobando usuario y contraseña</div>
+    </div>
+</div>
+
+<div *ngIf="alertUsuarioDesabilitado" id="growls-default">
+    <div class="growl growl-warning growl-large">
+      <div class="growl-close">×</div>
+      <div class="growl-title"><i class="icon fa fa-warning"></i> Advertencia</div>
+      <div class="growl-message">Usuario desabilitado</div>
+    </div>
+</div>
+

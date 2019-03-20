@@ -1,3 +1,5 @@
+<div class="wrapper">
+    <app-navbar-jf></app-navbar-jf>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
@@ -111,7 +113,7 @@
             <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
         </div>
     </div>
-</div>
+    </div>
 </div>
 <div class="modal fade" id="modal-acreditacion">
     <div class="modal-dialog">
@@ -121,6 +123,7 @@
                 <span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Aprobación de la acreditacón</h4>
             </div>
+        <form #formConfirmacion="ngForm" name="formAprobacion" class="form-horizontal">   
         <div class="modal-body">
             <div class="row">
                 <div class="col-md-3">
@@ -130,70 +133,82 @@
                     </div>
                 </div>
                 <div class="col-md-9">
-                    <div class="box-header with-border">
-                        <h3 class="modal-name"><strong>{{ nombreCompleto }}</strong> </h3>
+                    <div class="box-header">
+                        <h3 class="modal-name"><strong>{{ nombreCompleto }}</strong> </h3>                         
                     </div>
                 </div>                
             </div>
+            <br>
             <div class="row">
-                <div class="col-md-6 group-acreditacion">
-                    <p><strong><i class="fa fa-clock-o margin-r-5"></i> Horas:</strong></p>
-                    <div class="input-acreditacion">
-                        <p>12:00</p>
-                    </div>                    
-                </div>
-                <div class="col-md-6 group-acreditacion">
-                    <p ><strong><i class="fa fa-money margin-r-5"></i> Saldo:</strong></p>
-                    <div class="input-acreditacion">
-                        <p>15 Bs.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
+                <div class="col-lg-6">
                     <div class="form-group">
-                    <label>Reducir:</label>
-
-                    <div class="input-group">
-                        <input type="text" class="form-control timepicker" placeholder="00:00">
-
-                        <div class="input-group-addon">
-                        <i class="fa fa-clock-o"></i>
-                        </div>
+                    <label><i class="fa fa-clock-o margin-r-5"></i> Horas:</label>
+                    <div class="input-group col-md-12">
+                        <input [(ngModel)]="Horas" name="Horas" type="text" class="form-control" placeholder="00:00" disabled>
+                    </div>                   
+                    </div>                   
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                    <label><i class="fa fa-money margin-r-5"></i> Saldo:</label>
+                    <div class="input-group col-md-12">
+                        <input [(ngModel)]="Saldo" name="Saldo" type="text" class="form-control" placeholder="00.00 Bs" disabled>
+                    </div>                  
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                    <label><i class="fa fa-clock-o margin-r-5"></i> Reducir:</label>
+                    <div class="input-group col-md-12">
+                        <input (keyup)="inputReducir()" [(ngModel)]="menosHoras" name="menosHoras" type="text" class="form-control" placeholder="00:00">
                     </div>
                     </div>
                 </div>
-                <div class="col-md-4 group-acreditacion">
-                    <p><strong><i class="fa fa-clock-o margin-r-5"></i> Total Horas:</strong></p>
-                    <div class="input-acreditacion">
-                        <p>12:00</p>
-                    </div>                    
-                </div>
-                <div class="col-md-4 group-acreditacion">
-                    <p ><strong><i class="fa fa-money margin-r-5"></i> Total Saldo:</strong></p>
-                    <div class="input-acreditacion">
-                        <p>15 Bs.</p>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                    <label><i class="fa fa-clock-o margin-r-5"></i> Incrementar:</label>
+                    <div class="input-group col-md-12">
+                        <input (keyup)="inputIncrementar()" [(ngModel)]="masHoras" name="masHoras" type="text" class="form-control" placeholder="00:00">
                     </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                    <label><i class="fa fa-clock-o margin-r-5"></i> Total Horas:</label>
+                    <div class="input-group col-md-12">
+                        <input [(ngModel)]="informeFinanzas.totalHorasF" name="informeFinanzas.totalHorasF" type="text" class="form-control" placeholder="00:00" disabled>
+                    </div>  
+                    </div>            
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                    <label><i class="fa fa-money margin-r-5"></i> Total saldo:</label>
+                    <div class="input-group col-md-12">
+                        <input [(ngModel)]="informeFinanzas.totalSaldoF" name="informeFinanzas.totalSaldoF" type="text" class="form-control" placeholder="0 Bs." disabled>
+                    </div> 
+                    </div>                     
                 </div>
                 <div class="col-md-12">
                     <div class="form-group">
                         <label>Observación</label>
-                    <textarea class="form-control" rows="3" placeholder="obsevaciones ..."></textarea>
+                    <textarea [(ngModel)]="informeFinanzas.obsrevacionFinanzas" name="informeFinanzas.obsrevacionFinanzas" class="form-control" rows="3" placeholder="obsevaciones ..."></textarea>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="modal-footer text-center acreditacion">
+        <div class="modal-footer text-center footer-acreditacion">
             <div class="col-md-6">
-                <button type="button"  data-dismiss="modal" aria-label="Close" class="btn btn-danger"><i class="fa fa-close"></i> Cancelar</button>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-danger"><i class="fa fa-close"></i> Cancelar</button>
             </div>
             <div class="col-md-6">
-                <button data-dismiss="modal" aria-label="Close" type="button" class="btn btn-success"><i class="fa fa-save"></i> Guardar</button>
+                <button (click)="confirmarAprobarInformeEstudiante()" type="button" data-dismiss="modal" aria-label="Close" class="btn btn-success"><i class="fa fa-save"></i> Guardar</button>
             </div>
         </div>
+    </form>
     </div>
 </div>
 </div>
-  <!-- Main content -->
-  <section class="content">
+<section class="content">
       <div class="row">
           <div class="col-md-12">
               <div class="box box-primary">
@@ -205,13 +220,12 @@
                         </button>                          
                       </div>
                   </div>
-                  <!-- /.box-header -->
                   <div class="box-body">
                       <p>Lista de horas y saldos totales de los estudiantes que trabajan en la Universidad. &nbsp;Opciones: <a class="btn-success"><i class="fa fa-check"></i></a> Aprobar&nbsp;&nbsp;  
                         <a class="btn-danger"><i class="fa fa-close"></i></a> No aprobar </p>                   
                           <div class="table-responsive pad">
                               <table class="table table-bordered table-hover ">
-                                  <tr>
+                                  <tr class="fila-tabla">
                                       <th style="width: 10px">#</th>
                                       <th class="text-center">Cod.</th>
                                       <th>Nombre completo</th>
@@ -235,9 +249,9 @@
                                           <span *ngIf="informe.aprobadoJefeDep != null" class="badge bg-green"><i class="fa fa-check"></i></span>
                                       </td>
                                       <td class="text-center">
-                                          <a (click)="aprobarInformeEstudiante(informe.idRegistroHora, informe.idInformeEstudiante, '1', informe.idConvenio, informe.totalSaldo); informacionEstudiante(informe.idRegistroHora, informe.idPersona)" data-toggle="modal" data-target="#modal-acreditacion" class="btn btn-success btn-margin" title="Aprobar"><i class="fa fa-check"></i></a>
-                                          <a (click)="aprobarInformeEstudiante(informe.idRegistroHora, informe.idInformeEstudiante, '0', informe.idConvenio, informe.totalSaldo)" class="btn btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="No aprobar"><i class="fa fa-close"></i></a>
-                                    </td>
+                                          <a (click)="aprobarInformeEstudiante(informe.idDepartamento, informe.idRegistroHora, informe.idInformeEstudiante, '1', informe.idConvenio, informe.totalSaldo); informacionEstudiante(informe.idRegistroHora, informe.idPersona)" data-toggle="modal" data-target="#modal-acreditacion" class="btn btn-success btn-margin" title="Aprobar"><i class="fa fa-check"></i></a>
+                                          <a (click)="aprobarInformeEstudiante(informe.idDepartamento, informe.idRegistroHora, informe.idInformeEstudiante, '0', informe.idConvenio, informe.totalSaldo)" class="btn btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="No aprobar"><i class="fa fa-close"></i></a>
+                                     </td>
                                       <td class="text-center">
                                           <a (click)="informacionEstudiante(informe.idRegistroHora, informe.idPersona)" data-toggle="modal" data-target="#modal-informacionStudiante" class="btn btn-primary btn-margin" title="Ver"><i class="fa fa-eye"></i></a>
                                       </td>
@@ -245,53 +259,45 @@
                               </table>
                           </div>
                   </div>
-                  <!-- ./box-body -->
                   <div class="box-footer">
-                          <div class="row">
-                                  <div class="col-md-4 col-sm-6 col-xs-12">
-                                          <div class="info-box border-right">
-                                              <span class="info-box-icon"><i class="fa fa-users"></i></span>
-                  
-                                              <div class="info-box-content">
-                                                  <span class="info-box-text">CANTIDAD DE ESTUDIANTE</span>
-                                                  <span class="info-box-number">{{numStudent}}</span>
-                                              </div>
-                                              <!-- /.info-box-content -->
-                                          </div>
-                                  </div>  
-                                  <div class="col-md-4 col-sm-6 col-xs-12">
-                                      <div class="info-box border-right">
-                                          <span class="info-box-icon"><i class="fa fa-clock-o"></i></span>
-              
-                                          <div class="info-box-content">
-                                              <span class="info-box-text">TOTAL DE HORAS</span>
-                                              <span class="info-box-number">{{numHour}}</span>
-                                          </div>
-                                          <!-- /.info-box-content -->
-                                      </div>
-                                  </div>  
-                                  <div class="col-md-4 col-sm-6 col-xs-12">
-                                      <div class="info-box">
-                                          <span class="info-box-icon"><i class="fa fa-money"></i></span>
-              
-                                          <div class="info-box-content">
-                                              <span class="info-box-text">TOTAL DE SALDO</span>
-                                              <span class="info-box-number">{{totalSaldo}} Bs.</span>
-                                          </div>
-                                          <!-- /.info-box-content -->
-                                      </div>
-                                  </div>                   
-                              </div>
-                      <!-- /.row -->
+                        <div class="row">
+                                <div class="col-md-4 col-sm-6 col-xs-12">
+                                        <div class="info-box border-right">
+                                            <span class="info-box-icon"><i class="fa fa-users"></i></span>
+                
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">CANTIDAD DE ESTUDIANTE</span>
+                                                <span class="info-box-number">{{numStudent}}</span>
+                                            </div>
+                                        </div>
+                                </div>  
+                                <div class="col-md-4 col-sm-6 col-xs-12">
+                                    <div class="info-box border-right">
+                                        <span class="info-box-icon"><i class="fa fa-clock-o"></i></span>
+            
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">TOTAL DE HORAS</span>
+                                            <span class="info-box-number">{{numHour}}</span>
+                                        </div>
+                                    </div>
+                                </div>  
+                                <div class="col-md-4 col-sm-6 col-xs-12">
+                                    <div class="info-box">
+                                        <span class="info-box-icon"><i class="fa fa-money"></i></span>
+            
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">TOTAL DE SALDO</span>
+                                            <span class="info-box-number">{{totalSaldo}} Bs.</span>
+                                        </div>
+                                </div>
+                            </div>                   
+                        </div>
                   </div>
-                  <!-- /.box-footer -->
               </div>
-              <!-- /.box -->
           </div>
-          <!-- /.col -->
       </div>
-      <!-- /.row -->
   </section>
-  <!-- /.content -->
+</div>
+<app-footer></app-footer> 
 </div>
 <!-- /.content-wrapper -->

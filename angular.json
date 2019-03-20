@@ -35,6 +35,7 @@
                             "node_modules/admin-lte/bower_components/bootstrap-daterangepicker/daterangepicker.css",
                             "node_modules/admin-lte/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css",
                             "node_modules/admin-lte/bower_components/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css",
+                            "node_modules/admin-lte/dist/css/jquery.growl.css",
                             "src/styles.css"
                         ],
                         "scripts": [
@@ -60,6 +61,7 @@
                             "node_modules/admin-lte/bower_components/fastclick/lib/fastclick.js",
                             "node_modules/admin-lte/plugins/timepicker/bootstrap-timepicker.min.js",
                             "node_modules/admin-lte/dist/js/demo.js",
+                            "node_modules/admin-lte/dist/js/jquery.growl.js",
                             "src/assets/js/query.js"
                         ]
                     },

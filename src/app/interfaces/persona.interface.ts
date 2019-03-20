@@ -15,6 +15,7 @@ export interface Persona {
   semestre?:string
   idUsuario?: string;
   idRol?: string;
+  rol?:string
   usuario?: string;
   password?: string;
   estadoUsuario?: string

@@ -298,13 +298,13 @@ export class GestionarInformeWeekComponent implements OnInit {
     for(let estudiante of this.estudiantes){
       if(estudiante.idPersona == idEstudiante){
         if (estudiante.segundoNombre == null && estudiante.segundoApellido != null ) {
-          this.nombreCompleto = estudiante.primerNombre + " " + estudiante.primerApellido + " " + estudiante.segundoApellido;
+          this.nombreCompleto = estudiante.primerApellido + " " + estudiante.segundoApellido+ " " + estudiante.primerNombre ;
         } else if (estudiante.segundoNombre == null && estudiante.segundoApellido == null){
-          this.nombreCompleto = estudiante.primerNombre + " " + estudiante.primerApellido; 
+          this.nombreCompleto = estudiante.primerApellido + " " + estudiante.primerNombre; 
         }else if (estudiante.segundoNombre != null && estudiante.segundoApellido == null){ 
-          this.nombreCompleto = estudiante.primerNombre + " " + estudiante.segundoNombre + " " + estudiante.primerApellido;   
+          this.nombreCompleto = estudiante.primerApellido + " " + estudiante.primerNombre + " " + estudiante.segundoNombre;
         }else{
-          this.nombreCompleto = estudiante.primerNombre + " " + estudiante.segundoNombre + " " + estudiante.primerApellido + " " + estudiante.segundoApellido;
+          this.nombreCompleto = estudiante.primerApellido + " " + estudiante.segundoApellido + " " + estudiante.primerNombre + " " + estudiante.segundoNombre;
         }
           this.nacionalidad = estudiante.nacionalidad;
           this.direccion = estudiante.direccion;

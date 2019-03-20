@@ -1,3 +1,5 @@
+<div class="wrapper">
+    <app-navbar-jf></app-navbar-jf>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -250,14 +252,14 @@
                                 </div>
                                 <div class="table-responsive no-padding">
                                     <table class="table table-bordered table-hover">
-                                        <tr>
+                                        <tr class="fila-tabla">
                                             <th style="width: 10px">#</th>
                                             <th>Codigo estudiantil</th>
                                             <th>Nombre completo</th>
                                             <th>Nombre de usuario</th>
                                             <th>Rol de Usuario</th>
-                                            <th>Estado</th>
-                                            <th>Opciones</th>
+                                            <th class="text-center" >Estado</th>
+                                            <th class="text-center" >Opciones</th>
                                         </tr>
                                         <tr *ngFor="let user of userPersona; let i = index">
                                             <td>{{ i+1 }}.</td>
@@ -265,11 +267,11 @@
                                             <td>{{ user.primerNombre }} {{ user.segundoNombre | undefinedDato }} {{ user.primerApellido | undefinedDato }} {{ user.segundoApellido | undefinedDato }}</td>
                                             <td>{{ user.usuario }}</td>
                                             <td>{{ user.idRol | rolUser }}</td>
-                                            <td>
+                                            <td class="text-center" >
                                                 <a *ngIf="user.estadoUsuario == true" (click)="editEstadoUser(user.idRol, user.usuario, user.password, 0, user.idUsuario); messageEnableDesable('activo')" class="btn btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
                                                 <a *ngIf="user.estadoUsuario == false" (click)="editEstadoUser(user.idRol, user.usuario, user.password, 1, user.idUsuario); messageEnableDesable('inactivo')" class="btn  btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 <a (click)="buscarEstudiante(user.idPersona)" data-toggle="modal" class="btn btn-primary btn-margin" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a>
                                                 <a (click)="buscarEstudianteEditar(user.idPersona)" data-toggle="modal" data-target="#modal-editar" class="btn btn-default btn-margin" title="Editar"><i class="fa fa-edit"></i></a>
                                                 <a (click)="deleteUser(user.idUsuario)" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger btn-margin" title="Eliminar"><i class="fa fa-trash"></i></a>
@@ -550,5 +552,8 @@
         <!-- /.row -->
     </section>
     <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+<app-footer></app-footer> 
 </div>
 <!-- /.content-wrapper -->

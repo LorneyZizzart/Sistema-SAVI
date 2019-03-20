@@ -21,27 +21,31 @@ import { GestionarInformeHoyComponent } from './components/gestionar-informe-hoy
 import { GestionarInformeAyerComponent } from "./components/gestionar-informe-ayer/gestionar-informe-ayer.component";
 import { GestionarInformeWeekComponent } from './components/gestionar-informe-week/gestionar-informe-week.component';
 import { GestionarInformeMonthComponent } from './components/gestionar-informe-month/gestionar-informe-month.component';
+import { LoginComponent } from './components/login/login.component';
 
+import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
-  { path: 'home', component: HomeComponent },
-  { path: 'acreedor', component: GestionarAcreedorComponent },
-  { path: 'area', component: GestionarAreaComponent },
-  { path: 'beca', component: GestionarBecaComponent },
-  { path: 'convenio', component: GestionarConvenioComponent },
-  { path: 'departamento', component: GestionarDepartamentoComponent },
-  { path: 'descuento', component: GestionarDescuentoComponent },
-  { path: 'informeEstudiante', component: GestionarInformeEstudianteComponent },
-  { path: 'informeFinanzas', component: GestionarInformeFinanzasComponent },
-  { path: 'informeFinanzasAprobado', component: GestionarInformeFinanzasAprobadoComponent },
-  { path: 'informeFinanzasArchivado', component: GestionarInformeFinanzasArchivadoComponent },
-  { path: 'informeJefe', component: GestionarInformeJefeComponent },
-  { path: 'informeJefeArchivado', component: GestionarInformeJefeArhivadoComponent },
-  { path: 'organizacion', component: GestionarOrganizacionComponent },
-  { path: 'informeHoy', component: GestionarInformeHoyComponent },
-  { path: 'informeAyer', component: GestionarInformeAyerComponent },
-  { path: 'informeWeek', component: GestionarInformeWeekComponent },
-  { path: 'informeMonth', component: GestionarInformeMonthComponent },
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'acreedor', component: GestionarAcreedorComponent, canActivate: [AuthGuard] },
+  { path: 'area', component: GestionarAreaComponent, canActivate: [AuthGuard] },
+  //este path aun falta
+  { path: 'beca', component: GestionarBecaComponent, canActivate: [AuthGuard] },
+  { path: 'convenio', component: GestionarConvenioComponent, canActivate: [AuthGuard] },
+  { path: 'departamento', component: GestionarDepartamentoComponent, canActivate: [AuthGuard] },
+  { path: 'descuento', component: GestionarDescuentoComponent, canActivate: [AuthGuard] },
+  { path: 'informeEstudiante', component: GestionarInformeEstudianteComponent, canActivate: [AuthGuard] },
+  { path: 'informeFinanzas', component: GestionarInformeFinanzasComponent, canActivate: [AuthGuard] },
+  { path: 'informeFinanzasAprobado', component: GestionarInformeFinanzasAprobadoComponent, canActivate: [AuthGuard] },
+  { path: 'informeFinanzasArchivado', component: GestionarInformeFinanzasArchivadoComponent, canActivate: [AuthGuard] },
+  { path: 'informeJefe', component: GestionarInformeJefeComponent, canActivate: [AuthGuard] },
+  { path: 'informeJefeArchivado', component: GestionarInformeJefeArhivadoComponent, canActivate: [AuthGuard] },
+  { path: 'organizacion', component: GestionarOrganizacionComponent, canActivate: [AuthGuard] },
+  { path: 'informeHoy', component: GestionarInformeHoyComponent, canActivate: [AuthGuard] },
+  { path: 'informeAyer', component: GestionarInformeAyerComponent, canActivate: [AuthGuard] },
+  { path: 'informeWeek', component: GestionarInformeWeekComponent, canActivate: [AuthGuard] },
+  { path: 'informeMonth', component: GestionarInformeMonthComponent, canActivate: [AuthGuard] },
+  { path: 'login', component: LoginComponent },
   //Falta este modulo registroHora
   { path: 'registroHora', component: GestionarUsuarioComponent },
   { path: 'rol', component: GestionarRolComponent },

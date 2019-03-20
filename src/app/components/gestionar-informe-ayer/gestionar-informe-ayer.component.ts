@@ -309,13 +309,13 @@ export class GestionarInformeAyerComponent implements OnInit {
     for(let estudiante of this.estudiantes){
       if(estudiante.idPersona == idEstudiante){
         if (estudiante.segundoNombre == null && estudiante.segundoApellido != null ) {
-          this.nombreCompleto = estudiante.primerNombre + " " + estudiante.primerApellido + " " + estudiante.segundoApellido;
+          this.nombreCompleto = estudiante.primerApellido + " " + estudiante.segundoApellido+ " " + estudiante.primerNombre ;
         } else if (estudiante.segundoNombre == null && estudiante.segundoApellido == null){
-          this.nombreCompleto = estudiante.primerNombre + " " + estudiante.primerApellido; 
+          this.nombreCompleto = estudiante.primerApellido + " " + estudiante.primerNombre; 
         }else if (estudiante.segundoNombre != null && estudiante.segundoApellido == null){ 
-          this.nombreCompleto = estudiante.primerNombre + " " + estudiante.segundoNombre + " " + estudiante.primerApellido;   
+          this.nombreCompleto = estudiante.primerApellido + " " + estudiante.primerNombre + " " + estudiante.segundoNombre;
         }else{
-          this.nombreCompleto = estudiante.primerNombre + " " + estudiante.segundoNombre + " " + estudiante.primerApellido + " " + estudiante.segundoApellido;
+          this.nombreCompleto = estudiante.primerApellido + " " + estudiante.segundoApellido + " " + estudiante.primerNombre + " " + estudiante.segundoNombre;
         }
           this.nacionalidad = estudiante.nacionalidad;
           this.direccion = estudiante.direccion;
@@ -355,7 +355,7 @@ export class GestionarInformeAyerComponent implements OnInit {
     }, 2000);
   }
 
-  registrarAprovacion(idRegistro:string, aprobado:string, fecha:string, idRegistroHora:string){
+  registrarAprovacion(idEstudiante, idRegistro:string, aprobado:string, fecha:string, idRegistroHora:string){
     
     this.idRegistro = idRegistro;
     this.fecha = fecha;
@@ -367,9 +367,21 @@ export class GestionarInformeAyerComponent implements OnInit {
     }else{
       this.titleObservation = 'Argumentos de desaprovación';      
     }
+    for(let registro of this.informesRegistrosAyer){
+      if(registro.idPersona == idEstudiante && registro.idRegistroHora == idRegistroHora){
+        this.observacionesRegistroHora = registro.observacionRegistroHora;    
+      }
+    }
   }
 
   confirmarAprovacion(){
+    if(this.observacionesRegistroHora != null && this.registro.observacionRegistroHora != null){
+      this.registro.observacionRegistroHora = this.registro.observacionRegistroHora +' / ' + this.observacionesRegistroHora;
+    }else if(this.observacionesRegistroHora != null && this.registro.observacionRegistroHora == null){
+      this.registro.observacionRegistroHora = this.observacionesRegistroHora;
+    }else if(this.observacionesRegistroHora == null && this.registro.observacionRegistroHora != null){
+      this.registro.observacionRegistroHora = this.registro.observacionRegistroHora;
+    }
     this._appRegistroHoraService.putRegsitroAprovacion(this.idRegistro, this.registro)
     .subscribe((data : RegistroHora[]) => {console.log(data)});
 

@@ -9,10 +9,18 @@
 .modal-body {
     background: #ECF0F5;
     padding-left: 8%;
+    padding-right: 8%;
 }
 
 .modal-footer {
     background: #ECF0F5;
+}
+
+.footer-descuento{
+    text-align: center;
+    margin: auto;
+    margin-top: -2%;
+    padding-bottom: 4%;
 }
 
 .container-area{

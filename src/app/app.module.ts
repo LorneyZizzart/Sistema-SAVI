@@ -66,6 +66,9 @@ import { GestionarInformeJefeArhivadoComponent } from './components/gestionar-in
 import { GestionarInformeFinanzasAprobadoComponent } from './components/gestionar-informe-finanzas-aprobado/gestionar-informe-finanzas-aprobado.component';
 import { GestionarInformeFinanzasArchivadoComponent } from './components/gestionar-informe-finanzas-archivado/gestionar-informe-finanzas-archivado.component';
 
+//auth
+import { AuthGuard } from './auth.guard';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
   declarations: [
@@ -106,7 +109,8 @@ import { GestionarInformeFinanzasArchivadoComponent } from './components/gestion
     GestionarInformeMonthComponent,
     GestionarInformeJefeArhivadoComponent,
     GestionarInformeFinanzasAprobadoComponent,
-    GestionarInformeFinanzasArchivadoComponent
+    GestionarInformeFinanzasArchivadoComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -131,7 +135,8 @@ import { GestionarInformeFinanzasArchivadoComponent } from './components/gestion
     AppRegistroHoraService,
     AppRolService,
     AppTurnoService,
-    AppTipoPersonaService
+    AppTipoPersonaService,
+    AuthGuard
   ],
   bootstrap: [AppComponent]
 })

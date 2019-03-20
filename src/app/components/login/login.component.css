@@ -1,0 +1,30 @@
+.login-logo{
+    background: #fff;
+    margin: 0%;
+    padding-top: 5%;
+}
+
+.login-box-body{
+    margin-bottom: 7%;
+}
+
+.img-login{
+    height: 60%;
+    width: 60%;
+    display: block;
+    margin: auto;
+}
+.login-box-msg{
+    font-size: 125%;
+    color: rgb(52, 119, 158);
+}
+
+.login-box-body{
+    padding-top: 0;
+}
+
+.opciones-login{
+    margin-top: 7%;
+    margin-left: 2.5%;
+    margin-bottom: 7%;
+}

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm, FormBuilder, FormGroup } from '@angular/forms';
-import { formatDate, DatePipe } from "@angular/common";
 import { Convenio } from "../../interfaces/convenio.interface";
 import { AppConvenioService } from "../../services/app-convenio.service";
 import { AppTipoPersonaService } from "../../services/app-tipoPersona.service";
@@ -58,8 +57,8 @@ export class GestionarConvenioComponent implements OnInit {
 
   constructor( private _appConvenioService:AppConvenioService,
               private _appTipoPersonaService:AppTipoPersonaService,
-    private _appDepartamentoService: AppDepartamentoService,
-    private formBuilder:FormBuilder) {
+              private _appDepartamentoService: AppDepartamentoService,
+              private formBuilder:FormBuilder) {
    }
 
   ngOnInit() {
@@ -95,7 +94,6 @@ export class GestionarConvenioComponent implements OnInit {
 
   getConvenios(){
     this._appConvenioService.getConvenios().subscribe((convenios: Convenio[]) => this.convenios = convenios);
-    console.log(this.convenios);
   }
 
   saveConvenio(){

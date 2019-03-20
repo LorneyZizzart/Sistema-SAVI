@@ -32,6 +32,8 @@ export class GestionarInformeHoyComponent implements OnInit {
   listSaldo:any[] = ['0'];
   //Lista de estudiantes del departameto
   estudiantes:Persona[];
+  //Estudiante del departamentos
+  estudianteDep:Persona[];
   //Objeto para registrar asistencia del estudiante
   registro:RegistroHora = {};
   idConvenio:string;
@@ -89,6 +91,7 @@ export class GestionarInformeHoyComponent implements OnInit {
     this.fechaHoy = new Date();
     this.getDepartament(this.IdDepartamento);
     this.getInformeRegisterNow(this.IdDepartamento);
+    this.getEstudiantesDept(this.IdDepartamento);
     this.getEstudiantes(this.IdDepartamento);
   }
 
@@ -99,23 +102,20 @@ export class GestionarInformeHoyComponent implements OnInit {
   }
 
   calculadoraSaldo(hora, saldo){
-    var hour = parseInt(hora.substr(0,2));
-    var min = parseInt(hora.substr(3,2));
-    var auxSaldo = parseInt(saldo);
+    var hour = hora.split(":");
+    var auxSaldo = parseFloat(saldo);
     var totalSald;
-
+    
     for (let i = 0; i <= 60; i++) {
-      if(min == i){
+      if(hour[1] == i){
         auxSaldo = auxSaldo/60 * i
         break;
       }
     }
-    
-    var balance = hour * saldo;
+    var balance = hour[0] * saldo;
     var saldo1 = parseFloat(balance.toString());
     var saldo2 = parseFloat((auxSaldo.toFixed(2)).toString());
-    totalSald = saldo1 + saldo2;
-
+    totalSald = saldo1 + saldo2;    
     return totalSald;
   }
 
@@ -261,7 +261,12 @@ export class GestionarInformeHoyComponent implements OnInit {
       this.infoDepartamento(idDepartamento);
     }, 2000);
   }
-  //Obtener los estudiantes del departamento
+  //Lista de los estudiantes para registrar hora de ingreso
+  getEstudiantesDept(idDepartamento:string){
+    this._appTipoPersonaService.getListStudentDepto(idDepartamento)
+    .subscribe((estudiantes :Persona[]) => {this.estudianteDep = estudiantes});
+  }
+  //Obtener los estudiantes del departamento para informacion;
   getEstudiantes(idDepartamento:string){
     this._appTipoPersonaService.getInfoEstudiantes(idDepartamento)
     .subscribe((estudiantes : Persona[]) => {this.estudiantes = estudiantes});
@@ -272,13 +277,13 @@ export class GestionarInformeHoyComponent implements OnInit {
     for(let estudiante of this.estudiantes){
       if(estudiante.idPersona == idEstudiante){
         if (estudiante.segundoNombre == null && estudiante.segundoApellido != null ) {
-          this.nombreCompleto = estudiante.primerNombre + " " + estudiante.primerApellido + " " + estudiante.segundoApellido;
+          this.nombreCompleto = estudiante.primerApellido + " " + estudiante.segundoApellido+ " " + estudiante.primerNombre ;
         } else if (estudiante.segundoNombre == null && estudiante.segundoApellido == null){
-          this.nombreCompleto = estudiante.primerNombre + " " + estudiante.primerApellido; 
+          this.nombreCompleto = estudiante.primerApellido + " " + estudiante.primerNombre; 
         }else if (estudiante.segundoNombre != null && estudiante.segundoApellido == null){ 
-          this.nombreCompleto = estudiante.primerNombre + " " + estudiante.segundoNombre + " " + estudiante.primerApellido;   
+          this.nombreCompleto = estudiante.primerApellido + " " + estudiante.primerNombre + " " + estudiante.segundoNombre;
         }else{
-          this.nombreCompleto = estudiante.primerNombre + " " + estudiante.segundoNombre + " " + estudiante.primerApellido + " " + estudiante.segundoApellido;
+          this.nombreCompleto = estudiante.primerApellido + " " + estudiante.segundoApellido + " " + estudiante.primerNombre + " " + estudiante.segundoNombre;
         }
           this.nacionalidad = estudiante.nacionalidad;
           this.direccion = estudiante.direccion;
@@ -355,12 +360,12 @@ export class GestionarInformeHoyComponent implements OnInit {
     setTimeout(() => {
       this.messageExit = false;
     }, 5000);
-    setTimeout(() => {
+    setTimeout(() => {      
       this.getInformeRegisterNow(this.IdDepartamento);
     }, 2000);
   }
 
-  registrarAprobacion(idRegistro:string, aprobado:string, fecha:string, idRegistroHora:string){
+  registrarAprobacion(idEstudiante, idRegistro:string, aprobado:string, fecha:string, idRegistroHora:string){
     this.idRegistro = idRegistro;
     this.fecha = fecha;
     this.idRegistroHora = idRegistroHora;
@@ -371,9 +376,21 @@ export class GestionarInformeHoyComponent implements OnInit {
     }else{
       this.titleObservation = 'Argumentos de desaprovación';      
     }
+    for(let registro of this.informesRegistrosNow){
+      if(registro.idPersona == idEstudiante && registro.idRegistroHora == idRegistroHora){
+        this.observacionesRegistroHora = registro.observacionRegistroHora;    
+      }
+    }
   }
 
   confirmarAprovacion(){
+    if(this.observacionesRegistroHora != null && this.registro.observacionRegistroHora != null){
+      this.registro.observacionRegistroHora = this.registro.observacionRegistroHora +' / ' + this.observacionesRegistroHora;
+    }else if(this.observacionesRegistroHora != null && this.registro.observacionRegistroHora == null){
+      this.registro.observacionRegistroHora = this.observacionesRegistroHora;
+    }else if(this.observacionesRegistroHora == null && this.registro.observacionRegistroHora != null){
+      this.registro.observacionRegistroHora = this.registro.observacionRegistroHora;
+    }
     this._appRegistroHoraService.putRegsitroAprovacion(this.idRegistro, this.registro)
     .subscribe((data : RegistroHora[]) => {console.log(data)});
 

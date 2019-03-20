@@ -9,10 +9,18 @@
 .modal-body {
     background: #ECF0F5;
     padding-left: 8%;
+    padding-right: 8%;
 }
 
 .modal-footer {
     background: #ECF0F5;
+}
+
+.footer-acreditacion{
+    text-align: center;
+    margin: auto;
+    margin-top: -2%;
+    padding-bottom: 4%;
 }
 
 .info-observaciones{
@@ -28,4 +36,36 @@
 
 .areas{
     display: inline;
+}
+
+.informe-col-nombre{
+    cursor:pointer;
+    background: rgba(194, 216, 230, 0.726);
+}
+.informe-col-nombre:hover{    
+    background: rgba(150, 176, 192, 0.726);
+}
+a.detalleInfoEstudiante{    
+    color: rgb(37, 67, 122);
+    text-decoration: none;
+    display: inline-block;
+}
+a.detalleInfoEstudiante:hover{    
+    color: #000000;
+    text-decoration: none;
+    outline: none;
+}
+
+.box-info-finanzas{
+    padding-bottom: 2%;
+}
+
+.infoFinanazas{
+    background: rgb(245, 247, 181);
+    margin: 0 2% 0 2%;
+}
+
+.box-search{
+    float: right;
+    margin: 0 1% 0 0;
 }

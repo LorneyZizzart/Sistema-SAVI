@@ -1,3 +1,5 @@
+<div class="wrapper">
+    <app-navbar-jf></app-navbar-jf>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
@@ -24,16 +26,6 @@
 <div *ngIf="MessageInformeArchivado == true" class="pad no-print">
     <div class="callout callout-success">
         <h4><i class="icon fa fa-check"></i> El informe fue archivado</h4>
-    </div>
-</div>
-<div *ngIf="MessageAcreditado== true" class="pad no-print">
-    <div class="callout callout-success">
-        <h4><i class="icon fa fa-check"></i> El saldo fue acreditado satisfactoriamente</h4>
-    </div>
-</div>
-<div *ngIf="MessageNoAcreditado== true" class="pad no-print">
-    <div class="callout callout-warning">
-        <h4><i class="icon fa fa-info"></i> La acreditación fue eliminada</h4>
     </div>
 </div>
 <!-- Modal -->
@@ -127,6 +119,136 @@
     </div>
 </div>
 </div>
+<div class="modal fade" id="modal-acreditacion">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Aprobación de la acreditacón</h4>
+            </div>
+        <form #formConfirmacion="ngForm" name="formAprobacion" class="form-horizontal">   
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="box-profile">
+                        <img class="profile-user-img img-responsive img-circle" src="assets/img/avatar.png" alt="User profile picture">
+                        <p class="text-muted text-center">{{ codEstudiante }}</p>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="box-header">
+                        <h3 class="modal-name"><strong>{{ nombreCompleto }}</strong> </h3>                         
+                    </div>
+                </div>                
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                    <label><i class="fa fa-clock-o margin-r-5"></i> Horas:</label>
+                    <div class="input-group col-md-12">
+                        <input [(ngModel)]="Horas" name="Horas" type="text" class="form-control" placeholder="00:00" disabled>
+                    </div>                   
+                    </div>                   
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                    <label><i class="fa fa-money margin-r-5"></i> Saldo:</label>
+                    <div class="input-group col-md-12">
+                        <input [(ngModel)]="Saldo" name="Saldo" type="text" class="form-control" placeholder="00.00 Bs" disabled>
+                    </div>                  
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                    <label><i class="fa fa-clock-o margin-r-5"></i> Reducir:</label>
+                    <div class="input-group col-md-12">
+                        <input (keyup)="inputReducir()" [(ngModel)]="menosHoras" name="menosHoras" type="text" class="form-control" placeholder="00:00">
+                    </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                    <label><i class="fa fa-clock-o margin-r-5"></i> Incrementar:</label>
+                    <div class="input-group col-md-12">
+                        <input (keyup)="inputIncrementar()" [(ngModel)]="masHoras" name="masHoras" type="text" class="form-control" placeholder="00:00">
+                    </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                    <label><i class="fa fa-clock-o margin-r-5"></i> Total Horas:</label>
+                    <div class="input-group col-md-12">
+                        <input [(ngModel)]="informesFinanzas.totalHorasF" name="informeFinanzas.totalHorasF" type="text" class="form-control" placeholder="00:00" disabled>
+                    </div>  
+                    </div>            
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                    <label><i class="fa fa-money margin-r-5"></i> Total saldo:</label>
+                    <div class="input-group col-md-12">
+                        <input [(ngModel)]="informesFinanzas.totalSaldoF" name="informeFinanzas.totalSaldoF" type="text" class="form-control" placeholder="0 Bs." disabled>
+                    </div> 
+                    </div>                     
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Observación</label>
+                    <textarea [(ngModel)]="informesFinanzas.obsrevacionFinanzas" name="informeFinanzas.obsrevacionFinanzas" class="form-control" rows="3" placeholder="obsevaciones ..."></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer text-center footer-acreditacion">
+            <div class="col-md-6">
+                <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-danger"><i class="fa fa-close"></i> Cancelar</button>
+            </div>
+            <div class="col-md-6">
+                <button (click)="confirmarAprobarInformeEstudiante()" type="button" data-dismiss="modal" aria-label="Close" class="btn btn-success"><i class="fa fa-save"></i> Guardar</button>
+            </div>
+        </div>
+    </form>
+    </div>
+</div>
+</div>
+<div class="modal fade" id="modal-detalleInforme">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Detalles</h4>
+            </div>
+            <div class="box box-info-finanzas">                
+                <div class="table-responsive pad">
+                        <table class="table table-bordered table-hover ">
+                            <tr class="fila-tabla">
+                                <th style="width: 10px">Código</th>
+                                <th>Usuario</th>
+                                <th>Fecha aprobada</th>                                
+                                <th class="text-center" style="width: 12%">Horas</th>
+                                <th class="text-center" style="width: 15%">Saldo</th>
+                            </tr>
+                            <tr>
+                                <td class="text-center">{{idInformeFinanzas}}</td>
+                                <td>{{usuario}}</td>
+                                <td>{{fechaAprobada }}</td>
+                                <td class="text-center">{{totalHorasF}}</td>
+                                <td class="text-center">{{totalSaldoF}} Bs.</td>                                           
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="box-header infoFinanazas">
+                        <h4 class="box-title"><strong>Observaciones:</strong></h4>
+                    </div>
+                    <div class="box-body infoFinanazas">
+                        <p>{{ obsrevacionFinanzas }}</p> 
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
   <!-- Main content -->
   <section class="content">
       <div class="row">
@@ -142,14 +264,25 @@
                   </div>
                   <!-- /.box-header -->
                   <div class="box-body">
-                      <p class="text-left">Lista de horas y saldos totales de los estudiantes que trabajan en la Universidad. &nbsp;Opciones: <a class="btn-success"><i class="fa fa-check"></i></a> Aprobar&nbsp;&nbsp;  
-                        <a class="btn-danger"><i class="fa fa-close"></i></a> No aprobar </p>                       
+                    <div class="box-tools box-search">
+                        <div class="input-group input-group-sm" style="width: 250px;">
+                        <input (keyup)="buscarInforme(buscarNombre.value)" #buscarNombre type="text" name="buscarName" class="form-control pull-right" placeholder="Buscar">
+
+                        <div class="input-group-btn">
+                            <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                        </div>
+                        </div>
+                    </div> 
+                      <p class="text-left">Lista de horas y saldos totales de los estudiantes que trabajan en la Universidad. </p> 
+                      <p>Descripción: <a class="btn-success"><i class="fa fa-check"></i></a> Aprobar&nbsp;&nbsp;  
+                        <a class="btn-danger"><i class="fa fa-close"></i></a> No aprobar </p>     
+                                         
                           <div class="table-responsive pad">
                               <table class="table table-bordered table-hover ">
-                                  <tr>
+                                  <tr class="fila-tabla">
                                       <th style="width: 10px">#</th>
                                       <th class="text-center">Cod.</th>
-                                      <th>Nombre completo</th>
+                                      <th class="text-center">Nombre completo (Detalles)</th>
                                       <th>Departamento</th>
                                       <th>Fecha</th>
                                       <th style="width: 6%">Total horas</th>
@@ -161,7 +294,9 @@
                                   <tr *ngFor="let informe of informeFinanzas; let i = index">
                                       <td>{{i+1}}.</td>
                                       <td class="text-center">{{informe.codEstudiante}}</td>
-                                      <td>{{informe.primerApellido}} {{informe.segundoApellido}} {{informe.primerNombre}}  {{informe.segundoNombre}}</td>
+                                      <td class="informe-col-nombre"> 
+                                          <a (click)="informacionEstudiante(informe.idRegistroHora, informe.idPersona)" class="detalleInfoEstudiante" data-toggle="modal" data-target="#modal-informacionStudiante" title="Detalles">{{informe.primerApellido}} {{informe.segundoApellido}} {{informe.primerNombre}}  {{informe.segundoNombre}}</a>                                         
+                                      </td>
                                       <td>{{informe.departamento}}</td>
                                       <td>{{informe.fecha | nameDay }}</td>
                                       <td class="text-center">{{informe.totalHoras}}</td>
@@ -174,11 +309,11 @@
                                         <span *ngIf="informe.aprobadoFinanzas == false" class="badge bg-red"><i class="fa fa-close"></i></span>
                                       </td>
                                       <td class="text-center">
-                                          <a *ngIf="informe.aprobadoFinanzas == false" (click)="aprobarInformeEstudiante(informe.idInformeEstudiante, '1')" class="btn btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Aprobar"><i class="fa fa-check"></i></a>
+                                          <a *ngIf="informe.aprobadoFinanzas == false" (click)="aprobarInformeEstudiante(informe.idInformeFinanzas, informe.idConvenio, informe.totalSaldoF, informe.totalSaldo, informe.idDepartamento, informe.idRegistroHora, informe.idInformeEstudiante, '1'); informacionEstudiante(informe.idRegistroHora, informe.idPersona)" data-toggle="modal" data-target="#modal-acreditacion" class="btn btn-success btn-margin" title="Aprobar"><i class="fa fa-check"></i></a>
                                           <a *ngIf="informe.aprobadoFinanzas == true" class="btn btn-success btn-margin disabled" ><i class="fa fa-check"></i></a>
-                                          <a *ngIf="informe.aprobadoFinanzas == true" (click)="aprobarInformeEstudiante(informe.idInformeEstudiante, '0')" class="btn btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="No Aprobar"><i class="fa fa-close"></i></a>
+                                          <a *ngIf="informe.aprobadoFinanzas == true" (click)="aprobarInformeEstudiante(informe.idInformeFinanzas, informe.idConvenio, informe.totalSaldoF, informe.totalSaldo, informe.idDepartamento, informe.idRegistroHora, informe.idInformeEstudiante, '0')" class="btn btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="No Aprobar"><i class="fa fa-close"></i></a>
                                           <a *ngIf="informe.aprobadoFinanzas == false" class="btn btn-danger btn-margin disabled" ><i class="fa fa-close"></i></a>
-                                          <a (click)="informacionEstudiante(informe.idRegistroHora, informe.idPersona)" data-toggle="modal" data-target="#modal-informacionStudiante"  class="btn btn-primary btn-margin" title="Ver"><i class="fa fa-eye"></i></a>
+                                          <a (click)="infoInformeFinanzas(informe.idInformeFinanzas, informe.fechaAprobada, informe.totalHorasF, informe.totalSaldoF, informe.obsrevacionFinanzas)" data-toggle="modal" data-target="#modal-detalleInforme" class="btn btn-primary btn-margin" title="Ver"><i class="fa fa-eye"></i></a>
                                           <a *ngIf="informe.aprobadoJefeDep != NULL" (click)="archivarInformeFinanzas(informe.idInformeFinanzas)" class="btn btn-success btn-margin" title="Archivar"><i class="fa fa-folder"></i></a>
                                       </td>
                                   </tr>
@@ -233,5 +368,8 @@
       <!-- /.row -->
   </section>
   <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+<app-footer></app-footer> 
 </div>
 <!-- /.content-wrapper -->

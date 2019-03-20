@@ -1,3 +1,5 @@
+<div class="wrapper">
+    <app-navbar-jf></app-navbar-jf>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -8,7 +10,7 @@
         </h1>
         <ol class="breadcrumb">
             <li><a [routerLink]="['/home']"><i class="fa fa-home"></i> Home</a></li>
-            <li class="active">Informe recividas</li>
+            <li class="active">Informe de acreditaciones</li>
         </ol>
     </section>
   <div *ngIf="MessageInformeAprobado == true" class="pad no-print">
@@ -17,6 +19,11 @@
           <p>Al aprobar se encuentra listo para acreditar el saldo al estudiante.</p>
       </div>
   </div>
+  <div *ngIf="MessageDescuento == true" class="pad no-print">
+    <div class="callout callout-success">
+        <h4><i class="icon fa fa-check"></i> El descuento se realizo satisfactoriamente.</h4>
+    </div>
+</div>
   <!-- Modal -->
   <div class="modal fade" id="modal-informacionStudiante">
     <div class="modal-dialog">
@@ -100,6 +107,74 @@
         </div>
     </div>
   </div>
+  <div class="modal fade" id="modal-descuento">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Descuento</h4>
+            </div>
+  
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="box-profile">
+                        <img class="profile-user-img img-responsive img-circle" src="assets/img/avatar.png" alt="User profile picture">
+                        <p class="text-muted text-center">{{ codEstudiante }}</p>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="box-header">
+                        <h3 class="modal-name"><strong>{{ nombreCompleto }}</strong> </h3>                         
+                    </div>
+                </div>                
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                    <label><i class="fa fa-money margin-r-5"></i> Saldo:</label>
+                    <div class="input-group col-md-12">
+                        <input [(ngModel)]="inputSaldo" name="inputSaldo" type="text" class="form-control" placeholder="00.00 Bs" disabled>
+                    </div>                  
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group">
+                    <label><i class="fa fa-money margin-r-5"></i> Descontar:</label>
+                    <div class="input-group col-md-12">
+                        <input (keyup)="descontarSaldo()" [(ngModel)]="inputDescontar" name="inputDescontar" type="text" class="form-control" placeholder="00.00 Bs">
+                    </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group">
+                    <label><i class="fa fa-money margin-r-5"></i> Total saldo:</label>
+                    <div class="input-group col-md-12">
+                        <input [(ngModel)]="acreedor.montoBs" name="acreedor.montoBs" type="text" class="form-control" placeholder="00.00 Bs." disabled>
+                    </div> 
+                    </div>                     
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Observación</label>
+                    <textarea [(ngModel)]="descuento.observacion" name="descuento.observacion" class="form-control" rows="3" placeholder="obsevaciones ..."></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer text-center footer-descuento">
+            <div class="col-md-6">
+                <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-danger"><i class="fa fa-close"></i> Cancelar</button>
+            </div>
+            <div class="col-md-6">
+                <button (click)="confirmarDescuento()" type="button" data-dismiss="modal" aria-label="Close" class="btn btn-success"><i class="fa fa-save"></i> Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+  </div>
     <!-- Main content -->
     <section class="content">
         <div class="row">
@@ -118,14 +193,13 @@
                         <p>Lista de saldos totales de los estudiantes que trabajan en la Universidad</p>                     
                             <div class="table-responsive pad">
                                 <table class="table table-bordered table-hover ">
-                                    <tr>
+                                    <tr class="fila-tabla">
                                         <th style="width: 10px">#</th>
                                         <th class="text-center">Cod.</th>
                                         <th>Nombre completo</th>
                                         <th>Departamento</th>
                                         <th>Fecha</th>
                                         <th>Saldo total</th>
-                                        <th class="text-center" style="width: 6%">Estado</th>
                                         <th class="text-center" style="width: 20%px">Opciones</th>
                                     </tr>
                                     <tr *ngFor="let informe of acreedores; let i = index">
@@ -136,12 +210,8 @@
                                         <td>{{informe.fechaAsignado | date: 'dd/MM/yyyy' }}</td>
                                         <td class="text-center">{{informe.montoBs}} Bs.</td>
                                         <td class="text-center">
-                                            <a *ngIf="informe.estado == true" (click)="editEstadoArea(area.idArea, '0')" class="btn btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
-                                            <a *ngIf="informe.estado == false" (click)="editEstadoArea(area.idArea, '1')" class="btn btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
-                                        </td>
-                                        <td class="text-center">
+                                            <a (click)="infoFullName(informe.idPersona);aprobarDescuento(informe.idAcreedor, informe.montoBs, informe.idInformeEstudiante, informe.idConvenio)" data-toggle="modal" data-target="#modal-descuento"  class="btn btn-success btn-margin" title="Descontar"><i class="fa fa-toggle-down"></i></a>
                                             <a (click)="informacionEstudiante(informe.idPersona)" data-toggle="modal" data-target="#modal-informacionStudiante"  class="btn btn-primary btn-margin" title="Ver"><i class="fa fa-eye"></i></a>
-                                            <a class="btn btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-trash"></i></a>
                                         </td>
                                     </tr>
                                 </table>
@@ -156,6 +226,9 @@
         <!-- /.row -->
     </section>
     <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
+</div>
+<!-- /.content-wrapper -->
+<app-footer></app-footer> 
+</div>
+<!-- /.content-wrapper -->
   

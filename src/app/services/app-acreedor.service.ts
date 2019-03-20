@@ -41,6 +41,16 @@ export class AppAcreedorService {
       .pipe ();
   }
 
+  putDevolverSaldo(idConvenio:string, acreedor:Acreedor):Observable<Acreedor[]>{
+    let body = JSON.stringify(acreedor);
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    let url = `${this.uriAcreedor}/acreditacion/${idConvenio}`;
+    return this._http.put<Acreedor[]>(url, body, { headers })
+      .pipe ();
+  }
+
   deleteAcreedor(idInformeFinanzas:string){
     let url = `${this.uriAcreedor}/${idInformeFinanzas}`;
     return this._http.delete(url).pipe(map(res => res));

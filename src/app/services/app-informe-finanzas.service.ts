@@ -31,6 +31,16 @@ export class AppInformeFinanzasService {
       .pipe ();
   }
 
+  putInformeFinanzas(idInformeFinanzas:string, informe:InformeFinanzas):Observable<InformeFinanzas[]>{
+    let body = JSON.stringify(informe);
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    let url = `${this.listaInformeFinanzas}/${idInformeFinanzas}`;
+    return this._http.put<InformeFinanzas[]>(url, body, { headers })
+      .pipe ();
+  }      
+
   putInformeFinanzasArchivar(idInformeFinanzas:string, informe:InformeFinanzas):Observable<InformeFinanzas[]>{
     let body = JSON.stringify(informe);
     let headers = new HttpHeaders({
