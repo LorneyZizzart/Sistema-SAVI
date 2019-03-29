@@ -5,8 +5,8 @@ import { Persona } from '../../interfaces/persona.interface';
 import { AppUserService } from '../../services/app-user.service';
 import { InformeEstudiante } from '../../interfaces/informe-estudiante.interface';
 import { AppInformeEstudianteService } from '../../services/app-informe-estudiante.service';
-
-
+import { AppRegistroHoraService } from '../../services/app-registroHora.service';
+import { RegistroHora } from '../../interfaces/registroHora.interface';
 
 @Component({
   selector: 'app-navbar-jf',
@@ -14,10 +14,12 @@ import { AppInformeEstudianteService } from '../../services/app-informe-estudian
   styleUrls: ['./navbar-jf.component.css']
 })
 export class NavbarJFComponent implements OnInit {
+  IdDepartamento:string = "1"
   fechaHoy:any;
   Usuario:Persona = {};
+  Persona:Persona = {};
   datosUsuario:Persona[] = [];
-  //Info Estudiante
+  //Info Usuario
   nombreCompleto:string = 'Cargando...';
   nombres:string = 'Cargando...';
   rol:string;
@@ -26,18 +28,35 @@ export class NavbarJFComponent implements OnInit {
   //Lista de los estudiantes del total horas/saldos
   listInformeEstudiante:InformeEstudiante[];
   bandejaInformeNum;
+  //Gestionar Jefe departamento
+  //Registro de hoy
+  informesRegistrosNow:RegistroHora[];
+  //para notificar cuantos entraron
+  public asistenciasNum;
 
   constructor(private _router:Router, 
               private _authService:AuthService,
               private _appUserService:AppUserService,
-              private _appInformeEstudianteService:AppInformeEstudianteService) { }
+              private _appInformeEstudianteService:AppInformeEstudianteService,
+              private _appRegistroHoraService:AppRegistroHoraService) { }
 
   ngOnInit() {
     this.obtenerDateNow();
     this.obtenerUsuario(); 
     if(parseInt(this.Usuario.idRol) == 2 || parseInt(this.Usuario.idRol) == 3){
       this.getInfomeEstudiante();
-    } 
+    }else if(parseInt(this.Usuario.idRol) == 4){
+      this.getInformeRegisterNow(this.IdDepartamento);
+    }
+  }
+
+  //Gestionar jefe departamento
+  getInformeRegisterNow(idDepartamento:string){
+    this._appRegistroHoraService.getInformeRegisterNow(idDepartamento)
+    .subscribe((registro : RegistroHora[]) => {this.informesRegistrosNow = registro});
+    setTimeout(() => {
+      this.asistenciasNum = this.informesRegistrosNow.length;
+    }, 2000);
   }
 
   //Gestionar Finanzas
@@ -49,35 +68,26 @@ export class NavbarJFComponent implements OnInit {
     }, 2000);
   }
 
-  getUser(idUsuario){
-    this._appUserService.getUser(idUsuario)
-    .subscribe((usuario : Persona[]) => {this.datosUsuario = usuario});
-    setTimeout(() => {
-      for(let user of this.datosUsuario){
-        if (user.segundoNombre == null && user.segundoApellido != null ) {
-          this.nombreCompleto = user.primerNombre + ' ' + user.primerApellido + " " + user.segundoApellido;
-        } else if (user.segundoNombre == null && user.segundoApellido == null){
-          this.nombreCompleto = user.primerNombre + " " + user.primerApellido; 
-        }else if (user.segundoNombre != null && user.segundoApellido == null){ 
-          this.nombreCompleto = user.primerNombre + " " + user.segundoNombre + " " +user.primerApellido;
-        }else{
-          this.nombreCompleto = user.primerNombre + " " + user.segundoNombre + " " + user.primerApellido + " " + user.segundoApellido;
-        }
-        this.rol = user.rol;
-        this.idRol = user.idRol;
-        if(user.segundoNombre != null){
-          this.nombres = user.primerNombre + " " + user.segundoNombre;
-        }else{
-          this.nombres = user.primerNombre;
-        }
-      }
-    }, 2000);
-  }
-
-  //Obtener Usuario del localStorage
+  //Obtener Usuario del localStorage y datos personales
   obtenerUsuario(){
     this.Usuario = this._authService.getCurrentUser();
-    this.getUser(this.Usuario.idUsuario);
+    this.Persona = this._authService.getDatosPersonales();
+    if (this.Persona.segundoNombre == null && this.Persona.segundoApellido != null ) {
+      this.nombreCompleto = this.Persona.primerNombre + ' ' + this.Persona.primerApellido + " " + this.Persona.segundoApellido;
+    } else if (this.Persona.segundoNombre == null && this.Persona.segundoApellido == null){
+      this.nombreCompleto = this.Persona.primerNombre + " " + this.Persona.primerApellido; 
+    }else if (this.Persona.segundoNombre != null && this.Persona.segundoApellido == null){ 
+      this.nombreCompleto = this.Persona.primerNombre + " " + this.Persona.segundoNombre + " " +this.Persona.primerApellido;
+    }else{
+      this.nombreCompleto = this.Persona.primerNombre + " " + this.Persona.segundoNombre + " " + this.Persona.primerApellido + " " + this.Persona.segundoApellido;
+    }
+    this.rol = this.Persona.rol;
+    this.idRol = this.Persona.idRol;
+    if(this.Persona.segundoNombre != null){
+      this.nombres = this.Persona.primerNombre + " " + this.Persona.segundoNombre;
+    }else{
+      this.nombres = this.Persona.primerNombre;
+    }
   }
 
   obtenerDateNow(){

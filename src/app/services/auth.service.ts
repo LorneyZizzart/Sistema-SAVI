@@ -5,6 +5,7 @@ import { map } from "rxjs/operators";
 import { isNullOrUndefined } from "util";
 import { AppUserService } from './app-user.service';
 import { User } from '../interfaces/user.interface';
+import { Persona } from '../interfaces/persona.interface';
 
 
 
@@ -37,8 +38,27 @@ export class AuthService {
       return null;
     }
   }
+  //para navbar del dashboard
+  setDatosPersonales(persona:Persona):Boolean{
+    if(persona){
+      let people =JSON.stringify(persona);
+      localStorage.setItem("dataPeople", people);
+      return true;
+    }else{return false;}
+  }
+
+  getDatosPersonales():Persona{
+    let persona = localStorage.getItem("dataPeople");
+    if(!isNullOrUndefined(persona)){
+      let people: User = JSON.parse(persona);
+      return people;
+    } else {
+      return null;
+    }
+  }
 
   logoutUser(){
     localStorage.removeItem("currentUser")
+    localStorage.removeItem("dataPeople")
   }
 }

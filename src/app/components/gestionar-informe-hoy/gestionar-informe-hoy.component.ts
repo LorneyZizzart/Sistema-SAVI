@@ -116,7 +116,7 @@ export class GestionarInformeHoyComponent implements OnInit {
     var saldo1 = parseFloat(balance.toString());
     var saldo2 = parseFloat((auxSaldo.toFixed(2)).toString());
     totalSald = saldo1 + saldo2;    
-    return totalSald;
+    return totalSald.toFixed(2);
   }
 
   horasTranscurrido(day1, hora1, day2, hora2){
@@ -353,7 +353,8 @@ export class GestionarInformeHoyComponent implements OnInit {
 
   }
 
-  registrarSalida(idRegistro:string){
+  registrarSalida(idRegistro:string, fecha){
+    this.eliminarInformeEstudiante(fecha, idRegistro); 
     this._appRegistroHoraService.putRegistroSalida(idRegistro, this.registro)
     .subscribe((data : RegistroHora []) => {console.log(data)});
     this.messageExit = true;
@@ -372,9 +373,9 @@ export class GestionarInformeHoyComponent implements OnInit {
     this.registro.aprobadoRegistroHora = aprobado;
     this.btnConfirmacion = 'aprovacion';
     if(aprobado == '1'){
-      this.titleObservation = 'Argumentos de aprovación';
+      this.titleObservation = 'Argumentos de aprobación';
     }else{
-      this.titleObservation = 'Argumentos de desaprovación';      
+      this.titleObservation = 'Argumentos de desaprobación';      
     }
     for(let registro of this.informesRegistrosNow){
       if(registro.idPersona == idEstudiante && registro.idRegistroHora == idRegistroHora){

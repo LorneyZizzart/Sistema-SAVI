@@ -46,12 +46,13 @@ const routes: Routes = [
   { path: 'informeWeek', component: GestionarInformeWeekComponent, canActivate: [AuthGuard] },
   { path: 'informeMonth', component: GestionarInformeMonthComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
+  { path: 'user', component: GestionarUsuarioComponent, canActivate: [AuthGuard] },
+  { path: 'registroHora', component: GestionarUsuarioComponent, canActivate: [AuthGuard] },
+  { path: '**', pathMatch: 'full', redirectTo: 'home' },
+
   //Falta este modulo registroHora
-  { path: 'registroHora', component: GestionarUsuarioComponent },
   { path: 'rol', component: GestionarRolComponent },
-  { path: 'turno', component: GestionarTurnoComponent },
-  { path: 'user', component: GestionarUsuarioComponent },
-  { path: '**', pathMatch: 'full', redirectTo: 'home' }
+  { path: 'turno', component: GestionarTurnoComponent }
 ];
 
 @NgModule({

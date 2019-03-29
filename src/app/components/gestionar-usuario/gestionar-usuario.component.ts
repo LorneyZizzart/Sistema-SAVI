@@ -4,6 +4,9 @@ import { User } from '../../interfaces/user.interface';
 import { Persona } from "../../interfaces/persona.interface";
 import { AppUserService } from "../../services/app-user.service";
 import { AppPersonaService } from "../../services/app-persona.service";
+import { Carrera } from '../../interfaces/carrera.interface';
+import { AppCarreraService } from '../../services/app-carrera.service';
+
 
 @Component({
   selector: 'app-gestionar-usuario',
@@ -14,7 +17,6 @@ export class GestionarUsuarioComponent implements OnInit {
 
   //FormBuilder
   public formPersona:FormGroup;
-  //pRUEBA bORRAR
   idPersona:string = "";
   idRol:string = "";
   password:string = "";
@@ -24,28 +26,30 @@ export class GestionarUsuarioComponent implements OnInit {
   MessageEnable:Boolean = false;
   MessageDesable:Boolean = false;
   public userPersona: Persona[];
+  //se utiliza para el buscador el usuario
+  usuariosArray:Persona[];
   usuario:User[];
   personas:Persona[];
   //Para ver la informacion por estudiante
   infoNombreCompleto:string = "";
+  infoCodEstudiante:string = "";
   infoCarrera: string = "";
   infoSemestre: string = "";
   infoDireccion: string = "";
   infoNacionalidad: string = "";
   infoCI: string = "";
   infoCelular: string = "";
-  infoFechaNacimiento: string = "";
+  infoFechaNacimiento: string = ""
   infoUser:string = "";
   infoPassword:string = "";
 
   estudiante:Persona[] = [];
 
-  private persona: Persona = {
-  }
-
-  private editpersona: Persona = {
-  }
-
+  private persona: Persona = {}
+  private editpersona: Persona = {}
+  private edituser: User = {};
+  private editPassword:string;
+  MessageSuccessUpdate:boolean = false;
   private user: User = {
     idRol: "",
     usuario: "",
@@ -57,10 +61,13 @@ export class GestionarUsuarioComponent implements OnInit {
   messageYdelete:boolean = false;
   messageNdelete:boolean = false;
   idUsuario:string;
-
+  //Gestionar Carrera
+  carreras:Carrera[] = [];
+  carrera:Carrera = {};
   constructor( private _appUserService: AppUserService,
               private _appPersonaService: AppPersonaService,
-              private _formBuilder: FormBuilder) {
+              private _formBuilder: FormBuilder,
+              private _appCarreraService:AppCarreraService) {
   }
 
   ngOnInit() {
@@ -108,20 +115,50 @@ export class GestionarUsuarioComponent implements OnInit {
   }
 
   //Gestionar Usuarios
+  buscarUsuario(nombre:string){
+    let array:Persona[] = [];
+    nombre = nombre.toLowerCase();
+    var name;
+    this.userPersona = this.usuariosArray;
+    for(let informe of this.userPersona){
+      if (informe.segundoNombre == null && informe.segundoApellido != null ) {
+        name = informe.primerApellido + " " + informe.segundoApellido+ " " + informe.primerNombre ;
+      } else if (informe.segundoNombre == null && informe.segundoApellido == null){
+        name = informe.primerApellido + " " + informe.primerNombre; 
+      }else if (informe.segundoNombre != null && informe.segundoApellido == null){ 
+        name = informe.primerApellido + " " + informe.primerNombre + " " + informe.segundoNombre;
+      }else{
+        name = informe.primerApellido + " " + informe.segundoApellido + " " + informe.primerNombre + " " + informe.segundoNombre;
+      }
+      name = name.toLowerCase();
+      if(name.indexOf(nombre) >= 0){
+        array.push(informe);        
+      }  
+    }
+    this.userPersona = array;     
+  }
+
   getUsers() {
-    this._appUserService.getUsers().subscribe((users: Persona[]) => this.userPersona = users);
+    this._appUserService.getUsers()
+    .subscribe((users: Persona[]) => {
+      this.userPersona = users; 
+      this.usuariosArray = this.userPersona;
+    });
   }
   buscarEstudiante(idPersona:string){
 
     for (let estudiante of this.userPersona) {
       if(estudiante.idPersona == idPersona){
         if (estudiante.segundoNombre == null && estudiante.segundoApellido != null ) {
-          this.infoNombreCompleto = estudiante.primerNombre + " " + estudiante.primerApellido + " " + estudiante.segundoApellido;
+          this.infoNombreCompleto = estudiante.primerApellido + " " + estudiante.segundoApellido+ " " + estudiante.primerNombre ;
         } else if (estudiante.segundoNombre == null && estudiante.segundoApellido == null){
-          this.infoNombreCompleto = estudiante.primerNombre + " " + estudiante.primerApellido;          
+          this.infoNombreCompleto = estudiante.primerApellido + " " + estudiante.primerNombre; 
+        }else if (estudiante.segundoNombre != null && estudiante.segundoApellido == null){ 
+          this.infoNombreCompleto = estudiante.primerApellido + " " + estudiante.primerNombre + " " + estudiante.segundoNombre;
         }else{
-          this.infoNombreCompleto = estudiante.primerNombre + " " + estudiante.segundoNombre + " " + estudiante.primerApellido + " " + estudiante.segundoApellido;
+          this.infoNombreCompleto = estudiante.primerApellido + " " + estudiante.segundoApellido + " " + estudiante.primerNombre + " " + estudiante.segundoNombre;
         }
+        this.infoCodEstudiante = estudiante.codEstudiante;
         this.infoCarrera = estudiante.carrera;
         this.infoSemestre = estudiante.semestre;
         this.infoDireccion = estudiante.direccion;
@@ -137,67 +174,64 @@ export class GestionarUsuarioComponent implements OnInit {
 
   //Buscar al estudiante para editar
   //Aun falta no muestra los datos 
-  buscarEstudianteEditar(idPersona:string){
-    for(let estudiante of this.userPersona){
-     
+  buscarEstudianteEditar(idPersona:string, idUsuario:string){
+    this.idPersona = idPersona; 
+    this.idUsuario = idUsuario;   
+    this.getCarreras();
+    for(let estudiante of this.userPersona){     
       if (estudiante.idPersona == idPersona) {
-         console.log("idPersonas: ", estudiante.idPersona )
-        this.formPersona = this._formBuilder.group({
-          editPrimerNombre: estudiante.primerNombre,
-          editSegundoNombre: estudiante.segundoNombre,
-          editPrimerApellido : estudiante.primerApellido,
-          editSegundoApellido : estudiante.segundoApellido,
-          editCarrera : estudiante.carrera,
-          editSemestre : estudiante.semestre,
-          editNacionalidad : estudiante.nacionalidad,
-          editFechaNacimiento : estudiante.fechaNacimiento,
-          editDireccion : estudiante.direccion,
-          editCi : estudiante.ci,
-          editCelular : estudiante.celular
-        })
-
-        // this.formPersona = new FormGroup({
-        //   editPrimerNombre: new FormControl(estudiante.primerNombre),
-        //   editSegundoNombre: new FormControl(estudiante.segundoNombre),
-        //   editPrimerApellido : new FormControl(estudiante.primerApellido),
-        //   editSegundoApellido : new FormControl(estudiante.segundoApellido),
-        //   editCarrera : new FormControl(estudiante.carrera),
-        //   editSemestre : new FormControl(estudiante.semestre),
-        //   editNacionalidad : new FormControl(estudiante.nacionalidad),
-        //   editFechaNacimiento : new FormControl(estudiante.fechaNacimiento),
-        //   editDireccion : new FormControl(estudiante.direccion),
-        //   editCi : new FormControl(estudiante.ci),
-        //   editCelular : new FormControl(estudiante.celular)
-        // });
+        let fecha = new Date(estudiante.fechaNacimiento);
+        let dia = fecha.getUTCDate();
+        let mes = fecha.getUTCMonth()+1;
+        let year = fecha.getUTCFullYear();
+         this.editpersona.primerNombre = estudiante.primerNombre;
+         this.editpersona.segundoNombre = estudiante.segundoNombre;
+         this.editpersona.primerApellido = estudiante.primerApellido;
+         this.editpersona.segundoApellido = estudiante.segundoApellido;
+         this.editpersona.idCarrera = estudiante.idCarrera;        
+         this.editpersona.semestre = estudiante.semestre;        
+         this.editpersona.nacionalidad = estudiante.nacionalidad;        
+         this.editpersona.fechaNacimiento = dia + "/" + mes + "/" + year;       
+         this.editpersona.direccion = estudiante.direccion;        
+         this.editpersona.ci = estudiante.ci;        
+         this.editpersona.celular = estudiante.celular;        
+         this.editpersona.codEstudiante = estudiante.codEstudiante;
+         this.edituser.usuario = estudiante.usuario;
+         this.edituser.password = estudiante.password;
+         this.editPassword = estudiante.password;
       }
     }
   }
 
   saveUser() {
     this.user.idPersona = this.idPersona;
-    this.user.idRol = this.idRol;
+    this.user.idRol = '5';
     this.user.password = this.passwordTwo;
-    console.log(this.user);
     this._appUserService.postUser(this.user)
     .subscribe((data :User[]) => {console.log(data)});
-    //.subscribe(data => {data}, error => console.log(error));
   }
 
   editUsers(){
-    this.user.idRol = this.idRol;
-    this.user.password = this.passwordTwo;
-    console.log(this.user);
-    this._appUserService.putUser(this.user, this.idPersona)
+    this.edituser.estado = '1';
+    this.edituser.idRol = '5';
+    this._appUserService.putUser(this.edituser, this.idUsuario, this.idPersona)
     .subscribe((data :User[]) => {console.log(data)});
+    this.MessageSuccessUpdate = true;
+    setTimeout(() => {
+      this.getUsers();
+    }, 2000);
+    setTimeout(() => {
+      this.MessageSuccessUpdate = false;
+    }, 8000);
   }
 
-  editEstadoUser(idRol, usuario, password, estado, idPersona){
+  editEstadoUser(idRol, usuario, password, estado, idUsuario, idPersona){
     this.user.idRol = idRol;
     this.user.usuario = usuario;
     this.user.password = password;
     this.user.estado = estado;
     console.log(this.user);
-    this._appUserService.putUser(this.user, idPersona)
+    this._appUserService.putUser(this.user, idUsuario, idPersona)
       .subscribe((data: User[]) => { console.log(data) });
 
     setTimeout( () => {
@@ -205,8 +239,9 @@ export class GestionarUsuarioComponent implements OnInit {
     }, 2000);
   }
 
-  deleteUser(idUsuario:string){
+  deleteUser(idUsuario:string, idPersona:string){
     this.idUsuario = idUsuario;
+    this.idPersona = idPersona;
   }
 
   //Gestionar Personas
@@ -216,7 +251,9 @@ export class GestionarUsuarioComponent implements OnInit {
   }
 
   savePersona() {
-    console.log(this.persona);
+    let fecha = this.persona.fechaNacimiento.split('/')
+    let date = fecha[2]+"/"+fecha[1]+"/"+fecha[0];
+    this.persona.fechaNacimiento = date;
     this._appPersonaService.postPersona(this.persona)
     .subscribe((data :Persona[]) => {console.log(data)});
   }
@@ -225,6 +262,8 @@ export class GestionarUsuarioComponent implements OnInit {
     if(this.idUsuario != null){
       this._appUserService.deleteUser(this.idUsuario)
         .subscribe((user : User[]) => { console.log(user)});
+      this._appPersonaService.deletePersona(this.idPersona)
+      .subscribe((persona : Persona[]) =>{});
       this.messageYdelete = true;
       setTimeout(() => {
         this.messageYdelete = false;
@@ -238,6 +277,27 @@ export class GestionarUsuarioComponent implements OnInit {
       this.messageNdelete = false;
       }, 8000);
     }
+  }
+
+  editarPersona(){
+    let fecha =  this.editpersona.fechaNacimiento.split('/');
+    let date = fecha[2]+"/"+fecha[1]+"/"+fecha[0]
+    this.editpersona.fechaNacimiento = date;
+    this._appPersonaService.putPersona(this.editpersona, this.idPersona)
+    .subscribe((data : Persona[]) =>{console.log(data)});
+    setTimeout(() => {
+      this.getUsers();
+    }, 2000);
+    this.MessageSuccessUpdate = true;
+    setTimeout(() => {
+      this.MessageSuccessUpdate = false;
+    }, 8000);
+  }
+
+  //Gestionar Carrera
+  getCarreras(){
+    this._appCarreraService.getListCarrera()
+    .subscribe((carrera : Carrera[]) => {this.carreras = carrera})
   }
 
 }

@@ -343,7 +343,8 @@ export class GestionarInformeAyerComponent implements OnInit {
     }
   }
 
-  registrarSalida(idRegistro:string){
+  registrarSalida(idRegistro:string, fecha){
+    this.eliminarInformeEstudiante(fecha, idRegistro); 
     this._appRegistroHoraService.putRegistroSalida(idRegistro, this.registro)
     .subscribe((data : RegistroHora []) => {console.log(data)});
     this.messageExit = true;

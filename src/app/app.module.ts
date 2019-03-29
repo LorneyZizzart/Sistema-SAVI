@@ -20,6 +20,8 @@ import { AppRolService } from "./services/app-rol.service";
 import { AppTurnoService } from "./services/app-turno.service";
 import { AppUserService } from "./services/app-user.service";
 import { AppTipoPersonaService } from './services/app-tipoPersona.service';
+import { AppCarreraService } from './services/app-carrera.service';
+
 
 //Pipe
 import { KeysPipe } from './pipes/keys.pipe';
@@ -136,6 +138,7 @@ import { LoginComponent } from './components/login/login.component';
     AppRolService,
     AppTurnoService,
     AppTipoPersonaService,
+    AppCarreraService,
     AuthGuard
   ],
   bootstrap: [AppComponent]

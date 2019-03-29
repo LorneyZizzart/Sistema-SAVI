@@ -28,9 +28,13 @@ export class AppUserService {
       return this._http.get<Persona[]>(url);
     }
   
-  getVerificarUser(user, password):Observable<User[]>{
-      let url = `${this.listaUserURL}/${user}/${password}`;
-      return this._http.get<User[]>(url);
+  getVerificarUser(user:User):Observable<User[]>{
+      let body = JSON.stringify(user);
+      let headers = new HttpHeaders({
+         'Content-Type': 'application/json'
+      });
+      let url = `${this.listaUserURL}/verificarUser/`;
+      return this._http.post<User[]>(url, body, { headers }).pipe ();
   }
 
   postUser(user:User):Observable<User[]>{
@@ -49,12 +53,12 @@ export class AppUserService {
     return this._http.delete(url).pipe(map(res => res));
   }
 
-  putUser(user:User, key$:string):Observable<User[]>{
+  putUser(user:User, key$:string, idPersona:string):Observable<User[]>{
     let body = JSON.stringify(user);
     let headers = new HttpHeaders({
       'Content-Type':'application/json'
     });
-    let url = `${this.listaUserURL}/${key$}`;
+    let url = `${this.listaUserURL}/${key$}/${idPersona}`;
     return this._http.put<User[]>(url, body, {headers})
     .pipe();
   }

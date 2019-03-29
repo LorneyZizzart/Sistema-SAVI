@@ -290,7 +290,7 @@
                     <!-- /.box-header -->
                     <div class="box-body">
                         <p class="text-left">Lista de los estudiantes que ingresaron hoy. &nbsp;&nbsp;Descripción: <a class="btn-success"><i class="fa fa-check"></i></a> Aprobado&nbsp;&nbsp;  
-                            <a class="btn-danger"><i class="fa fa-close"></i></a> No aproba </p>             
+                            <a class="btn-danger"><i class="fa fa-close"></i></a> No aprobado </p>             
                                            
                             <div class="table-responsive pad">
                                 <table class="table table-bordered table-hover ">
@@ -316,7 +316,7 @@
                                         <td class="text-center">{{listHours[i+1] | undefineHora}}</td>
                                         <td class="text-center">{{listSaldo[i+1] | undefineSaldo}} Bs.</td>
                                         <td class="text-center">
-                                            <a *ngIf="registro.aprobadoFinanzas == false" (click)="registrarSalida(registro.idRegistroHora)" class="btn btn-success btn-margin" title="Marcar salida"><i class="fa fa-sign-in"></i></a>
+                                            <a *ngIf="registro.aprobadoFinanzas == false" (click)="registrarSalida(registro.idRegistroHora, registro.fechaEntrada)" class="btn btn-success btn-margin" title="Marcar salida"><i class="fa fa-sign-in"></i></a>
                                             <a *ngIf="registro.aprobadoFinanzas == true" class="btn btn-success btn-margin disabled" title="Marcar salida"><i class="fa fa-sign-in"></i></a>
                                         </td>
                                         <td class="text-center">

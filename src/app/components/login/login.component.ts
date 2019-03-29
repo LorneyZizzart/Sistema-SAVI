@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { User } from '../../interfaces/user.interface';
 import { AppUserService } from "../../services/app-user.service";
 import { AuthService } from '../../services/auth.service';
+import { Persona } from '../../interfaces/persona.interface';
 
 
 @Component({
@@ -12,6 +13,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class LoginComponent implements OnInit {
   usuario:User[];
+  persona:Persona[];
   private user:User = {};
   alertUserIncorrect:boolean = false;
   alertLoading:boolean = false;
@@ -25,9 +27,14 @@ export class LoginComponent implements OnInit {
   }
 
   verificarUsuario(){
-    this._appUserService.getVerificarUser(this.user.usuario, this.user.password)
+    this._appUserService.getVerificarUser(this.user)
     .subscribe((usuario:User[])=>{this.usuario = usuario});
     this.alertLoading = true;
+
+    setTimeout(() => {
+      if(this.usuario.length > 0)
+      this._appUserService.getUser(this.usuario[0].idUsuario).subscribe((data : Persona[]) => {this.persona = data});      
+    }, 2000);
 
     setTimeout(() => {
       this.alertLoading = false;
@@ -35,18 +42,19 @@ export class LoginComponent implements OnInit {
 
         if(this.usuario[0].estado){
           if(this._authService.setUser(this.usuario[0])){
+            this._authService.setDatosPersonales(this.persona[0]);
             this._router.navigate(['/home']);  
           }
         }else{
           this.alertUsuarioDesabilitado = true;
           setTimeout(() => {
           this.alertUsuarioDesabilitado = false;              
-          }, 5000); 
+          }, 6000); 
         }
       }else{
         this.alertErrorUser();
       }   
-    }, 2500);
+    }, 3000);
   }
 
   alertErrorUser(){

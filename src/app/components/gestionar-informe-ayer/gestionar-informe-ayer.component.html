@@ -278,7 +278,7 @@
                                     <td class="text-center">{{listHours[i+1] | undefineHora}}</td>
                                     <td class="text-center">{{listSaldo[i+1] | undefineSaldo}} Bs</td>
                                     <td class="text-center">
-                                        <a *ngIf="registro.aprobadoFinanzas == false" (click)="registrarSalida(registro.idRegistroHora)" class="btn btn-success btn-margin" title="Marcar salida"><i class="fa fa-sign-in"></i></a>
+                                        <a *ngIf="registro.aprobadoFinanzas == false" (click)="registrarSalida(registro.idRegistroHora, registro.fechaEntrada)" class="btn btn-success btn-margin" title="Marcar salida"><i class="fa fa-sign-in"></i></a>
                                         <a *ngIf="registro.aprobadoFinanzas == true" class="btn btn-success btn-margin disabled" title="Marcar salida"><i class="fa fa-sign-in"></i></a>
                                     </td>
                                     <td class="text-center">
