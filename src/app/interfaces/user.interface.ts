@@ -1,4 +1,6 @@
-export interface User {
+import { Persona } from './persona.interface';
+
+export interface User extends Persona  {
   idUsuario?: string;
   idPersona?: string;
   idRol?: string;

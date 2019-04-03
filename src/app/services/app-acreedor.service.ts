@@ -31,6 +31,16 @@ export class AppAcreedorService {
       .pipe ();
   }
 
+  putAcreedor(acreedor:Acreedor):Observable<Acreedor[]>{
+    let body = JSON.stringify(acreedor);
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    let url = `${this.uriAcreedor}/descuentos/`;
+    return this._http.put<Acreedor[]>(url, body, { headers })
+      .pipe ();
+  }
+
   putSaldoAcreedor(idConvenio:string, acreedor:Acreedor):Observable<Acreedor[]>{
     let body = JSON.stringify(acreedor);
     let headers = new HttpHeaders({

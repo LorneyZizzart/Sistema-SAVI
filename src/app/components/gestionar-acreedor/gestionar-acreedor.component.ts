@@ -5,6 +5,10 @@ import { Persona } from '../../interfaces/persona.interface';
 import { AppTipoPersonaService } from '../../services/app-tipoPersona.service';
 import { Descuento } from '../../interfaces/descuento.interface';
 import { AppDescuentoService } from '../../services/app-descuento.service';
+import { AuthService } from '../../services/auth.service';
+import { User } from '../../interfaces/user.interface';
+
+
 
 @Component({
   selector: 'app-gestionar-acreedor',
@@ -13,7 +17,7 @@ import { AppDescuentoService } from '../../services/app-descuento.service';
 })
 export class GestionarAcreedorComponent implements OnInit {
   //iDUSUARIO
-  IdUsuario:string = "4";
+  IdUsuario:string;
   //Lista de acreedores
   acreedores:Acreedor[];
   //Lista de estudiantes del departameto
@@ -48,11 +52,18 @@ export class GestionarAcreedorComponent implements OnInit {
 
   constructor(private _appAcreedorService:AppAcreedorService,
               private _appTipoPersonaService:AppTipoPersonaService,
-              private _appDescuentoService:AppDescuentoService) { }
+              private _appDescuentoService:AppDescuentoService,
+              private _authService:AuthService) { }
 
   ngOnInit() {
     this.listaAcreedores();
     this.getEstudiantes();
+    this.getUsuario();
+  }
+
+  getUsuario(){
+    let usuario = this._authService.getDatosPersonales();
+    this.IdUsuario = usuario.idUsuario;  
   }
 
   listaAcreedores(){
@@ -116,6 +127,7 @@ export class GestionarAcreedorComponent implements OnInit {
 
   aprobarDescuento(idAcreedor, saldo, idInformeEstudiante, idConvenio){
     this.descuento.idAcreedor = idAcreedor;
+    this.acreedor.idAcreedor = idAcreedor;
     this.Saldo = saldo;
     this.inputSaldo = saldo + " Bs."
     this.acreedor.idInformeEstudiante = idInformeEstudiante;
@@ -124,16 +136,18 @@ export class GestionarAcreedorComponent implements OnInit {
     this.inputDescontar = '00.00';
   }
   confirmarDescuento(){
+    this.acreedor.idUsuario = this.IdUsuario;
+    this.acreedor.estadoAcreedor = '0';
     this.descuento.idUsuario = this.IdUsuario;
+    this.editAcreedor(this.acreedor);
     this.saveDescuento(this.descuento);
-    this.editAcreedor(this.acreedor.idConvenio, this.acreedor);
     setTimeout(() => {
       this.listaAcreedores();
     }, 2000);
   }
   //Gestionar Acreditacion
-  editAcreedor(idConvenio:string, acreedor:Acreedor){
-    this._appAcreedorService.putSaldoAcreedor(idConvenio, acreedor).subscribe((acreedor:Acreedor[])=>{});
+  editAcreedor(acreedor:Acreedor){
+    this._appAcreedorService.putAcreedor(acreedor).subscribe((acreedor:Acreedor[])=>{console.log(acreedor)});
   }
   //Gestionar Descuentos
   saveDescuento(descuento:Descuento){    
