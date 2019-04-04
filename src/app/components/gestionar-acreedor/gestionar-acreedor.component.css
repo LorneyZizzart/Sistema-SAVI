@@ -1,3 +1,7 @@
+.bg-default{
+    background-color: #3c8dbc !important;
+    color: #fff !important;
+}
 .modal-name {
     margin-top: 5%;
 }

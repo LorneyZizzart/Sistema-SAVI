@@ -7,6 +7,7 @@ import { Descuento } from '../../interfaces/descuento.interface';
 import { AppDescuentoService } from '../../services/app-descuento.service';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../interfaces/user.interface';
+import { Router } from '@angular/router';
 
 
 
@@ -53,7 +54,8 @@ export class GestionarAcreedorComponent implements OnInit {
   constructor(private _appAcreedorService:AppAcreedorService,
               private _appTipoPersonaService:AppTipoPersonaService,
               private _appDescuentoService:AppDescuentoService,
-              private _authService:AuthService) { }
+              private _authService:AuthService,
+              private _router:Router) { }
 
   ngOnInit() {
     this.listaAcreedores();
@@ -127,6 +129,7 @@ export class GestionarAcreedorComponent implements OnInit {
 
   aprobarDescuento(idAcreedor, saldo, idInformeEstudiante, idConvenio){
     this.descuento.idAcreedor = idAcreedor;
+    this.descuento.saldoInicial = saldo;
     this.acreedor.idAcreedor = idAcreedor;
     this.Saldo = saldo;
     this.inputSaldo = saldo + " Bs."
@@ -156,6 +159,10 @@ export class GestionarAcreedorComponent implements OnInit {
     setTimeout(() => {
       this.MessageDescuento = false;
     }, 6000);
+  }
+
+  verAcreedorHistorial(idConvenio){
+    this._router.navigate(['/acreedorHistorial', idConvenio]);  
   }
 
 }

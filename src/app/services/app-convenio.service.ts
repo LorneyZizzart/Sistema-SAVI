@@ -3,6 +3,8 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Convenio } from "../interfaces/convenio.interface";
 import { Observable } from "rxjs";
+import { User } from '../interfaces/user.interface';
+
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +14,7 @@ export class AppConvenioService {
   convenio = {};
 
   listaUserURL: string = "http://localhost:3000/convenio";
+  listaTipoPersonaURL: string = "http://localhost:3000/tipoPersona";
 
   constructor(private _http:HttpClient) { }
 
@@ -22,6 +25,11 @@ export class AppConvenioService {
   getConvenio(key$: string): Observable<Convenio[]> {
     let url = `${this.listaUserURL}/${key$}`;
     return this._http.get<Convenio[]>(url);
+  }
+
+  getHistorialConvenio(idConvenio): Observable<User[]> {
+    let url = `${this.listaTipoPersonaURL}/historialConvenio/${idConvenio}`;
+    return this._http.get<User[]>(url);
   }
 
   postConvenio(convenio: Convenio): Observable<Convenio[]> {

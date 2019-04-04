@@ -1,3 +1,5 @@
+import { User } from './user.interface';
+
 export interface Convenio {
   idConvenio?:string
   idPersona?: string;

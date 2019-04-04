@@ -105,7 +105,9 @@ export class GestionarDescuentoComponent implements OnInit {
           this.fechaFinal = estudiante.fechaFinal;
           this.fotocopiaCI = estudiante.fotocopiaCarnet;
           this.solicitudWork = estudiante.solicitudTrabajo;
-          this.areas.push(estudiante.nombreArea);
+          if (this.areas.indexOf(estudiante.nombreArea) < 0) {
+            this.areas.push(estudiante.nombreArea);            
+          }
       }
     }
   }

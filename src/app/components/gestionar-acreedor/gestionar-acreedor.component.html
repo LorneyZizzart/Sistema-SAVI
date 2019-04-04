@@ -178,6 +178,54 @@
     <!-- Main content -->
     <section class="content">
         <div class="row">
+            <div class="col-lg-3 col-xs-6">
+                <div class="small-box bg-aqua">
+                    <div class="inner">
+                    <h4>Iniciar</h4>        
+                    <h4>nueva gestión</h4>
+                    </div>
+                    <div class="icon">
+                    <i class="ion ion-calendar"></i>
+                    </div>
+                    <a href="#" class="small-box-footer"><i class="fa fa-check-circle"></i> Aceptar</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-xs-6">
+                <div class="small-box bg-green">
+                    <div class="inner">
+                    <h4>Ver salos</h4>        
+                    <h4>pendientes</h4>
+                    </div>
+                    <div class="icon">
+                    <i class="ion ion-cash"></i>
+                    </div>
+                    <a href="#" class="small-box-footer"><i class="fa fa-arrow-circle-right"></i> Ver mas</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-xs-6">
+                <div class="small-box bg-yellow">
+                    <div class="inner">
+                    <h4>Historial</h4>        
+                    <h4>descuentos</h4>
+                    </div>
+                    <div class="icon">
+                    <i class="ion ion-archive"></i>
+                    </div>
+                    <a href="#" class="small-box-footer"><i class="fa fa-arrow-circle-right"></i> Ver mas</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-xs-6">
+                <div class="small-box bg-default">
+                    <div class="inner">
+                    <h4>65</h4>        
+                    <h4>Areditaciones</h4>
+                    </div>
+                    <div class="icon">
+                    <i class="ion ion-person"></i>
+                    </div>
+                    <a class="small-box-footer"><i class="fa"></i></a>
+                </div>
+            </div>
             <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
@@ -212,6 +260,7 @@
                                         <td class="text-center">
                                             <a (click)="infoFullName(informe.idPersona);aprobarDescuento(informe.idAcreedor, informe.montoBs, informe.idInformeEstudiante, informe.idConvenio)" data-toggle="modal" data-target="#modal-descuento"  class="btn btn-success btn-margin" title="Descontar"><i class="fa fa-toggle-down"></i></a>
                                             <a (click)="informacionEstudiante(informe.idPersona)" data-toggle="modal" data-target="#modal-informacionStudiante"  class="btn btn-primary btn-margin" title="Ver"><i class="fa fa-eye"></i></a>
+                                            <a (click)="verAcreedorHistorial(informe.idConvenio)" class="btn btn-info btn-margin" title="Mas información"><i class="fa fa-plus"></i></a>
                                         </td>
                                     </tr>
                                 </table>
