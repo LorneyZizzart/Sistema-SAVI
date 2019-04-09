@@ -210,6 +210,7 @@ export class GestionarInformeHoyComponent implements OnInit {
     .subscribe((registro : RegistroHora[]) => {this.informesRegistrosNow = registro});
     
     setTimeout(() => {
+      console.log("horas: ",this.informesRegistrosNow);
       this.listHours = ['00:00'];
       this.listSaldo= ['0'];
       this.numStudent = 0;
@@ -243,7 +244,7 @@ export class GestionarInformeHoyComponent implements OnInit {
         processHours = this.horasTranscurrido(registro.dayEntrada, horaInicio, registro.daySalida, horaFinal);
         this.numHour = this.sumarHorasTotal(this.numHour, processHours);
         numMoney = this.calculadoraSaldo(processHours, this.costoHora);
-        this.totalSaldo = numMoney + this.totalSaldo;
+        this.totalSaldo = parseFloat(numMoney) + parseFloat(this.totalSaldo);
         this.listSaldo.push(numMoney);
         this.listHours.push(processHours);
       }else{
@@ -251,7 +252,8 @@ export class GestionarInformeHoyComponent implements OnInit {
         this.listHours.push('00:00');
       }
     }
-    this.totalSaldo = this.totalSaldo.toFixed(2);
+    this.totalSaldo = parseFloat(this.totalSaldo).toFixed(2);
+    
   }
   //PARA OBTENER LOS DATOS DEL DEPARTAMENTO LUEGO SE PARA AL METODO infoDepartamento
   getDepartament(idDepartamento:string){

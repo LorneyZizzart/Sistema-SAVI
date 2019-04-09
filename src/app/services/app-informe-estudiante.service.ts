@@ -28,6 +28,11 @@ export class AppInformeEstudianteService {
     return this._http.get<InformeEstudiante[]>(url).pipe(map(res => res));
   }
 
+  getAcreedorHistorial(idConvenio):Observable<InformeEstudiante[]>{
+    let url = `${this.listaInformeEstudiante}/acreedorHistorial/${idConvenio}`;
+    return this._http.get<InformeEstudiante[]>(url).pipe(map(res => res));
+  }
+
   postInformeEstudiante(informe:InformeEstudiante):Observable<InformeEstudiante[]>{
     let body = JSON.stringify(informe);
     let headers = new HttpHeaders({

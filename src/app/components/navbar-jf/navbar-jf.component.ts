@@ -56,7 +56,7 @@ export class NavbarJFComponent implements OnInit {
     .subscribe((registro : RegistroHora[]) => {this.informesRegistrosNow = registro});
     setTimeout(() => {
       this.asistenciasNum = this.informesRegistrosNow.length;
-    }, 2000);
+    }, 3000);
   }
 
   //Gestionar Finanzas
@@ -65,7 +65,7 @@ export class NavbarJFComponent implements OnInit {
     .subscribe((informe : InformeEstudiante[]) => {this.listInformeEstudiante = informe})
     setTimeout(() => {
       this.bandejaInformeNum = this.listInformeEstudiante.length;
-    }, 2000);
+    }, 3000);
   }
 
   //Obtener Usuario del localStorage y datos personales

@@ -16,7 +16,7 @@ export class NameDayPipe implements PipeTransform {
       if(fechaNum >= 32){
         fechaNum = 1;
       }  
-    return (dias[date.getDay()]).toLowerCase() + ", " + fechaNum + " de " + meses[mes_name] + " de " + date.getFullYear();
+    return (dias[date.getDay()]).toString().toLowerCase() + ", " + fechaNum + " de " + meses[mes_name] + " de " + date.getFullYear();
   }
 
 }

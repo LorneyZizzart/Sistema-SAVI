@@ -274,7 +274,7 @@
                                     <td>{{registro.primerApellido}} {{registro.segundoApellido}} {{registro.primerNombre}}  {{registro.segundoNombre}}</td>
                                     <td class="text-center">{{registro.horaEntrada | hora }}:{{registro.minutoEntrada | minuto}}</td>
                                     <td *ngIf="registro.horaSalida == null"></td>
-                                    <td *ngIf="registro.horaSalida" class="text-center">{{registro.horaSalida | hora }}:{{registro.minutoSalida | minuto}}</td>
+                                    <td *ngIf="registro.horaSalida || registro.minutoSalida" class="text-center">{{registro.horaSalida | hora }}:{{registro.minutoSalida | minuto}}</td>
                                     <td class="text-center">{{listHours[i+1] | undefineHora}}</td>
                                     <td class="text-center">{{listSaldo[i+1] | undefineSaldo}} Bs</td>
                                     <td class="text-center">
