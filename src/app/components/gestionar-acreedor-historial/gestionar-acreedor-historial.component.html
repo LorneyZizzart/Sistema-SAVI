@@ -99,7 +99,7 @@
             <li (click)="getFecha(0)" class="active"><a href="#verTodo" data-toggle="tab">Ver todo</a></li>
             <li><a href="#dia" data-toggle="tab">Día</a></li>
             <li><a href="#semana" data-toggle="tab">Semana</a></li>
-            <li><a href="#mes" data-toggle="tab">Mes</a></li>
+            <li (click)="resetForm(frmMeses)"><a href="#mes" data-toggle="tab">Mes</a></li>
             <li><a href="#gestion" data-toggle="tab">Gestión</a></li>
           </ul>          
           <div class="tab-content">
@@ -142,32 +142,89 @@
                 </div> 
             </div>
             <div class="tab-pane" id="mes">
+              <form action=""  #frmMeses="ngForm">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                       <div class="form-group">
-                          <label>Mes</label>
-                          <select #mes
-                              class="form-control select2" multiple="multiple" data-placeholder="Selecione mes(es)"
-                              style="width: 100%;">
-                            <option value="01">Enero</option>
-                            <option value="02">Febrero</option>
-                            <option value="03">Marzo</option>
-                            <option value="04">Abril</option>
-                            <option value="05">Mayo</option>
-                            <option value="06">Junio</option>
-                            <option value="07">Julio</option>
-                            <option value="08">Agosto</option>
-                            <option value="09">Septiembre</option>
-                            <option value="10">Octubre</option>
-                            <option value="11">Noviembre</option>
-                            <option value="12">Diciembre</option>
-                          </select>                          
-                        </div>                        
+                        <label>
+                            <input (click)="getMonth(1, meses.enero)" type="checkbox" [(ngModel)]="meses.enero" name="meses.enero" class="minimal">
+                            Enero
+                        </label>
                     </div>
-                    <div class="input-group-btn">
-                        <button (click)="getMonth(mes.value)" type="button" class="btn btn-default"><i class="fa fa-search"></i></button>
+                    <div class="form-group">
+                        <label>
+                            <input (click)="getMonth(2, meses.febrero)" type="checkbox" [(ngModel)]="meses.febrero" name="meses.febrero" class="minimal">
+                            Febrero
+                        </label>
+                    </div>
+                    <div class="form-group">
+                      <label>
+                          <input (click)="getMonth(3, meses.marzo)" type="checkbox" [(ngModel)]="meses.marzo" name="meses.marzo" class="minimal">
+                          Marzo
+                      </label>
+                  </div>
+                  <div class="form-group">
+                    <label>
+                        <input (click)="getMonth(4, meses.abril)" type="checkbox" [(ngModel)]="meses.abril" name="meses.abril" class="minimal">
+                        Abril
+                    </label>
+                </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label>
+                            <input type="checkbox" [(ngModel)]="meses.mayo" name="meses.mayo" class="minimal">
+                            Mayo
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" [(ngModel)]="meses.junio" name="meses.junio" class="minimal">
+                            Junio
+                        </label>
+                    </div>
+                    <div class="form-group">
+                      <label>
+                          <input type="checkbox" [(ngModel)]="meses.julio" name="meses.julio" class="minimal">
+                          Julio
+                      </label>
+                  </div>
+                  <div class="form-group">
+                    <label>
+                        <input type="checkbox" [(ngModel)]="meses.agosto" name="meses.agosto" class="minimal">
+                        Agosto
+                    </label>
+                </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label>
+                            <input type="checkbox" [(ngModel)]="meses.septiembre" name="meses.septiembre" class="minimal">
+                            Septiembre
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" [(ngModel)]="meses.octubre" name="meses.octubre" class="minimal">
+                            Octubre
+                        </label>
+                    </div>
+                    <div class="form-group">
+                      <label>
+                          <input type="checkbox" [(ngModel)]="meses.noviembre" name="meses.noviembre" class="minimal">
+                          Noviembre
+                      </label>
+                  </div>
+                  <div class="form-group">
+                    <label>
+                        <input type="checkbox" [(ngModel)]="meses.diciembre" name="meses.diciembre" class="minimal">
+                        Diciembre
+                    </label>
+                </div>
                     </div>
                   </div> 
+              </form>
+                
             </div>
             <div class="tab-pane" id="gestion">
                 <div class="row">

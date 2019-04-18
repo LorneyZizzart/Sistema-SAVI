@@ -25,6 +25,11 @@ export class AppPersonaService {
     return this._http.get<Persona[]>(url).pipe(map(res => res));
   }
 
+  searchCodStudent(codStudent):Observable<Persona[]>{
+    let url = `${this.listaPersonaURL}/search/codStudent/${codStudent}`;
+    return this._http.get<Persona[]>(url).pipe(map(res => res));
+  }
+
   postPersona(persona:Persona):Observable<Persona[]>{
       let body = JSON.stringify(persona);
       let headers = new HttpHeaders({

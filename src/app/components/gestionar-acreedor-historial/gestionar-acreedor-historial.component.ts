@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../interfaces/user.interface';
 import { AppConvenioService } from '../../services/app-convenio.service';
@@ -20,7 +21,22 @@ export class GestionarAcreedorHistorialComponent implements OnInit {
   areas:any[] = [];
   informeEstudiante:InformeEstudiante[] = [];
   informeEstudianteArray:InformeEstudiante[] = [];
-  
+  mesArray:any[] = [];
+  month:string;
+  meses:any = {
+    enero : false,
+    febrero : false,
+    marzo : false,
+    abril : false,
+    mayo : false,
+    junio : false,
+    julio : false,
+    agosto : false,
+    septiembre : false,
+    octubre : false,
+    noviembre : false,
+    diciembre : false
+  };
   constructor( private _activatedRoute:ActivatedRoute,
                private _router:Router,
                private _appConvenioService:AppConvenioService,
@@ -31,6 +47,12 @@ export class GestionarAcreedorHistorialComponent implements OnInit {
       this.idConvenio = params['idConvenio'];
       this.getHistorialConvenio(this.idConvenio);
       this.getAcreedorHistorial(this.idConvenio);
+    });
+  }
+
+  //resetear el FORMULARIO no estamos usando
+  resetForm(formulario: NgForm) {
+    formulario.reset({
     });
   }
 
@@ -66,7 +88,13 @@ export class GestionarAcreedorHistorialComponent implements OnInit {
       case 4:
         let fecha = new Date(date.getTime() + (24*60*60*1000)*1)
         value =  fecha;
-        break;    
+        break;  
+      case 5:
+        value =  date.getMonth()+1;
+        break;
+      case 6:
+        value =  date.getFullYear();
+        break; 
       default:
         break;
     }
@@ -146,7 +174,7 @@ export class GestionarAcreedorHistorialComponent implements OnInit {
       this.informeEstudiante = array;
     }else{
       this.informeEstudiante = this.informeEstudianteArray;
-    }    
+    }
   }
 
   //buscar x rango de fechas
@@ -167,12 +195,44 @@ export class GestionarAcreedorHistorialComponent implements OnInit {
   
   }
 
-  getMonth(data){
-    console.log("data: ",data)
+  getMonth(mes, opcion){
+    opcion = !opcion;
+    let array:InformeEstudiante[] = [];
+    this.informeEstudiante = this.informeEstudianteArray;
+    if(opcion){
+      this.mesArray.push(mes)
+      for(let informe of this.informeEstudiante){
+        for (let i = 0; i < this.mesArray.length; i++) {
+          if(this.mesArray[i] == this.convertDate(informe.fecha, 5)){
+            array.push(informe)  
+          }        
+        }
+      }
+    }else{
+      var index = this.mesArray.indexOf(mes)
+      this.mesArray.splice(index, 1)
+      for(let informe of this.informeEstudiante){
+        for (let i = 0; i < this.mesArray.length; i++) {
+          if(this.mesArray[i] == this.convertDate(informe.fecha, 5)){
+            array.push(informe)  
+          }        
+        }
+      }
+    }       
+    this.informeEstudiante = array;
   }
 
   getGestion(data){
     console.log("gestion: ", data);
+    let array:InformeEstudiante[] = [];
+    this.informeEstudiante = this.informeEstudianteArray;
+    for(let informe of this.informeEstudiante){
+      console.log(this.convertDate(informe.fecha, 6))
+      if(this.convertDate(informe.fecha, 6) == data){
+        array.push(informe)  
+      }
+    }
+    this.informeEstudiante = array;
   }
   
   

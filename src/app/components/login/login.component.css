@@ -25,6 +25,19 @@
 
 .opciones-login{
     margin-top: 7%;
-    margin-left: 2.5%;
     margin-bottom: 7%;
+}
+.btn{
+    float: right;
+}
+.ico-success{
+    color: #00a65a;
+}
+
+.ico-error{
+    color: #dd4b39;
+}
+
+.help-block{
+    font-size: 80%;
 }

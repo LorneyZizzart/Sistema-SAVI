@@ -8,27 +8,30 @@
       <strong>Iniciar sesión</strong></p>
 
     <form (ngSubmit)="verificarUsuario()" #verficarUser="ngForm" name="frmVerificarUser" >
-      <div class="form-group has-feedback">
-        <input [(ngModel)]="user.usuario" name="user.usuario" type="text" class="form-control" placeholder="Usuario">
-        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+      <div [ngClass]="{'has-error': !inputErrorUsuario, 'has-success':inputSuccessUsuario}" class="form-group has-feedback">
+        <input (keyup)="inputUser(user.usuario)" [(ngModel)]="user.usuario" name="user.usuario" type="text" class="form-control" placeholder="Usuario">
+        <span
+        [ngClass]="{'glyphicon':true, 
+        'glyphicon-user':inputErrorUsuario, 
+        'glyphicon-remove':!inputErrorUsuario, 
+        'form-control-feedback':true, 
+        'ico-success':inputSuccessUsuario,
+        'ico-error':!inputErrorUsuario}"></span>
       </div>
-      <div class="form-group has-feedback">
-        <input [(ngModel)]="user.password" name="user.password" type="password" class="form-control" placeholder="Contraseña">
-        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+      <div [ngClass]="{'has-error': !inputErrorPassword, 'has-success':inputSuccessPassword}" class="form-group has-feedback">
+        <input (keyup)="inputPassword(user.password)" [(ngModel)]="user.password" name="user.password" type="password" class="form-control" placeholder="Contraseña">
+        <span 
+        [ngClass]="{'glyphicon':true,
+        'glyphicon-remove':!inputErrorPassword,
+        'glyphicon-lock':iconPassword,  
+        'form-control-feedback':true, 
+        'ico-success':inputSuccessPassword,
+        'ico-error':!inputErrorPassword}"></span>
       </div>
-      <div class="row opciones-login">
-        <div class="col-xs-8">
-          <div class="checkbox icheck">
-            <label>
-              <input type="checkbox">Recuérdame
-            </label>
-          </div>
+      <div class="row opciones-login">   
+        <div class="col-md-12">
+          <button type="submit" class="btn btn-primary btn-flat">Ingresar</button>
         </div>
-        <!-- /.col -->
-        <div class="col-xs-4">
-          <button type="submit" class="btn btn-primary btn-block btn-flat">Ingresar</button>
-        </div>
-        <!-- /.col -->
       </div>
     </form>
     <a href="#">Olvidé mi contraseña</a><br>
@@ -37,10 +40,10 @@
 </div>
 
 <div *ngIf="alertUserIncorrect" id="growls-default">
-  <div class="growl growl-error growl-large">
+  <div [ngClass]="{'growl': true, 'growl-error':true, 'growl-large':true, 'growl.growl-outgoing':!alertUserIncorrect}">
     <div class="growl-close">×</div>
     <div class="growl-title"><i class="icon fa fa-close"></i> Error</div>
-    <div class="growl-message">El usuario y la contraseña no son validos</div>
+    <div class="growl-message">{{messageError}}</div>
   </div>
 </div>
 

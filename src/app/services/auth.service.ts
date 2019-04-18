@@ -44,7 +44,7 @@ export class AuthService {
       let people =JSON.stringify(persona);
       localStorage.setItem("dataPeople", people);
       return true;
-    }else{return false;}
+    }else{return false}
   }
 
   getDatosPersonales():Persona{

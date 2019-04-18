@@ -19,12 +19,12 @@
             <p>Los datos se actualizaron satisfactoriamente.</p>
         </div>
     </div>
-    <div *ngIf="MessageSuccess == true" class="pad no-print">
+    <!-- <div *ngIf="messageSuccessRegisterPeople == true" class="pad no-print">
         <div class="callout callout-success">
             <h4><i class="icon fa fa-check"></i> Registro Exitoso</h4>
-            <p>El registro se realizó satisfactoriamente.</p>
+            <p>{{ messageRegisterPeople }}</p>
         </div>
-    </div>
+    </div> -->    
     <div *ngIf="MessageEnable == true" class="pad no-print">
         <div class="callout callout-success">
             <h4><i class="icon fa fa-check"></i> Usuario habilitado</h4>
@@ -300,8 +300,8 @@
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
                         <li (click)="getUsers()" class="active"><a href="#lista" data-toggle="tab">Lista</a></li>
-                        <li (click)="getCarreras(); resetForm(registroPersona)"><a href="#registrar" data-toggle="tab">Registrar datos personales</a></li>
-                        <li (click)="getPersonas(); resetForm(registroUser)"><a href="#registerUsuario" data-toggle="tab">Registrar Usuario</a></li>
+                        <li (click)="getCarreras();"><a href="#registrar" data-toggle="tab">Registrar datos personales</a></li>
+                        <li (click)="getPersonas();"><a href="#registerUsuario" data-toggle="tab">Registrar Usuario</a></li>
                     </ul>
                     <div class="tab-content">
                         <!-- LISTA -->
@@ -360,47 +360,51 @@
                             <section id="new">
                                 <h4 class="page-header"><i class="fa fa-address-book"></i> Registro de datos personales</h4>
 
-                                <form (ngSubmit)="savePersona()" #registroPersona="ngForm" name="formularioRegistroPersona" class="form-horizontal">
+                                <form (ngSubmit)="savePersona(registroPersona)" #registroPersona="ngForm" name="formularioRegistroPersona" class="form-horizontal">
 
                                     <div class="row">
                                         <div class="col-md-7">
-                                            <div class="form-group">
-                                                <label for="inputName" class="col-sm-3 control-label">Código de estudiante</label>
+                                            <div [ngClass]="{'has-error': !inputValCodStudent}" class="form-group">
+                                                <label for="inputName" class="col-sm-3 control-label">Código de estudiante </label>
 
                                                 <div class="col-sm-9">
-                                                    <input [(ngModel)]="persona.codEstudiante" name="persona.codEstudiante" type="text" class="form-control" id="persona.codEstudiante" placeholder="">
+                                                    <input (keyup)="inputCodStudent(persona.codEstudiante)" [(ngModel)]="persona.codEstudiante" name="persona.codEstudiante" type="text" class="form-control" id="persona.codEstudiante" placeholder="">
+                                                    <span *ngIf="!inputValCodStudent" class="help-block"><i class="icon fa fa-warning"></i> {{ messaggeCodStudent }}</span>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="inputName" class="col-sm-3 control-label">Primer nombre</label>
+                                            <div [ngClass]="{'has-error': !inputValFirstName}" class="form-group">
+                                                <label for="inputName" class="col-sm-3 control-label">Primer nombre *</label>
+                                                <div class="col-sm-9">
+                                                    <input (keyup)="inputFirstName(persona.primerNombre)" [(ngModel)]="persona.primerNombre" name="persona.primerNombre" type="text" class="form-control" id="persona.primerNombre" placeholder="">
+                                                    <span *ngIf="!inputValFirstName" class="help-block"><i class="icon fa fa-warning"></i> {{ messaggeFullName }}</span>
+                                                </div>
+                                            </div>
+                                            <div [ngClass]="{'form-group': true, 'has-error': !inputValSecondName}">
+                                                <label for="inputName" class="col-sm-3 control-label">Segundo nombre </label>
 
                                                 <div class="col-sm-9">
-                                                    <input [(ngModel)]="persona.primerNombre" name="persona.primerNombre" type="text" class="form-control" id="persona.primerNombre" placeholder="">
+                                                    <input (keyup)="inputSecondName(persona.segundoNombre)"  [(ngModel)]="persona.segundoNombre" name="persona.segundoNombre" type="text" class="form-control" id="persona.segundoNombre" placeholder="">
+                                                    <span *ngIf="!inputValSecondName" class="help-block"><i class="icon fa fa-warning"></i> {{ messaggeFullName }}</span>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="inputName" class="col-sm-3 control-label">Segundo nombre</label>
+                                            <div [ngClass]="{'form-group': true, 'has-error': !inputValSurname}">
+                                                <label for="inputName" class="col-sm-3 control-label">Primer apellido *</label>
 
                                                 <div class="col-sm-9">
-                                                    <input [(ngModel)]="persona.segundoNombre" name="persona.segundoNombre" type="text" class="form-control" id="persona.segundoNombre" placeholder="">
+                                                    <input (keyup)="inputSurname(persona.primerApellido)"  [(ngModel)]="persona.primerApellido" name="persona.primerApellido" type="text" class="form-control" id="persona.primerApellido" placeholder="">
+                                                    <span *ngIf="!inputValSurname" class="help-block"><i class="icon fa fa-warning"></i> {{ messaggeFullName }}</span>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="inputName" class="col-sm-3 control-label">Primer apellido</label>
+                                            <div [ngClass]="{'form-group': true, 'has-error': !inputValSecondSurname}">
+                                                <label for="inputExperience" class="col-sm-3 control-label">Segundo apellido </label>
 
                                                 <div class="col-sm-9">
-                                                    <input [(ngModel)]="persona.primerApellido" name="persona.primerApellido" type="text" class="form-control" id="persona.primerApellido" placeholder="">
+                                                    <input (keyup)="inputSecondSurname(persona.segundoApellido)"  [(ngModel)]="persona.segundoApellido" name="persona.segundoApellido" type="text" class="form-control" id="persona.segundoApellido" placeholder="">
+                                                    <span *ngIf="!inputValSecondSurname" class="help-block"><i class="icon fa fa-warning"></i> {{ messaggeFullName }}</span>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="inputExperience" class="col-sm-3 control-label">Segundo apellido</label>
-
-                                                <div class="col-sm-9">
-                                                    <input [(ngModel)]="persona.segundoApellido" name="persona.segundoApellido" type="text" class="form-control" id="persona.segundoApellido" placeholder="">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="inputName" class="col-sm-3 control-label">Carrera</label>
+                                            <div [ngClass]="{'form-group': true}">
+                                                <label for="inputName" class="col-sm-3 control-label">Carrera </label>
     
                                                 <div class="col-sm-9 select-student">
                                                     <select [(ngModel)]='persona.idCarrera' name="persona.idCarrera" class="form-control select2" style="width: 100%;">
@@ -408,45 +412,51 @@
                                                         </select>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="inputExperience" class="col-sm-3 control-label">Semestre</label>
+                                            <div [ngClass]="{'form-group': true, 'has-error': !inputValSemester}">
+                                                <label for="inputExperience" class="col-sm-3 control-label">Semestre </label>
 
                                                 <div class="col-sm-9">
-                                                    <input [(ngModel)]="persona.semestre" name="persona.semestre" type="text" class="form-control" id="persona.semestre" placeholder="">
+                                                    <input (keyup)="inputSemester(persona.semestre)"  [(ngModel)]="persona.semestre" name="persona.semestre" type="text" class="form-control" id="persona.semestre" placeholder="">
+                                                    <span *ngIf="!inputValSemester" class="help-block"><i class="icon fa fa-warning"></i> {{ messaggeSemester }}</span>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="inputEmail" class="col-sm-3 control-label">Nacionalidad</label>
+                                            <div [ngClass]="{'form-group': true, 'has-error': !inputValNationality}">
+                                                <label for="inputEmail" class="col-sm-3 control-label">Nacionalidad *</label>
                                                 <div class="col-sm-9">
-                                                    <input [(ngModel)]="persona.nacionalidad" name="persona.nacionalidad" type="text" class="form-control" id="persona.nacionalidad" placeholder="">
+                                                    <input (keyup)="inputNationality(persona.nacionalidad)"  [(ngModel)]="persona.nacionalidad" name="persona.nacionalidad" type="text" class="form-control" id="persona.nacionalidad" placeholder="">
+                                                    <span *ngIf="!inputValNationality" class="help-block"><i class="icon fa fa-warning"></i> {{ messaggeNationality }}</span>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="inputSkills" class="col-sm-3 control-label">Fecha de nacimiento</label>
+                                            <div [ngClass]="{'form-group': true, 'has-error': !inputValBirth}">
+                                                <label for="inputSkills" class="col-sm-3 control-label">Fecha de nacimiento *</label>
 
                                                 <div class="col-sm-9">
-                                                    <input [(ngModel)]="persona.fechaNacimiento" name="persona.fechaNacimiento" type="text" class="form-control pull-right" id="persona.fechaNacimiento" placeholder="01/01/1900">
+                                                    <input (keyup)="inputBirth(persona.fechaNacimiento)"  [(ngModel)]="persona.fechaNacimiento" name="persona.fechaNacimiento" type="text" class="form-control pull-right" id="persona.fechaNacimiento" placeholder="01/01/1900">
+                                                    <span *ngIf="!inputValBirth" class="help-block"><i class="icon fa fa-warning"></i> {{ messaggeBirth }}</span>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="inputSkills" class="col-sm-3 control-label">Dirección</label>
+                                            <div [ngClass]="{'form-group': true, 'has-error': !inputValAddress}">
+                                                <label for="inputSkills" class="col-sm-3 control-label">Dirección *</label>
 
                                                 <div class="col-sm-9">
-                                                    <input [(ngModel)]="persona.direccion" name="persona.direccion" type="text" class="form-control" id="persona.direccion" placeholder="">
+                                                    <input (keyup)="inputAddress(persona.direccion)"  [(ngModel)]="persona.direccion" name="persona.direccion" type="text" class="form-control" id="persona.direccion" placeholder="">
+                                                    <span *ngIf="!inputValAddress" class="help-block"><i class="icon fa fa-warning"></i> {{ messaggeAddress }}</span>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="inputSkills" class="col-sm-3 control-label">C.I.</label>
+                                            <div [ngClass]="{'form-group': true, 'has-error': !inputValCI}">
+                                                <label for="inputSkills" class="col-sm-3 control-label">C.I. *</label>
 
                                                 <div class="col-sm-9">
-                                                    <input [(ngModel)]="persona.ci" name="persona.ci" type="text" class="form-control" id="persona.ci" placeholder="">
+                                                    <input (keyup)="inputCI(persona.ci)"  [(ngModel)]="persona.ci" name="persona.ci" type="text" class="form-control" id="persona.ci" placeholder="">
+                                                    <span *ngIf="!inputValCI" class="help-block"><i class="icon fa fa-warning"></i> {{ messaggeCI }}</span>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="inputSkills" class="col-sm-3 control-label">Celular</label>
+                                            <div [ngClass]="{'form-group': true, 'has-error': !inputValMobile}">
+                                                <label for="inputSkills" class="col-sm-3 control-label">Celular *</label>
 
                                                 <div class="col-sm-9">
-                                                    <input [(ngModel)]="persona.celular" name="persona.celular" type="text" class="form-control" id="persona.celular" placeholder="">
+                                                    <input (keyup)="inputMobile(persona.celular)"  [(ngModel)]="persona.celular" name="persona.celular" type="text" class="form-control" id="persona.celular" placeholder="">
+                                                    <span *ngIf="!inputValMobile" class="help-block"><i class="icon fa fa-warning"></i> {{ messaggeMobile }}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -461,7 +471,7 @@
                                         </div>
                                         <div class="col-md-12 text-center">
 
-                                            <button (click)="mensajeSuccess()" type="submit" name="button" class="btn btn-primary margin">
+                                            <button type="submit" name="button" class="btn btn-primary margin">
                                                 <i class="fa fa-save"></i> Guardar
                                             </button>
                                         </div>
@@ -550,4 +560,17 @@
 <!-- /.content-wrapper -->
 <app-footer></app-footer> 
 </div>
-<!-- /.content-wrapper -->
+<div id="growls-default">
+    <div [ngClass]="{'growl': true, 'growl-notice':alertSuccess, 
+                    'growl-error':alertError, 
+                    'growl-large':true, 
+                    'growl-outgoing':!activateAlert}">
+        <div [ngClass]="{'growl-close': true, 'growl-outgoing':!activateAlert}">×</div>
+        <div [ngClass]="{'growl-title': true, 'growl-outgoing':!activateAlert}">
+            <i [ngClass]="{'icon': true, 'fa': true, 
+            'fa-check': alertSuccess, 
+            'fa-close': alertError}"></i> 
+            {{titleAlert}} </div>
+        <div [ngClass]="{'growl-message': true,'growl-outgoing':!activateAlert}">{{messageAlert}}</div>
+    </div>
+</div>
