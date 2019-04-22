@@ -37,6 +37,11 @@ export class AppUserService {
       return this._http.post<User[]>(url, body, { headers }).pipe ();
   }
 
+  searchUser(user:string):Observable<User[]>{
+    let url = `${this.listaUserURL}/search/name/${user}`;
+    return this._http.get<User[]>(url).pipe(map(res => res));
+  }
+
   postUser(user:User):Observable<User[]>{
       let body = JSON.stringify(user);
       let headers = new HttpHeaders({

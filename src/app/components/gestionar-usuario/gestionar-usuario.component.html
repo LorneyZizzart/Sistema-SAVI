@@ -75,7 +75,7 @@
                                         <p><strong><i class="fa fa-flag-checkered margin-r-5"></i> Nacionalidad:</strong></p>
                                         <p><strong><i class="fa fa-credit-card margin-r-5"></i> Carnet de Identidad:</strong></p>
                                         <p><strong><i class="fa fa-phone margin-r-5"></i> Celular:</strong></p>
-                                        <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha nacimiento:</strong></p>
+                                        <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha de nacimiento:</strong></p>
                                     </div>
                                     <div class="col-md-7">
                                         <p *ngIf="infoCarrera">{{ infoCarrera }}</p>
@@ -486,56 +486,59 @@
                             <section id="new">
                                 <h4 class="page-header"><i class="fa fa-user"></i> Crear Usuario</h4>
 
-                                <form (ngSubmit)="saveUser()" #registroUser="ngForm" name="formulario" class="form-horizontal">
+                                <form (ngSubmit)="saveUser(idPeople.value)" #registroUser="ngForm" name="formulario" class="form-horizontal">
 
                                     <div class="row form">
                                         <div class="col-md-12">
 
-                                            <div class="form-group col-sm-6">
-                                                <label for="inputName" class="col-sm-3 control-label">Nombre completo</label>
+                                            <div [ngClass]="{'has-error': !inputValSelectPeople}" class="form-group col-sm-6">
+                                                <label for="inputName" class="col-sm-3 control-label">Nombre completo *</label>
 
-                                                <div class="col-sm-9 select-student">
-                                                    <select [(ngModel)]='idPersona' name="idPersona" class="form-control select2" style="width: 100%;">
+                                                <div (click)="selectPeople()" class="col-sm-9 select-student">
+                                                    <select [(ngModel)]='idPersona' #idPeople name="idPersona" class="form-control select2" style="width: 100%;">
                                                     <option *ngFor="let persona of personas" [value]="persona.idPersona" >{{ persona.primerApellido }} {{ persona.segundoApellido | undefinedDato}} {{ persona.primerNombre }} {{ persona.segundoNombre | undefinedDato}}</option>
                                                   </select>
+                                                  <span *ngIf="!inputValSelectPeople" class="help-block"><i class="icon fa fa-warning"></i> {{ messageSelectPeople }}</span>
                                                 </div>
                                             </div>
                                             <div class="form-group col-sm-6">
                                                 <label for="inputName" class="col-sm-3 control-label">Rol</label>
     
                                                 <div class="col-sm-9">
-                                                    <input type="text" class="form-control"  placeholder="Estudiante" disabled>
+                                                    <input type="text" class="form-control" placeholder="Estudiante" disabled>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
-                                            <div class="form-group col-sm-6">
-                                                <label for="inputName" class="col-sm-3 control-label">Nombre de usuario</label>
+                                            <div [ngClass]="{'has-error': !inputValUser}" class="form-group col-sm-6">
+                                                <label for="inputName" class="col-sm-3 control-label">Nombre de usuario *</label>
 
-                                                <div class="col-sm-9">
-                                                    <input [(ngModel)]="user.usuario" name="user.usuario" type="text" class="form-control" id="user.usuario" placeholder="">
+                                                <div (click)="generateUser(idPeople.value)" class="col-sm-9">
+                                                    <input (keyup)="inputUser(user.usuario)" [(ngModel)]="user.usuario" name="user.usuario" type="text" class="form-control" id="user.usuario" placeholder="">
+                                                    <span *ngIf="!inputValUser" class="help-block"><i class="icon fa fa-warning"></i> {{ messageUser }}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
-                                            <div class="form-group col-sm-6">
-                                                <label for="inputName" class="col-sm-3 control-label">Contraseña</label>
+                                            <div [ngClass]="{'has-error': !inputValPassword}" class="form-group col-sm-6">
+                                                <label for="inputName" class="col-sm-3 control-label">Contraseña *</label>
 
                                                 <div class="col-sm-9">
-                                                    <input [(ngModel)]="password" name="password" type="password" class="form-control" id="password1" placeholder="">
+                                                    <input (keyup)="inputPassword1(password)" [(ngModel)]="password" name="password" type="text" class="form-control" id="password1" placeholder="">
+                                                    <span *ngIf="!inputValPassword" class="help-block"><i class="icon fa fa-warning"></i> {{ messagePassword }}</span>
                                                 </div>
                                             </div>
-                                            <div class="form-group col-sm-6">
-                                                <label for="inputName" class="col-sm-3 control-label">Confimar contraseña</label>
+                                            <div [ngClass]="{'has-error': !inputValPassword2}" class="form-group col-sm-6">
+                                                <label for="inputName" class="col-sm-3 control-label">Confimar contraseña *</label>
 
                                                 <div class="col-sm-9">
-                                                    <input [(ngModel)]="passwordTwo" name="passwordTwo" type="password" class="form-control" id="passwordTwo" placeholder="">
-                                                    <p *ngIf="comparacionPassword()==false">La contraseña no es la misma</p>
+                                                    <input (keyup)="inputPassword2(passwordTwo)" [(ngModel)]="passwordTwo" name="passwordTwo" type="text" class="form-control" id="passwordTwo" placeholder="">
+                                                    <span *ngIf="!inputValPassword2" class="help-block"><i class="icon fa fa-warning"></i> {{ messagePassword2 }}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-12 text-center">
-                                            <button (click)="mensajeSuccess()" type="submit" class="btn btn-primary">
+                                            <button type="submit" class="btn btn-primary">
                                               <i class="fa fa-save"></i> Guardar
                                             </button>
                                         </div>

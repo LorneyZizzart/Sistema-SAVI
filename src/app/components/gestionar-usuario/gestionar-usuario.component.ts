@@ -17,10 +17,10 @@ export class GestionarUsuarioComponent implements OnInit {
 
   //FormBuilder
   public formPersona:FormGroup;
-  idPersona:string = "";
-  idRol:string = "";
-  password:string = "";
-  passwordTwo:string = "";
+  idPersona:string = null;
+  idRol:string = null;
+  password:string = null;
+  passwordTwo:string = null;;
   //ALERTS
   titleAlert:string = null;
   messageAlert:string = null;
@@ -54,12 +54,7 @@ export class GestionarUsuarioComponent implements OnInit {
   private edituser: User = {};
   private editPassword:string;
   MessageSuccessUpdate:boolean = false;
-  private user: User = {
-    idRol: "",
-    usuario: "",
-    password: "",
-    estado: "0"
-  };
+  private user: User = {};
 
   //Confirmacion de eliminar
   messageYdelete:boolean = false;
@@ -70,27 +65,25 @@ export class GestionarUsuarioComponent implements OnInit {
   carrera:Carrera = {};
   //INPUTs
   //REGISTER PEOPLE
-  inputValCodStudent:boolean = true;
-  messaggeCodStudent:string = null;
+  inputValCodStudent:boolean = true; messaggeCodStudent:string = null;
   inputValFirstName:boolean = true;
   inputValSecondName:boolean = true;
   inputValSurname:boolean = true;
-  inputValSecondSurname:boolean = true;
-  messaggeFullName:string = null;
-  inputValSemester:boolean = true;
-  messaggeSemester:string = null;
-  inputValNationality:boolean = true;
-  messaggeNationality:string = null;
-  inputValBirth:boolean = true;
-  messaggeBirth:string = null;
-  inputValAddress:boolean = true;
-  messaggeAddress:string = null;
-  inputValCI:boolean = true;
-  messaggeCI:string = null;
-  inputValMobile:boolean = true;
-  messaggeMobile:string = null;
+  inputValSecondSurname:boolean = true; messaggeFullName:string = null;
+  inputValSemester:boolean = true; messaggeSemester:string = null;
+  inputValNationality:boolean = true; messaggeNationality:string = null;
+  inputValBirth:boolean = true; messaggeBirth:string = null;
+  inputValAddress:boolean = true; messaggeAddress:string = null;
+  inputValCI:boolean = true; messaggeCI:string = null;
+  inputValMobile:boolean = true;messaggeMobile:string = null;
+  //RESGISTER USER
+  inputValSelectPeople:boolean = true; messageSelectPeople:string = null;
+  inputValUser:boolean = true; messageUser:string = null;
+  inputValPassword:boolean = true; messagePassword:string = null;
+  inputValPassword2:boolean = true; messagePassword2:string = null;
   letters="abcdefghyjklmnñopqrstuvwxyz";
   numbers="0123456789";
+  simbolos="/*-+|°!#$%&()=¿?,;. :_{}[]><";
   constructor( private _appUserService: AppUserService,
               private _appPersonaService: AppPersonaService,
               private _formBuilder: FormBuilder,
@@ -121,12 +114,6 @@ export class GestionarUsuarioComponent implements OnInit {
   }
   
   ngOnDestroy(): void {
-  }
-
-  comparacionPassword():Boolean{
-    if (this.passwordTwo != this.password || this.passwordTwo == null && this.password != null) {
-      return false;
-    }else{return true;}
   }
 
   //inputs de Registrar Persona
@@ -347,6 +334,121 @@ export class GestionarUsuarioComponent implements OnInit {
     }
   }
 
+  //Inputs de registrar usuario
+  selectPeople(){
+    this.inputValSelectPeople=true;
+  }
+  generateUser(idPersona){
+    if(idPersona != null){
+      for(let persona of this.personas){
+        if(persona.idPersona == idPersona){
+          this.inputValUser = true;
+          this.inputValPassword = true;
+          this.user.usuario = (persona.primerNombre+persona.primerApellido).toLowerCase().substr(0,6);
+          this.password = (persona.primerApellido).toLowerCase().substr(0,3)+(persona.ci).toLowerCase().substr(0,3);       
+          if(this.password != this.passwordTwo){
+            this.inputValPassword2 = false;
+            this.messagePassword2 = 'Debe escribir la misma contraseña para confirmar.'
+          }
+        }
+      }
+    }       
+  }
+  inputUser(value){
+    var validInput = false;
+    if(value != null){
+      if(value.length == 0){
+        this.inputValUser = false;
+        this.messageUser = 'El campo debe ser llenado obligatoriamente.'
+      }else if(value.length > 5){
+        for (let i = 0; i < value.length; i++) {
+          if(this.simbolos.indexOf(value.charAt(i),0)!=-1){
+            this.inputValUser = false;
+            this.messageUser = 'No debe contener símbolos y ni espacios.'
+            validInput = false;
+            break;
+          }else validInput = true;
+        }
+        if(validInput){
+          this._appUserService.searchUser(value)
+          .subscribe((data:User[])=>{
+            if(data.length > 0){this.inputValUser = false;
+              this.messageUser = 'El nombre de usuario ya existe.';  
+              return;       
+            }else{
+              this.inputValUser = true;  
+            }               
+          }, res =>{this.inputValUser = false;
+            this.messageUser = 'Se ha producido un error en el servidor.'})
+        }
+      }else{
+        this.inputValUser = false;
+        this.messageUser = 'Debe contener al menos 6 caracteres numéricos o literarios, sin símbolos y ni espacios.'
+      }
+    }
+  }
+  inputPassword1(value){
+    var valLetters = false, valNumbers = false;
+    if(value != null){
+      if(value.length == 0){
+        this.inputValPassword = false;
+        this.messagePassword = 'El campo debe ser llenado obligatoriamente.';
+      }else if(value.length > 5){
+        this.inputValPassword = true;
+        for (let i = 0; i < value.length; i++) {
+          if(this.letters.indexOf(value.charAt(i),0)!=-1) valLetters = true;
+          if(this.numbers.indexOf(value.charAt(i),0)!=-1) valNumbers = true;
+          if(this.simbolos.indexOf(value.charAt(i),0)!=-1){
+            valLetters = false; valNumbers = false;
+            this.inputValPassword = false;
+            this.messagePassword = 'No debe contener símbolos y ni espacios.'
+            break;
+          }
+        }
+        if(valLetters && valNumbers){
+          if(this.password != this.passwordTwo){
+            this.inputValPassword2 = false;
+            this.messagePassword2 = 'La contraseñas deben ser iguales.';
+          }else this.inputValPassword = true;
+        }
+      }else{
+        this.inputValPassword = false;
+        this.messagePassword = 'Debe contener al menos 6 caracteres entre letras y números, sin símbolos y ni espacios.';
+      }
+    }
+  }
+
+  inputPassword2(value){
+    var valLetters = false, valNumbers = false;
+    if(value != null){
+      if(value.length == 0){
+        this.inputValPassword2 = false;
+        this.messagePassword2 = 'El campo debe ser llenado obligatoriamente.';
+      }else if(value.length > 5){
+        for (let i = 0; i < value.length; i++) {
+          if(this.letters.indexOf(value.charAt(i),0)!=-1) valLetters = true;
+          if(this.numbers.indexOf(value.charAt(i),0)!=-1) valNumbers = true;
+          if(this.simbolos.indexOf(value.charAt(i),0)!=-1){
+            valLetters = false; valNumbers = false;
+            this.inputValPassword2 = false;
+            this.messagePassword2 = 'No debe contener símbolos y ni espacios.'
+            break;
+          }
+        }
+        if(valLetters && valNumbers){
+          if(this.password==this.passwordTwo) this.inputValPassword2 = true;
+          else{
+            this.inputValPassword2 = false;
+            this.messagePassword2 = 'La contraseñas deben ser iguales.'
+          }
+        }
+      }else{
+        this.inputValPassword2 = false;
+        this.messagePassword2 = 'Debe contener al menos 6 caracteres entre letras y números, sin símbolos y ni espacios.';
+      }
+    }
+  }
+
   //Gestionar Usuarios
   buscarUsuario(nombre:string){
     let array:Persona[] = [];
@@ -436,13 +538,26 @@ export class GestionarUsuarioComponent implements OnInit {
     }
   }
 
-  saveUser() {
-    this.user.idPersona = this.idPersona;
-    this.user.idRol = '5';
-    this.user.password = this.passwordTwo;
-    this._appUserService.postUser(this.user)
-    .subscribe((data :User[]) => {console.log(data)});
-  }
+  saveUser(idPersona) {
+    if(idPersona == null || idPersona == ""){this.inputValSelectPeople = false; this.messageSelectPeople='Debe seleccionar un nombre para el usuario.'}
+    if(this.user.usuario == null){this.inputValUser=false; this.messageUser='El campo debe ser llenado obligatoriamente.';}
+    if(this.password == null){this.inputValPassword=false; this.messagePassword='El campo debe ser llenado obligatoriamente.';}
+    if(this.passwordTwo == null){this.inputValPassword2=false; this.messagePassword2='El campo debe ser llenado obligatoriamente.';}
+
+    if(this.inputValSelectPeople && this.inputValUser && this.inputValPassword && this.inputValPassword2){
+      this.user.idPersona = idPersona;
+      this.user.idRol = '5';
+      this.user.password = this.passwordTwo;
+      this._appUserService.postUser(this.user)
+      .subscribe((data :User[]) => {
+        this.alert(true, 'Registro exitoso','El registro del usuario se realizó satisfactoriamente.');
+      },res => {
+        this.alert(false, 'Error al registrar','Se ha producido un error en el servidor.');
+      });
+    }else this.alert(false, 'Error al registrar','Se ha producido un error al guardar el registro del usuario.');
+    
+    
+  }  
 
   editUsers(){
     this.edituser.estado = '1';
@@ -480,12 +595,9 @@ export class GestionarUsuarioComponent implements OnInit {
   //Gestionar Personas
   getPersonas() {
     this._appPersonaService.getPersonas().subscribe((personas:Persona[]) => this.personas = personas);
-    console.log(this.personas);
   }
 
   savePersona(form:NgForm) {
-    console.log("formulario: ", form);
-    
     if(this.persona.primerNombre == null) {this.inputValFirstName = false;this.messaggeFullName = 'El campo debe ser llenado obligatoriamente.';}
     if(this.persona.primerApellido == null) this.inputValSurname = false;
     if(this.persona.nacionalidad == null) {this.inputValNationality = false;this.messaggeNationality = 'El campo debe ser llenado obligatoriamente.';}
@@ -506,13 +618,13 @@ export class GestionarUsuarioComponent implements OnInit {
           this.alert(true, 'Registro exitoso', 'El registro se realizó satisfactoriamente.');
           this.resetForm(form);
         }, res =>{
-          this.alert(false, 'Error al registrar','Se ha producido un error al guardar el registro.');
+          this.alert(false, 'Error al registrar','Se ha producido un error en el servidor.');
         });
       }else{
         this.alert(false, 'Error al registrar','Se ha producido un error al guardar el registro.');
-      }    
-  }  
-
+      }   
+  }
+  
   eliminarUser(){
     if(this.idUsuario != null){
       this._appUserService.deleteUser(this.idUsuario)
