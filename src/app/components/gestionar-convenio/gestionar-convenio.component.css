@@ -4,12 +4,11 @@
 }
 
 .dateInicio {
-    margin-right: -2px;
-    margin-left: 0;
+    margin-left: -3%;
 }
 
 .dateFinal {
-    margin-left: 2%;
+    margin-right: -5%;
 }
 
 .buscador {

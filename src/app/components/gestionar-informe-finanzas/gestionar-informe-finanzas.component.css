@@ -37,3 +37,10 @@
 .areas{
     display: inline;
 }
+
+.input-buscador{
+    float: right;
+    position: absolute;
+    right: 2%;
+    top: 114px;
+}

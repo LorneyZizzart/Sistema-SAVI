@@ -8,6 +8,8 @@ import { InformeEstudiante } from '../../interfaces/informe-estudiante.interface
 import { AppInformeEstudianteService } from '../../services/app-informe-estudiante.service';
 import { Persona } from '../../interfaces/persona.interface';
 import { AppTipoPersonaService } from '../../services/app-tipoPersona.service';
+import { User } from 'src/app/interfaces/user.interface';
+import { Convenio } from 'src/app/interfaces/convenio.interface';
 
 
 
@@ -64,7 +66,7 @@ export class GestionarInformeWeekComponent implements OnInit {
   carrera:string
   semestre:string
   beca:string;
-  estadoConvenio:boolean;
+  estadoConvenio:string;
   fotocopiaCI;
   solicitudWork;
   fechaInicio;
@@ -72,7 +74,7 @@ export class GestionarInformeWeekComponent implements OnInit {
   observacionesRegistroHora:string;
   areas:any[] = [];
   //Lista de estudiantes del departameto
-  estudiantes:Persona[];
+  estudiantes:Convenio[];
   //title de observacion
   titleObservation:string;
   btnConfirmacion:string;
@@ -333,15 +335,17 @@ export class GestionarInformeWeekComponent implements OnInit {
   
   getInformeRegisterWeek(idDepartamento:string){
     this._appRegistroHoraService.getInformeRegisterWeek(idDepartamento)
-    .subscribe((registro : RegistroHora[]) => {this.informesRegistrosWeek = registro});
+    .subscribe((registro : RegistroHora[]) => {
+      this.informesRegistrosWeek = registro;
+    });
     setTimeout(() => {
       this.listHours = ['00:00'];
       this.listSaldo= ['0'];
       this.numStudent = 0;
       this.numHour= '00:00';
       this.totalSaldo = 0;
-      this.totalDatos();   
-      }, 4000);
+      this.totalDatos();  
+    }, 2000); 
   }
 
   registrarAprobacion(idRegistro:string, aprobado:string, fecha:string, idRegistroHora:string){

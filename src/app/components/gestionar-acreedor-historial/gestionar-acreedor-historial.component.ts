@@ -15,8 +15,8 @@ import { InformeEstudiante } from '../../interfaces/informe-estudiante.interface
 export class GestionarAcreedorHistorialComponent implements OnInit {
 
   idConvenio:string;
-  convenio:User[] = [];
-  convenioData:User = {};
+  convenio:Convenio[] = [];
+  convenioData:Convenio = {};
   nombreCompleto:string;
   areas:any[] = [];
   informeEstudiante:InformeEstudiante[] = [];
@@ -118,9 +118,9 @@ export class GestionarAcreedorHistorialComponent implements OnInit {
 
   getHistorialConvenio(idConvenio){
     this._appConvenioService.getHistorialConvenio(idConvenio)
-    .subscribe((data:User[]) => {this.convenio = data});
-    this.areas = [];
-    setTimeout(() => {
+    .subscribe((data:User[]) => {
+      this.convenio = data
+      this.areas = [];
       for(let data of this.convenio){
         if (data.segundoNombre == null && data.segundoApellido != null ) {
           this.nombreCompleto = data.primerApellido + " " + data.segundoApellido+ " " + data.primerNombre ;
@@ -151,7 +151,7 @@ export class GestionarAcreedorHistorialComponent implements OnInit {
           this.areas.push(data.nombreArea);            
         }
       }
-    }, 2000);
+    });
   }
 
   getAcreedorHistorial(idConvenio){

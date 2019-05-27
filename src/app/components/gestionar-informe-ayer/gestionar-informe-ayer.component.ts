@@ -8,6 +8,7 @@ import { Persona } from '../../interfaces/persona.interface';
 import { AppTipoPersonaService } from '../../services/app-tipoPersona.service';
 import { InformeEstudiante } from '../../interfaces/informe-estudiante.interface';
 import { AppInformeEstudianteService } from '../../services/app-informe-estudiante.service';
+import { Convenio } from 'src/app/interfaces/convenio.interface';
 
 @Component({
   selector: 'app-gestionar-informe-ayer',
@@ -59,7 +60,7 @@ export class GestionarInformeAyerComponent implements OnInit {
   carrera:string
   semestre:string
   beca:string;
-  estadoConvenio:boolean;
+  estadoConvenio:string;
   fotocopiaCI;
   solicitudWork;
   fechaInicio;
@@ -67,7 +68,7 @@ export class GestionarInformeAyerComponent implements OnInit {
   observacionesRegistroHora:string;
   areas:any[] = [];
   //Lista de estudiantes del departameto
-  estudiantes:Persona[];
+  estudiantes:Convenio[];
   //Message of exit the student
   messageExit:boolean = false;
   //Confirmacion
@@ -255,17 +256,17 @@ export class GestionarInformeAyerComponent implements OnInit {
   getInformeRegistroYesterday(idDepartamento:string){
     this._appRegistroHoraService.getInformeRegisterYest(idDepartamento)
     .subscribe((registro : RegistroHora[]) => {
-        this.informesRegistrosAyer = registro;
+      this.informesRegistrosAyer = registro;
+            
     });
     setTimeout(() => {
-      console.log(this.informesRegistrosAyer);
       this.listHours = ['00:00'];
       this.listSaldo= ['0'];
       this.numStudent = 0;
       this.numHour= '00:00';
       this.totalSaldo = 0;
-      this.totalDatos();   
-      }, 4000);
+      this.totalDatos(); 
+    }, 2000); 
   }
 
   //PARA OBTENER LOS DATOS DEL DEPARTAMENTO LUEGO SE PARA AL METODO infoDepartamento

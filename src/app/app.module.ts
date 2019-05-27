@@ -72,6 +72,7 @@ import { GestionarInformeFinanzasArchivadoComponent } from './components/gestion
 import { AuthGuard } from './auth.guard';
 import { LoginComponent } from './components/login/login.component';
 import { GestionarAcreedorHistorialComponent } from './components/gestionar-acreedor-historial/gestionar-acreedor-historial.component';
+import { FechaPipe } from './pipes/fecha.pipe';
 
 @NgModule({
   declarations: [
@@ -114,7 +115,8 @@ import { GestionarAcreedorHistorialComponent } from './components/gestionar-acre
     GestionarInformeFinanzasAprobadoComponent,
     GestionarInformeFinanzasArchivadoComponent,
     LoginComponent,
-    GestionarAcreedorHistorialComponent
+    GestionarAcreedorHistorialComponent,
+    FechaPipe
   ],
   imports: [
     BrowserModule,

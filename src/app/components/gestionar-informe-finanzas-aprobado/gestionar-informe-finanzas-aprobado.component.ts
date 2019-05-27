@@ -11,6 +11,7 @@ import { AppAcreedorService } from '../../services/app-acreedor.service';
 import { Acreedor } from '../../interfaces/acreedor.interface';
 import { AppRegistroHoraService } from '../../services/app-registroHora.service';
 import { RegistroHora } from '../../interfaces/registroHora.interface';
+import { Convenio } from 'src/app/interfaces/convenio.interface';
 
 @Component({
   selector: 'app-gestionar-informe-finanzas-aprobado',
@@ -39,7 +40,7 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
   carrera:string
   semestre:string
   beca:string;
-  estadoConvenio:boolean;
+  estadoConvenio:string;
   nombreDepartamento:string;
   fotocopiaCI;
   solicitudWork;
@@ -57,7 +58,7 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
   //messsage de archivar
   MessageInformeArchivado:boolean = false;
   //Lista de estudiantes del departameto
-  estudiantes:Persona[];
+  estudiantes:Convenio[];
   //acreditacion
   Horas:string; Saldo:string; menosHoras:string = '00:00'; masHoras:string = '00:00';
   //List departament

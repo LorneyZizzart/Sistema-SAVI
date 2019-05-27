@@ -41,3 +41,6 @@
 .help-block{
     font-size: 80%;
 }
+#growls-default {
+    top: 10px;
+}

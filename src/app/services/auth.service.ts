@@ -39,7 +39,7 @@ export class AuthService {
     }
   }
   //para navbar del dashboard
-  setDatosPersonales(persona:Persona):Boolean{
+  setDatosPersonales(persona:User):Boolean{
     if(persona){
       let people =JSON.stringify(persona);
       localStorage.setItem("dataPeople", people);
@@ -47,7 +47,7 @@ export class AuthService {
     }else{return false}
   }
 
-  getDatosPersonales():Persona{
+  getDatosPersonales():User{
     let persona = localStorage.getItem("dataPeople");
     if(!isNullOrUndefined(persona)){
       let people: User = JSON.parse(persona);

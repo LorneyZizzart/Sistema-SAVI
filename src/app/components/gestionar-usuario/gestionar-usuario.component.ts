@@ -6,7 +6,7 @@ import { AppUserService } from "../../services/app-user.service";
 import { AppPersonaService } from "../../services/app-persona.service";
 import { Carrera } from '../../interfaces/carrera.interface';
 import { AppCarreraService } from '../../services/app-carrera.service';
-
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-gestionar-usuario',
@@ -14,7 +14,8 @@ import { AppCarreraService } from '../../services/app-carrera.service';
   styleUrls: ['./gestionar-usuario.component.css']
 })
 export class GestionarUsuarioComponent implements OnInit {
-
+  // usuario logeado
+  private userLog:User = {};
   //FormBuilder
   public formPersona:FormGroup;
   idPersona:string = null;
@@ -27,13 +28,14 @@ export class GestionarUsuarioComponent implements OnInit {
   activateAlert:boolean = false;
   alertSuccess:Boolean = false;
   alertError:Boolean = false;
+  alertWarning:boolean = false;
   MessageEnable:Boolean = false;
   MessageDesable:Boolean = false;
-  public userPersona: Persona[];
+  public userPersona: User[];
   //se utiliza para el buscador el usuario
-  usuariosArray:Persona[];
+  usuariosArray:User[];
   usuario:User[];
-  personas:Persona[];
+  personas:User[];
   //Para ver la informacion por estudiante
   infoNombreCompleto:string = "";
   infoCodEstudiante:string = "";
@@ -47,7 +49,7 @@ export class GestionarUsuarioComponent implements OnInit {
   infoUser:string = "";
   infoPassword:string = "";
 
-  estudiante:Persona[] = [];
+  estudiante:User[] = [];
 
   private persona: Persona = {}
   private editpersona: Persona = {}
@@ -75,24 +77,62 @@ export class GestionarUsuarioComponent implements OnInit {
   inputValBirth:boolean = true; messaggeBirth:string = null;
   inputValAddress:boolean = true; messaggeAddress:string = null;
   inputValCI:boolean = true; messaggeCI:string = null;
-  inputValMobile:boolean = true;messaggeMobile:string = null;
+  inputValMobile:boolean = true; messaggeMobile:string = null;
+  //EDIT PEOPLE
+  inputValEditCodStudent:boolean = true;
+  inputValEditFirstName:boolean = true;
+  inputValEditSecondName:boolean = true;
+  inputValEditSurname:boolean = true;
+  inputValEditSecondSurname:boolean = true;
+  inputValEditSemester:boolean = true;
+  inputValEditNationality:boolean = true;
+  inputValEditBirth:boolean = true;
+  inputValEditAddress:boolean = true;
+  inputValEditCI:boolean = true;
+  inputValEditMobile:boolean = true;
   //RESGISTER USER
   inputValSelectPeople:boolean = true; messageSelectPeople:string = null;
+  inputValSelectRol:boolean = true; messageSelectRol:string = null;
   inputValUser:boolean = true; messageUser:string = null;
   inputValPassword:boolean = true; messagePassword:string = null;
   inputValPassword2:boolean = true; messagePassword2:string = null;
+  //EDIT USER
+  inputValEditSelectRol:boolean = true;
+  inputValEditUser:boolean = true;
+  inputValEditPassword:boolean = true;
+  inputValEditPassword2:boolean = true;
+  //para esconder el password
+  typePassword:boolean;
   letters="abcdefghyjklmnñopqrstuvwxyz";
   numbers="0123456789";
   simbolos="/*-+|°!#$%&()=¿?,;. :_{}[]><";
+
+  imagen:string = 'Jhonny.png';
+    
   constructor( private _appUserService: AppUserService,
               private _appPersonaService: AppPersonaService,
               private _formBuilder: FormBuilder,
-              private _appCarreraService:AppCarreraService) {
+              private _appCarreraService:AppCarreraService,
+              private _authService:AuthService) {
   }
 
   ngOnInit() {
-    // this.getUsers();
+    this.obtenerUsuario();
+    if(this.userLog != null){
+      this.getUsers(this.userLog.idRol);
+      this.getCarreras();
+    }    
     this.formPersona = new FormGroup({});
+  }
+
+  cargarImg(img){
+    console.log("imagen url: ", img.target.files[0])
+    this.imagen = img.target.files[0].name;
+  }
+  //obtencion de datos del usuario logeado
+  obtenerUsuario(){
+    this.userLog = this._authService.getCurrentUser();
+
   }
 
    //resetear el FORMULARIO no estamos usando
@@ -100,9 +140,10 @@ export class GestionarUsuarioComponent implements OnInit {
     formulario.reset({});
   }
   
-  alert(opcion:boolean, title:string, message:string):void{
-    if(opcion) this.alertSuccess = true;
-    if(!opcion) this.alertError = true;      
+  alert(opcion:number, title:string, message:string):void{
+    if(opcion == 1) this.alertSuccess = true;
+    if(opcion == 2) this.alertError = true;      
+    if(opcion == 3) this.alertWarning = true;      
     this.titleAlert = title;
     this.messageAlert = message;
     this.activateAlert = true;
@@ -110,144 +151,211 @@ export class GestionarUsuarioComponent implements OnInit {
       this.activateAlert = false;
       this.alertSuccess = false;
       this.alertError = false;
+      this.alertWarning = false;
     }, 5000);
   }
-  
-  ngOnDestroy(): void {
+
+  hidePassword(){
+    this.typePassword  = !this.typePassword 
   }
 
   //inputs de Registrar Persona
-  inputCodStudent(value){
+  inputCodStudent(value, opcion){
+    var valCodStudent = true;
     if(value != null){
     if(value.length == 9){
       for (let i = 0; i < value.length; i++) {
-        if(this.letters.indexOf(value.charAt(i),0)!=-1){
-          this.inputValCodStudent = false;
-          this.messaggeCodStudent = 'Debe contener 9 caracteres numéricos y no se permite letras.';
-          break;
-        }else{
-          this._appPersonaService.searchCodStudent(value)
+        if(this.simbolos.indexOf(value.charAt(i),0)!=-1){valCodStudent = false; break}
+        if(this.letters.indexOf(value.charAt(i),0)!=-1){valCodStudent = false; break}    
+      }
+      if(valCodStudent){
+        this._appPersonaService.searchCodStudent(value)
           .subscribe((data:Persona[])=>{
-            if(data.length > 0) {this.inputValCodStudent = false;
+            if(data.length > 0) {
+              if(opcion == 1) this.inputValCodStudent = false;
+              if(opcion == 2) this.inputValEditCodStudent = false;
               this.messaggeCodStudent = 'El código de estudiante se encuentra registrado.';
-            }else this.inputValCodStudent = true;
-          },res =>{this.inputValCodStudent = false}); 
-          break;
-        }     
+            }else{
+              if(opcion == 1) this.inputValCodStudent = true;
+              if(opcion == 2) this.inputValEditCodStudent = true;
+            }            
+          },res =>{
+            if(opcion == 1) this.inputValCodStudent = false;
+            if(opcion == 2) this.inputValEditCodStudent = false;
+          });
+      }else{
+        if(opcion == 1) this.inputValCodStudent = false;
+        if(opcion == 2) this.inputValEditCodStudent = false;
+        this.messaggeCodStudent = 'Debe contener 9 caracteres numéricos y no se permite letras.';
       }
     }else if(value.length >= 1 && value.length <= 8){
-      this.inputValCodStudent = false;
+      if(opcion == 1) this.inputValCodStudent = false;
+      if(opcion == 2) this.inputValEditCodStudent = false;
       this.messaggeCodStudent = 'Debe contener 9 caracteres numéricos y no se permite letras.';
     }else if (value.length > 9){
-      this.inputValCodStudent = false;
+      if(opcion == 1) this.inputValCodStudent = false;
+      if(opcion == 2) this.inputValEditCodStudent = false;
       this.messaggeCodStudent = 'Solo se permite 9 caracteres numéricos.';
-    }else if (value.length == 0) this.inputValCodStudent = true
+    }else if (value.length == 0) {
+      if(opcion == 1) this.inputValCodStudent = true;
+      if(opcion == 2) this.inputValEditCodStudent = true;
+    }
     }
   }
 
-  inputFirstName(value){
+  inputFirstName(value, opcion){
+    var valName = true;
     if(value != null){
       if(value.length > 0){
-        for (let i = 0; i < value.length; i++) {
-          if(this.numbers.indexOf(value.charAt(i),0)!=-1){
-            this.inputValFirstName = false;
-            this.messaggeFullName = 'No se permite caracteres numéricos.';
-            break;
-          }else {
-            this.inputValFirstName = true
-          }
+        for (let i = 0; i < value.length; i++) { 
+          if(this.simbolos.indexOf(value.charAt(i),0)!=-1){valName = false; break}
+          if(this.numbers.indexOf(value.charAt(i),0)!=-1){valName = false; break}
+        }
+        if(valName){
+          if(opcion == 1) this.inputValFirstName = true;
+            if(opcion == 2) this.inputValEditFirstName = true;
+        }else{
+          if(opcion == 1) this.inputValFirstName = false;
+          if(opcion == 2) this.inputValEditFirstName = false;
+          this.messaggeFullName = 'No se permite caracteres numéricos ni símbolos.';
         }
       }else {
-        this.inputValFirstName = false;
+        if(opcion == 1) this.inputValFirstName = false;
+        if(opcion == 2) this.inputValEditFirstName = false;
         this.messaggeFullName = 'El campo debe ser llenado obligatoriamente.';
       }
     }     
   }
 
-  inputSecondName(value){
+  inputSecondName(value, opcion){
+    var valName = true;
     if(value != null){
       if(value.length > 0){
         for (let i = 0; i < value.length; i++) {
-          if(this.numbers.indexOf(value.charAt(i),0)!=-1){
-            this.inputValSecondName = false;
-            this.messaggeFullName = 'No se permite caracteres numéricos.';
-            break;
-          }else this.inputValSecondName = true
+          if(this.simbolos.indexOf(value.charAt(i),0)!=-1){valName = false; break}
+          if(this.numbers.indexOf(value.charAt(i),0)!=-1){valName = false; break}
         }
-      }else this.inputValSecondName = true 
+        if(valName){
+          if(opcion == 1) this.inputValSecondName = true;
+          if(opcion == 2) this.inputValEditSecondName = true;
+        }else{
+          if(opcion == 1) this.inputValSecondName = false;
+          if(opcion == 2) this.inputValEditSecondName = false;
+          this.messaggeFullName = 'No se permite caracteres numéricos ni símbolos.';
+        }
+      }else{
+        if(opcion == 1) this.inputValSecondName = true;
+        if(opcion == 2) this.inputValEditSecondName = true;
+      }
     }    
   }
 
-  inputSurname(value){
+  inputSurname(value, opcion){
+    var valSurname = true;
     if(value != null){
     if(value.length > 0){
       for (let i = 0; i < value.length; i++) {
-        if(this.numbers.indexOf(value.charAt(i),0)!=-1){
-          this.inputValSurname = false;
-          this.messaggeFullName = 'No se permite caracteres numéricos.';
-          break;
-        }else this.inputValSurname = true
+        if(this.simbolos.indexOf(value.charAt(i),0)!=-1){valSurname = false; break}
+        if(this.numbers.indexOf(value.charAt(i),0)!=-1){valSurname = false; break}
+      }
+      if(valSurname){
+        if(opcion == 1) this.inputValSurname = true;
+        if(opcion == 2) this.inputValEditSurname = true;
+      }else{
+        if(opcion == 1) this.inputValSurname = false;
+        if(opcion == 2) this.inputValEditSurname = false;
+        this.messaggeFullName = 'No se permite caracteres numéricos ni símbolos.';
       }
     }else {
-      this.inputValSurname = false;
+      if(opcion == 1) this.inputValSurname = false;
+      if(opcion == 2) this.inputValEditSurname = false;
       this.messaggeFullName = 'El campo debe ser llenado obligatoriamente.';
     }
     }
   }
 
-  inputSecondSurname(value){
+  inputSecondSurname(value, opcion){
+    var valSurname = true;
     if(value != null){
     if(value.length > 0){
       for (let i = 0; i < value.length; i++) {
-        if(this.numbers.indexOf(value.charAt(i),0)!=-1){
-          this.inputValSecondSurname = false;
-          this.messaggeFullName = 'No se permite caracteres numéricos.';
-          break;
-        }else this.inputValSecondSurname = true
+        if(this.simbolos.indexOf(value.charAt(i),0)!=-1){valSurname = false; break}
+        if(this.numbers.indexOf(value.charAt(i),0)!=-1){valSurname = false; break}
       }
-    }else this.inputValSecondSurname = true; 
+      if(valSurname){
+        if(opcion == 1) this.inputValSecondSurname = true;
+        if(opcion == 2) this.inputValEditSecondSurname = true;
+      }else{
+        if(opcion == 1) this.inputValSecondSurname = false;
+        if(opcion == 2) this.inputValEditSecondSurname = false;
+        this.messaggeFullName = 'No se permite caracteres numéricos ni símbolos.';
+      }
+    }else{
+      if(opcion == 1) this.inputValSecondSurname = true;
+      if(opcion == 2) this.inputValEditSecondSurname = true;
+    } 
     }
   }
 
-  inputSemester(value){
+  inputSemester(value, opcion){
+    var valSemester = true;
     if(value != null){
-    if(value.length>0){
+    if(parseInt(value)>0){
       for (let i = 0; i < value.length; i++) {
-        if(this.letters.indexOf(value.charAt(i),0)!=-1){
-          this.inputValSemester = false;
-          this.messaggeSemester = 'No se permite caracteres literarios.';
-          break;
-        }else {
-          if(parseInt(value) >=1 && parseInt(value) <= 9){
-           this.inputValSemester = true            
-          }else if (parseInt(value) > 9){
-            this.inputValSemester = false;
-            this.messaggeSemester = 'Solo se permiten valores numéricos del 1 al 9.';
-          }
+        if(this.simbolos.indexOf(value.charAt(i),0)!=-1){valSemester = false; break}
+        if(this.letters.indexOf(value.charAt(i),0)!=-1){valSemester = false; break}
+      }
+      if(valSemester){
+        if(parseInt(value) >=1 && parseInt(value) <= 9){
+          if(opcion == 1) this.inputValSemester = true;
+          if(opcion == 2) this.inputValEditSemester = true;           
+        }else if (parseInt(value) > 9){
+          if(opcion == 1) this.inputValSemester = false;
+          if(opcion == 2) this.inputValEditSemester = false;
+          this.messaggeSemester = 'Solo se permiten valores numéricos del 1 al 9.';
         }
-      }      
-    }else this.inputValSemester = true; 
+      }else{
+        if(opcion == 1) this.inputValSemester = false;
+        if(opcion == 2) this.inputValEditSemester = false;
+        this.messaggeSemester = 'No se permite caracteres literarios ni símbolos.';
+      }     
+    }else if(value.length == 0){
+      if(opcion == 1) this.inputValSemester = true;
+      if(opcion == 2) this.inputValEditSemester = true;
+    }
+    else{
+      if(opcion == 1) this.inputValSemester = false;
+      if(opcion == 2) this.inputValEditSemester = false;
+      this.messaggeSemester = 'Solo se permiten valores numéricos del 1 al 9.';
+    }
     }
   }
 
-  inputNationality(value){
+  inputNationality(value, opcion){
+    var valNationality = true;
     if(value != null){
     if(value.length > 0){
       for (let i = 0; i < value.length; i++) {
-        if(this.numbers.indexOf(value.charAt(i),0)!=-1){
-          this.inputValNationality = false;
-          this.messaggeNationality = 'No se permite caracteres numéricos.';
-          break;
-        }else this.inputValNationality = true
+        if(this.simbolos.indexOf(value.charAt(i),0)!=-1){valNationality = false; break}
+        if(this.numbers.indexOf(value.charAt(i),0)!=-1){valNationality = false; break}
+      }
+      if(valNationality){
+        if(opcion == 1) this.inputValNationality = true;
+        if(opcion == 2) this.inputValEditNationality = true;
+      }else{
+        if(opcion == 1) this.inputValNationality = false;
+        if(opcion == 2) this.inputValEditNationality = false;
+        this.messaggeNationality = 'No se permite caracteres numéricos ni símbolos.';
       }
     }else {
-      this.inputValNationality = false; 
+      if(opcion == 1) this.inputValNationality = false;
+      if(opcion == 2) this.inputValEditNationality = false;
       this.messaggeNationality = 'El campo debe ser llenado obligatoriamente.';
     }
     }
   }
 
-  inputBirth(value){
+  inputBirth(value, opcion){
     if(value != null){
       var valDay = false, valMonth = false, valYear = false;
       var date = new Date();
@@ -255,7 +363,8 @@ export class GestionarUsuarioComponent implements OnInit {
       if(value.length > 0){
         for (let i = 0; i < value.length; i++) {
           if(this.letters.indexOf(value.charAt(i),0)!=-1){
-            this.inputValBirth = false;
+            if(opcion == 1) this.inputValBirth = false;
+            if(opcion == 2) this.inputValEditBirth = false;
             this.messaggeBirth = 'No se permite caracteres literarios.';
             break;
           }else {
@@ -263,14 +372,16 @@ export class GestionarUsuarioComponent implements OnInit {
               if(value.substr(0,2) > 0 && value.substr(0,2) <= 31){
                 valDay = true;
               }else{
-                this.inputValBirth = false;
+                if(opcion == 1) this.inputValBirth = false;
+                if(opcion == 2) this.inputValEditBirth = false;
                 valDay = false;
                 this.messaggeBirth = 'El valor del día debe ser entre 01 a 31';
               }
               if(value.substr(3,2) > 0 && value.substr(3,2) <= 12){
                 valMonth = true;
               }else{
-                this.inputValBirth = false;
+                if(opcion == 1) this.inputValBirth = false;
+                if(opcion == 2) this.inputValEditBirth = false;
                 valMonth = false;
                 this.messaggeBirth = 'El valor del mes debe ser entre 01 a 12';
               }
@@ -278,57 +389,78 @@ export class GestionarUsuarioComponent implements OnInit {
                 if(parseInt(value.substr(6)) > infYear && parseInt(value.substr(6)) < parseInt(date.getFullYear().toString())) {
                   valYear = true;
                 }else {
-                  this.inputValBirth = false;
+                  if(opcion == 1) this.inputValBirth = false;
+                  if(opcion == 2) this.inputValEditBirth = false;
                   valYear =false;
                   this.messaggeBirth = 'Debe ser un año valido y inferior al año actual.';
                 }
               }            
-              if(valDay == true && valMonth == true && valYear == true)this.inputValBirth = true;
+              if(valDay == true && valMonth == true && valYear == true){
+                if(opcion == 1) this.inputValBirth = true;
+                if(opcion == 2) this.inputValEditBirth = true;
+              }
             }else{
-              this.inputValBirth = false;
+              if(opcion == 1) this.inputValBirth = false;
+              if(opcion == 2) this.inputValEditBirth = false;
               this.messaggeBirth = 'La fecha debe ser en el formato día/mes/año.';
             }                  
           }
         }
       }else{
-        this.inputValBirth = false;
+        if(opcion == 1) this.inputValBirth = false;
+        if(opcion == 2) this.inputValEditBirth = false;
         this.messaggeBirth = 'El campo debe ser llenado obligatoriamente en el formato de día/mes/año.';
       }
     }
   }
 
-  inputAddress(value){
+  inputAddress(value, opcion){
     if(value != null){
-    if(value.length > 0) this.inputValAddress = true
+    if(value.length > 0){
+      if(opcion == 1) this.inputValAddress = true;
+      if(opcion == 2) this.inputValEditAddress = true;
+    }
     else {
-      this.inputValAddress = false;
+      if(opcion == 1) this.inputValAddress = false;
+      if(opcion == 2) this.inputValEditAddress = false;
       this.messaggeAddress = 'El campo debe ser llenado obligatoriamente.'
     }
     }
   }
 
-  inputCI(value){
+  inputCI(value, opcion){
     if(value != null){
-    if(value.length > 0) this.inputValCI = true
+    if(value.length > 0){
+      if(opcion == 1) this.inputValCI = true;
+      if(opcion == 2) this.inputValEditCI = true;
+    }
     else {
-      this.inputValCI = false;
+      if(opcion == 1) this.inputValCI = false;
+      if(opcion == 2) this.inputValEditCI = false;
       this.messaggeCI = 'El campo debe ser llenado obligatoriamente.'
     }
   }
   }
 
-  inputMobile(value){
+  inputMobile(value, opcion){
+    var valMobile = true;
     if(value != null){
-    if(value.length > 0){
+    if(value.length > 0 && value != " "){
       for (let i = 0; i < value.length; i++) {
-        if(this.letters.indexOf(value.charAt(i),0)!=-1){
-          this.inputValMobile = false;
-          this.messaggeMobile = 'No se permite caracteres literarios.';
-          break;
-        }else this.inputValMobile = true
+        if(this.simbolos.indexOf(value.charAt(i),0)!=-1){valMobile = false; break}
+        if(this.letters.indexOf(value.charAt(i),0)!=-1){valMobile = false; break}
       }
+      if(valMobile){
+        if(opcion == 1) this.inputValMobile = true;
+        if(opcion == 2) this.inputValEditMobile = true;
+      }else{
+        if(opcion == 1) this.inputValMobile = false;
+        if(opcion == 2) this.inputValEditMobile = false;
+        this.messaggeMobile = 'No se permite caracteres literarios ni símbolos.';
+      }  
     }else{
-      this.inputValMobile = false;
+      if(opcion == 1) this.inputValMobile = false;
+      if(opcion == 2) this.inputValEditMobile = false;
       this.messaggeMobile = 'El campo debe ser llenado obligatoriamente con caracteres numéricos';
     }
     }
@@ -346,6 +478,15 @@ export class GestionarUsuarioComponent implements OnInit {
           this.inputValPassword = true;
           this.user.usuario = (persona.primerNombre+persona.primerApellido).toLowerCase().substr(0,6);
           this.password = (persona.primerApellido).toLowerCase().substr(0,3)+(persona.ci).toLowerCase().substr(0,3);       
+          this._appUserService.searchUser(this.user.usuario )
+          .subscribe((data:User[])=>{
+            if(data.length > 0){ this.inputValUser = false;
+              this.messageUser = 'El nombre generado de usuario ya existe.';
+            }else{
+              this.inputValUser = true; 
+            }
+          }, res => {this.inputValUser = false;
+            this.messageUser = 'Se ha producido un error en el servidor.'})
           if(this.password != this.passwordTwo){
             this.inputValPassword2 = false;
             this.messagePassword2 = 'Debe escribir la misma contraseña para confirmar.'
@@ -354,75 +495,94 @@ export class GestionarUsuarioComponent implements OnInit {
       }
     }       
   }
-  inputUser(value){
-    var validInput = false;
+  inputUser(value, opcion){
+    var validInput = true;
     if(value != null){
       if(value.length == 0){
-        this.inputValUser = false;
+        if(opcion == 1) this.inputValUser = false;
+        if(opcion == 2) this.inputValEditUser = false;
         this.messageUser = 'El campo debe ser llenado obligatoriamente.'
       }else if(value.length > 5){
         for (let i = 0; i < value.length; i++) {
-          if(this.simbolos.indexOf(value.charAt(i),0)!=-1){
-            this.inputValUser = false;
-            this.messageUser = 'No debe contener símbolos y ni espacios.'
-            validInput = false;
-            break;
-          }else validInput = true;
+          if(this.simbolos.indexOf(value.charAt(i),0)!=-1){validInput = false; break}
         }
         if(validInput){
           this._appUserService.searchUser(value)
           .subscribe((data:User[])=>{
-            if(data.length > 0){this.inputValUser = false;
-              this.messageUser = 'El nombre de usuario ya existe.';  
-              return;       
+            if(data.length > 0){
+              if(opcion == 1) this.inputValUser = false;
+              if(opcion == 2) this.inputValEditUser = false;
+              this.messageUser = 'El nombre de usuario ya existe.'; 
             }else{
-              this.inputValUser = true;  
+              if(opcion == 1) this.inputValUser = true;
+              if(opcion == 2) this.inputValEditUser = true;
             }               
-          }, res =>{this.inputValUser = false;
+          }, res =>{
+            if(opcion == 1) this.inputValUser = false;
+            if(opcion == 2) this.inputValEditUser = false;
             this.messageUser = 'Se ha producido un error en el servidor.'})
+        }else{
+          if(opcion == 1) this.inputValUser = false;
+          if(opcion == 2) this.inputValEditUser = false;
+          this.messageUser = 'No debe contener símbolos y ni espacios.'
         }
       }else{
-        this.inputValUser = false;
+        if(opcion == 1) this.inputValUser = false;
+        if(opcion == 2) this.inputValEditUser = false;
         this.messageUser = 'Debe contener al menos 6 caracteres numéricos o literarios, sin símbolos y ni espacios.'
       }
     }
   }
-  inputPassword1(value){
+  inputPassword1(value, opcion){
     var valLetters = false, valNumbers = false;
     if(value != null){
       if(value.length == 0){
-        this.inputValPassword = false;
+        if(opcion == 1) this.inputValPassword = false;
+        if(opcion == 2) this.inputValEditPassword = false;
         this.messagePassword = 'El campo debe ser llenado obligatoriamente.';
       }else if(value.length > 5){
-        this.inputValPassword = true;
         for (let i = 0; i < value.length; i++) {
           if(this.letters.indexOf(value.charAt(i),0)!=-1) valLetters = true;
           if(this.numbers.indexOf(value.charAt(i),0)!=-1) valNumbers = true;
           if(this.simbolos.indexOf(value.charAt(i),0)!=-1){
-            valLetters = false; valNumbers = false;
-            this.inputValPassword = false;
-            this.messagePassword = 'No debe contener símbolos y ni espacios.'
+            valLetters = false; valNumbers = false;            
             break;
           }
         }
         if(valLetters && valNumbers){
-          if(this.password != this.passwordTwo){
-            this.inputValPassword2 = false;
-            this.messagePassword2 = 'La contraseñas deben ser iguales.';
-          }else this.inputValPassword = true;
+          if(opcion == 1) {
+            this.inputValPassword = true;
+            if(this.password != this.passwordTwo){
+              this.inputValPassword2 = false;
+              this.messagePassword2 = 'La contraseñas deben ser iguales.';
+            }            
+          }
+          if(opcion == 2){
+            this.inputValEditPassword = true;
+            if(this.edituser.password != this.editPassword){
+              this.inputValEditPassword2 = false;
+              this.messagePassword2 = 'La contraseñas deben ser iguales.';
+            }
+          }
+        }else{
+          if(opcion == 1) this.inputValPassword = false;
+          if(opcion == 2) this.inputValEditPassword = false;
+          this.messagePassword = 'No debe contener símbolos y ni espacios.'
         }
       }else{
-        this.inputValPassword = false;
+        if(opcion == 1) this.inputValPassword = false;
+        if(opcion == 2) this.inputValEditPassword = false;
         this.messagePassword = 'Debe contener al menos 6 caracteres entre letras y números, sin símbolos y ni espacios.';
       }
     }
   }
 
-  inputPassword2(value){
+  inputPassword2(value, opcion){
     var valLetters = false, valNumbers = false;
     if(value != null){
       if(value.length == 0){
-        this.inputValPassword2 = false;
+        if(opcion == 1) this.inputValPassword2 = false;
+        if(opcion == 2) this.inputValEditPassword2 = false;        
         this.messagePassword2 = 'El campo debe ser llenado obligatoriamente.';
       }else if(value.length > 5){
         for (let i = 0; i < value.length; i++) {
@@ -430,20 +590,31 @@ export class GestionarUsuarioComponent implements OnInit {
           if(this.numbers.indexOf(value.charAt(i),0)!=-1) valNumbers = true;
           if(this.simbolos.indexOf(value.charAt(i),0)!=-1){
             valLetters = false; valNumbers = false;
-            this.inputValPassword2 = false;
-            this.messagePassword2 = 'No debe contener símbolos y ni espacios.'
             break;
           }
         }
         if(valLetters && valNumbers){
-          if(this.password==this.passwordTwo) this.inputValPassword2 = true;
-          else{
-            this.inputValPassword2 = false;
-            this.messagePassword2 = 'La contraseñas deben ser iguales.'
-          }
+          if(opcion == 1) {
+            this.inputValPassword2 = true;
+            if(this.password!=this.passwordTwo){
+              this.inputValPassword2 = false;
+              this.messagePassword2 = 'La contraseñas deben ser iguales.'
+            }            
+          }else if(opcion == 2) {
+            this.inputValEditPassword2 = true;
+            if(this.edituser.password!=this.editPassword){
+              this.inputValEditPassword2 = false;
+              this.messagePassword2 = 'La contraseñas deben ser iguales.'
+            }
+          } 
+        }else{
+          if(opcion == 1) this.inputValPassword2 = false;
+          if(opcion == 2) this.inputValEditPassword2 = false; 
+          this.messagePassword2 = 'No debe contener símbolos y ni espacios.'
         }
       }else{
-        this.inputValPassword2 = false;
+        if(opcion == 1) this.inputValPassword2 = false;
+        if(opcion == 2) this.inputValEditPassword2 = false; 
         this.messagePassword2 = 'Debe contener al menos 6 caracteres entre letras y números, sin símbolos y ni espacios.';
       }
     }
@@ -473,14 +644,16 @@ export class GestionarUsuarioComponent implements OnInit {
     this.userPersona = array;     
   }
 
-  getUsers() {
-    this._appUserService.getUsers()
+  getUsers(idRol) {
+    this._appUserService.getUsers(idRol)
     .subscribe((users: Persona[]) => {
       this.userPersona = users; 
       this.usuariosArray = this.userPersona;
     });
   }
   buscarEstudiante(idPersona:string){
+    this.infoCarrera = null;
+    this.infoSemestre = null;
 
     for (let estudiante of this.userPersona) {
       if(estudiante.idPersona == idPersona){
@@ -493,8 +666,12 @@ export class GestionarUsuarioComponent implements OnInit {
         }else{
           this.infoNombreCompleto = estudiante.primerApellido + " " + estudiante.segundoApellido + " " + estudiante.primerNombre + " " + estudiante.segundoNombre;
         }
-        this.infoCodEstudiante = estudiante.codEstudiante;
-        this.infoCarrera = estudiante.carrera;
+
+        for(let carrera of this.carreras){
+          if(carrera.idCarrera == estudiante.idCarrera)
+            this.infoCarrera = carrera.nombreCarrera;
+        }
+        this.infoCodEstudiante = estudiante.codEstudiante;        
         this.infoSemestre = estudiante.semestre;
         this.infoDireccion = estudiante.direccion;
         this.infoNacionalidad = estudiante.nacionalidad;
@@ -510,67 +687,79 @@ export class GestionarUsuarioComponent implements OnInit {
   //Buscar al estudiante para editar
   //Aun falta no muestra los datos 
   buscarEstudianteEditar(idPersona:string, idUsuario:string){
+    this.inputValEditCodStudent = true;
+    this.inputValEditFirstName = true;
+    this.inputValEditSecondName = true;
+    this.inputValEditSurname = true;
+    this.inputValEditSecondSurname = true;
+    this.inputValEditSemester = true;
+    this.inputValEditNationality = true;
+    this.inputValEditBirth = true;
+    this.inputValEditAddress = true;
+    this.inputValEditCI = true;
+    this.inputValEditMobile = true;
     this.idPersona = idPersona; 
     this.idUsuario = idUsuario;   
-    this.getCarreras();
     for(let estudiante of this.userPersona){     
       if (estudiante.idPersona == idPersona) {
         let fecha = new Date(estudiante.fechaNacimiento);
         let dia = fecha.getUTCDate();
         let mes = fecha.getUTCMonth()+1;
         let year = fecha.getUTCFullYear();
-         this.editpersona.primerNombre = estudiante.primerNombre;
-         this.editpersona.segundoNombre = estudiante.segundoNombre;
-         this.editpersona.primerApellido = estudiante.primerApellido;
-         this.editpersona.segundoApellido = estudiante.segundoApellido;
-         this.editpersona.idCarrera = estudiante.idCarrera;        
-         this.editpersona.semestre = estudiante.semestre;        
-         this.editpersona.nacionalidad = estudiante.nacionalidad;        
-         this.editpersona.fechaNacimiento = dia + "/" + mes + "/" + year;       
-         this.editpersona.direccion = estudiante.direccion;        
-         this.editpersona.ci = estudiante.ci;        
-         this.editpersona.celular = estudiante.celular;        
-         this.editpersona.codEstudiante = estudiante.codEstudiante;
-         this.edituser.usuario = estudiante.usuario;
-         this.edituser.password = estudiante.password;
-         this.editPassword = estudiante.password;
+        this.editpersona.primerNombre = estudiante.primerNombre;
+        this.editpersona.segundoNombre = estudiante.segundoNombre;
+        this.editpersona.primerApellido = estudiante.primerApellido;
+        this.editpersona.segundoApellido = estudiante.segundoApellido;
+        for(let carrera of this.carreras){
+          if(carrera.idCarrera == estudiante.idCarrera)
+          this.editpersona.carrera = carrera.nombreCarrera;  
+        }              
+        this.editpersona.idCarrera = estudiante.idCarrera;        
+        this.editpersona.semestre = estudiante.semestre;        
+        this.editpersona.nacionalidad = estudiante.nacionalidad;        
+        this.editpersona.fechaNacimiento = dia + "/" + mes + "/" + year;       
+        this.editpersona.direccion = estudiante.direccion;        
+        this.editpersona.ci = estudiante.ci;        
+        this.editpersona.celular = estudiante.celular;        
+        this.editpersona.codEstudiante = estudiante.codEstudiante;
+        this.edituser.usuario = estudiante.usuario;
+        this.edituser.password = estudiante.password;
+        this.editPassword = estudiante.password;
       }
     }
   }
 
-  saveUser(idPersona) {
+  saveUser(idPersona, idRol, form:NgForm) {
+    if(idPersona == null || idRol == ""){this.inputValSelectRol = false; this.messageSelectRol='Debe seleccionar un rol para el usuario.'}
     if(idPersona == null || idPersona == ""){this.inputValSelectPeople = false; this.messageSelectPeople='Debe seleccionar un nombre para el usuario.'}
     if(this.user.usuario == null){this.inputValUser=false; this.messageUser='El campo debe ser llenado obligatoriamente.';}
     if(this.password == null){this.inputValPassword=false; this.messagePassword='El campo debe ser llenado obligatoriamente.';}
     if(this.passwordTwo == null){this.inputValPassword2=false; this.messagePassword2='El campo debe ser llenado obligatoriamente.';}
 
-    if(this.inputValSelectPeople && this.inputValUser && this.inputValPassword && this.inputValPassword2){
+    if(this.inputValSelectPeople && this.inputValSelectRol && this.inputValUser && this.inputValPassword && this.inputValPassword2){
       this.user.idPersona = idPersona;
-      this.user.idRol = '5';
-      this.user.password = this.passwordTwo;
+      this.user.idRol = idRol;
+      this.user.password = this.passwordTwo;      
       this._appUserService.postUser(this.user)
       .subscribe((data :User[]) => {
-        this.alert(true, 'Registro exitoso','El registro del usuario se realizó satisfactoriamente.');
+        this.alert(1, 'Registro exitoso','El registro del usuario se realizó satisfactoriamente.');
+        this.resetForm(form);
+        this.getUsers(this.userLog.idRol);
       },res => {
-        this.alert(false, 'Error al registrar','Se ha producido un error en el servidor.');
+        this.alert(2, 'Error al registrar','Se ha producido un error en el servidor.');
       });
-    }else this.alert(false, 'Error al registrar','Se ha producido un error al guardar el registro del usuario.');
-    
-    
+    }else this.alert(2, 'Error al registrar','Se ha producido un error al guardar el registro del usuario.');       
   }  
 
-  editUsers(){
+  editUsers(idRol){
     this.edituser.estado = '1';
-    this.edituser.idRol = '5';
+    this.edituser.idRol = idRol;
     this._appUserService.putUser(this.edituser, this.idUsuario, this.idPersona)
-    .subscribe((data :User[]) => {console.log(data)});
-    this.MessageSuccessUpdate = true;
-    setTimeout(() => {
-      this.getUsers();
-    }, 2000);
-    setTimeout(() => {
-      this.MessageSuccessUpdate = false;
-    }, 8000);
+    .subscribe((data :User[]) => {
+      this.alert(1,'Actualización exitoso', 'Los datos del usuario se actualizarion satisfactoriamente.')
+      this.getUsers(this.userLog.idRol);
+    }
+    ,res =>{this.alert(2, 'Error', 'Se ha producido un error en el servidor al actualizar los datos.')});
   }
 
   editEstadoUser(idRol, usuario, password, estado, idUsuario, idPersona){
@@ -578,18 +767,32 @@ export class GestionarUsuarioComponent implements OnInit {
     this.user.usuario = usuario;
     this.user.password = password;
     this.user.estado = estado;
-    console.log(this.user);
     this._appUserService.putUser(this.user, idUsuario, idPersona)
-      .subscribe((data: User[]) => { console.log(data) });
-
-    setTimeout( () => {
-          this.getUsers();
-    }, 2000);
+      .subscribe((data: User[]) => {
+        if(estado == 1)this.alert(1, 'Habilitación exitosa','Se ha habilitado la cuenta del usuario.')
+        if(estado == 0)this.alert(3, 'Deshabilitación exitosa','Se ha habilitado la cuenta del usuario.')
+        this.getUsers(this.userLog.idRol);
+      }, res => {
+        this.alert(2, 'Error','Se ha producido un error en el servidor al cambiar de estado.')
+      });
   }
 
   deleteUser(idUsuario:string, idPersona:string){
     this.idUsuario = idUsuario;
     this.idPersona = idPersona;
+  }
+  eliminarUser(){
+    var successDelete = false;
+    if(this.idUsuario != null){
+      this._appUserService.deleteUser(this.idUsuario)
+        .subscribe((user : User[]) => { successDelete = true},res => { successDelete = false});
+      this._appPersonaService.deletePersona(this.idPersona)
+      .subscribe((persona : Persona[]) =>{
+        if(successDelete) this.alert(1, 'Eliminación exitoso','El registro del usuario fue eliminado satisfactoriamente.')
+        else this.alert(2, 'Error al eliminar', 'Se ha poducido un error en el servidor al eliminar la cuenta del usuario.')
+        this.getUsers(this.userLog.idRol);
+      }, res => {this.alert(2, 'Error al eliminar', 'Se ha poducido un error en el servidor al eliminar los datos del usuario.')});
+    }else this.alert(2, 'Error al eliminar', 'Se ha poducido un error en el sistema al eliminar la cuenta del usuario.')
   }
 
   //Gestionar Personas
@@ -597,9 +800,9 @@ export class GestionarUsuarioComponent implements OnInit {
     this._appPersonaService.getPersonas().subscribe((personas:Persona[]) => this.personas = personas);
   }
 
-  savePersona(form:NgForm) {
+  savePersona(idCarrera, form:NgForm) {
     if(this.persona.primerNombre == null) {this.inputValFirstName = false;this.messaggeFullName = 'El campo debe ser llenado obligatoriamente.';}
-    if(this.persona.primerApellido == null) this.inputValSurname = false;
+    if(this.persona.primerApellido == null){this.inputValSurname = false;this.messaggeFullName = 'El campo debe ser llenado obligatoriamente.';}
     if(this.persona.nacionalidad == null) {this.inputValNationality = false;this.messaggeNationality = 'El campo debe ser llenado obligatoriamente.';}
     if(this.persona.fechaNacimiento == null) {this.inputValBirth = false;this.messaggeBirth = 'El campo debe ser llenado obligatoriamente en el formato de día/mes/año.';}
     if(this.persona.direccion == null) {this.inputValAddress = false;this.messaggeAddress = 'El campo debe ser llenado obligatoriamente.'}
@@ -611,54 +814,43 @@ export class GestionarUsuarioComponent implements OnInit {
         //
         let fecha = this.persona.fechaNacimiento.split('/')
         let date = fecha[2]+"/"+fecha[1]+"/"+fecha[0];
-        this.persona.fechaNacimiento = date;  
-
-        this._appPersonaService.postPersona(this.persona)
-        .subscribe((data :Persona[]) => {
-          this.alert(true, 'Registro exitoso', 'El registro se realizó satisfactoriamente.');
-          this.resetForm(form);
-        }, res =>{
-          this.alert(false, 'Error al registrar','Se ha producido un error en el servidor.');
-        });
+        this.persona.fechaNacimiento = date;
+        this.persona.idCarrera = idCarrera;
+        console.log(this.persona);
+        // this._appPersonaService.postPersona(this.persona)
+        // .subscribe((data :Persona[]) => {
+        //   this.alert(1, 'Registro exitoso', 'El registro se realizó satisfactoriamente.');
+        //   this.resetForm(form);
+        // }, res =>{
+        //   this.alert(2, 'Error al registrar','Se ha producido un error en el servidor.');
+        // });
       }else{
-        this.alert(false, 'Error al registrar','Se ha producido un error al guardar el registro.');
+        this.alert(2, 'Error al registrar','Se ha producido un error al guardar el registro en el sistema.');
       }   
-  }
-  
-  eliminarUser(){
-    if(this.idUsuario != null){
-      this._appUserService.deleteUser(this.idUsuario)
-        .subscribe((user : User[]) => { console.log(user)});
-      this._appPersonaService.deletePersona(this.idPersona)
-      .subscribe((persona : Persona[]) =>{});
-      this.messageYdelete = true;
-      setTimeout(() => {
-        this.messageYdelete = false;
-      }, 8000);
-      setTimeout(() => {
-        this.getUsers();
-      }, 3000);
-    }else{
-      this.messageNdelete = true;
-      setTimeout(() => {
-      this.messageNdelete = false;
-      }, 8000);
-    }
-  }
+  }  
 
   editarPersona(){
-    let fecha =  this.editpersona.fechaNacimiento.split('/');
-    let date = fecha[2]+"/"+fecha[1]+"/"+fecha[0]
-    this.editpersona.fechaNacimiento = date;
-    this._appPersonaService.putPersona(this.editpersona, this.idPersona)
-    .subscribe((data : Persona[]) =>{console.log(data)});
-    setTimeout(() => {
-      this.getUsers();
-    }, 2000);
-    this.MessageSuccessUpdate = true;
-    setTimeout(() => {
-      this.MessageSuccessUpdate = false;
-    }, 8000);
+    if(this.editpersona.primerNombre == null){this.inputValEditFirstName = false;this.messaggeFullName = 'El campo debe ser llenado obligatoriamente.';}
+    if(this.editpersona.primerApellido == null){this.inputValEditSurname = false;this.messaggeFullName = 'El campo debe ser llenado obligatoriamente.';}
+    if(this.editpersona.nacionalidad == null){this.inputValEditNationality = false;this.messaggeNationality = 'El campo debe ser llenado obligatoriamente.';}
+    if(this.editpersona.fechaNacimiento == null){this.inputValEditBirth = false;this.messaggeBirth = 'El campo debe ser llenado obligatoriamente.';}
+    if(this.editpersona.direccion == null){this.inputValEditAddress = false;this.messaggeAddress = 'El campo debe ser llenado obligatoriamente.';}
+    if(this.editpersona.ci == null){this.inputValEditCI= false;this.messaggeCI = 'El campo debe ser llenado obligatoriamente.';}
+    if(this.editpersona.celular == null){this.inputValEditMobile = false;this.messaggeMobile = 'El campo debe ser llenado obligatoriamente.';}
+    if(this.inputValEditFirstName && this.inputValEditSurname && this.inputValEditNationality && this.inputValEditBirth
+      && this.inputValEditAddress && this.inputValEditAddress && this.inputValEditCI && this.inputValEditMobile){
+        let fecha =  this.editpersona.fechaNacimiento.split('/');
+        let date = fecha[2]+"/"+fecha[1]+"/"+fecha[0]
+        this.editpersona.fechaNacimiento = date;
+        this._appPersonaService.putPersona(this.editpersona, this.idPersona)
+        .subscribe((data : Persona[]) =>{
+          this.alert(1,'Actualización exitoso', 'Los datos del usuario fueron actualizados satisfactoriamente.')
+          this.getUsers(this.userLog.idRol);
+        }
+        , res =>{this.alert(2, 'Error', 'Se ha producido un error en el servidor al actualizar los datos.')});
+    }else{
+      this.alert(2, 'Error al actualizar','Se ha producido un error al actualizar el registro.');
+    }    
   }
 
   //Gestionar Carrera

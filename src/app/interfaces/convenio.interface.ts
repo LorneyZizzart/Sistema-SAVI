@@ -1,20 +1,7 @@
 import { User } from './user.interface';
 
-export interface Convenio {
+export interface Convenio extends User {
   idConvenio?:string
-  idPersona?: string;
-  primerNombre?: string;
-  segundoNombre?: string;
-  primerApellido?: string;
-  segundoApellido?: string;
-  nacionalidad?: string;
-  direccion?: string;
-  ci?: string;
-  celular?: string;
-  fechaNacimiento?: string;
-  estadoPersona?: boolean;
-  carrera?:string
-  semestre?:string
   idDepartamento?:string
   departamento?:string
   idBeca?:string
@@ -24,4 +11,5 @@ export interface Convenio {
   fotocopiaCarnet?:string
   solicitudTrabajo?:string
   estadoConvenio?:string
+  nombreArea?:string
 }

@@ -36,7 +36,6 @@
                 <b>Semestre</b> <p class="pull-right">{{convenioData.semestre}}</p>
               </li>
             </ul>
-            <a href="#" class="btn btn-primary btn-block"><b>Follow</b></a>
           </div>
           <!-- /.box-body -->
         </div>
@@ -173,25 +172,25 @@
                     <div class="col-md-4">
                       <div class="form-group">
                         <label>
-                            <input type="checkbox" [(ngModel)]="meses.mayo" name="meses.mayo" class="minimal">
+                            <input (click)="getMonth(5, meses.mayo)" type="checkbox" [(ngModel)]="meses.mayo" name="meses.mayo" class="minimal">
                             Mayo
                         </label>
                     </div>
                     <div class="form-group">
                         <label>
-                            <input type="checkbox" [(ngModel)]="meses.junio" name="meses.junio" class="minimal">
+                            <input (click)="getMonth(6, meses.junio)" type="checkbox" [(ngModel)]="meses.junio" name="meses.junio" class="minimal">
                             Junio
                         </label>
                     </div>
                     <div class="form-group">
                       <label>
-                          <input type="checkbox" [(ngModel)]="meses.julio" name="meses.julio" class="minimal">
+                          <input (click)="getMonth(7, meses.julio)" type="checkbox" [(ngModel)]="meses.julio" name="meses.julio" class="minimal">
                           Julio
                       </label>
                   </div>
                   <div class="form-group">
                     <label>
-                        <input type="checkbox" [(ngModel)]="meses.agosto" name="meses.agosto" class="minimal">
+                        <input (click)="getMonth(8, meses.agosto)" type="checkbox" [(ngModel)]="meses.agosto" name="meses.agosto" class="minimal">
                         Agosto
                     </label>
                 </div>
@@ -199,25 +198,25 @@
                     <div class="col-md-4">
                       <div class="form-group">
                         <label>
-                            <input type="checkbox" [(ngModel)]="meses.septiembre" name="meses.septiembre" class="minimal">
+                            <input (click)="getMonth(9, meses.septiembre)" type="checkbox" [(ngModel)]="meses.septiembre" name="meses.septiembre" class="minimal">
                             Septiembre
                         </label>
                     </div>
                     <div class="form-group">
                         <label>
-                            <input type="checkbox" [(ngModel)]="meses.octubre" name="meses.octubre" class="minimal">
+                            <input (click)="getMonth(10, meses.octubre)" type="checkbox" [(ngModel)]="meses.octubre" name="meses.octubre" class="minimal">
                             Octubre
                         </label>
                     </div>
                     <div class="form-group">
                       <label>
-                          <input type="checkbox" [(ngModel)]="meses.noviembre" name="meses.noviembre" class="minimal">
+                          <input (click)="getMonth(11, meses.noviembre)" type="checkbox" [(ngModel)]="meses.noviembre" name="meses.noviembre" class="minimal">
                           Noviembre
                       </label>
                   </div>
                   <div class="form-group">
                     <label>
-                        <input type="checkbox" [(ngModel)]="meses.diciembre" name="meses.diciembre" class="minimal">
+                        <input (click)="getMonth(12, meses.diciembre)" type="checkbox" [(ngModel)]="meses.diciembre" name="meses.diciembre" class="minimal">
                         Diciembre
                     </label>
                 </div>
@@ -249,30 +248,20 @@
               <div class="box-header with-border">
                   <h3 class="box-title">Historial de acreditaciones</h3>
                   <div class="box-tools pull-right">
-                      <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                                </button>
-                      <div class="btn-group">
-                          <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown">
-                          <i class="fa fa-wrench"></i></button>
-                          <ul class="dropdown-menu" role="menu">
-                              <li><a href="#">Generar PDF</a></li>
-                              <li class="divider"></li>
-                              <li><a href="#">Imprimir</a></li>
-                          </ul>
-                      </div>
+                      <button type="button" class="btn btn-box-tool" title="Generar PDF"><i class="fa fa-file-pdf-o"></i></button>
+                      <button type="button" class="btn btn-box-tool" title="Imprimir"><i class="fa fa-print"></i></button>
                   </div>
               </div>
               <div class="box-body">                    
                   <div class="table-responsive pad">
                       <table class="table table-bordered table-hover ">
-                          <tr class="fila-tabla">
+                          <tr class="text-center fila-tabla">
                               <th style="width: 10px">#</th>
                               <th class="text-center">Cod.</th>
-                              <th>Fecha</th>
-                              <th>Horas</th>
-                              <th>Saldo</th>
-                              <th>Aprobación Finanzas</th>
-                              <th class="text-center" style="width: 20%px">Opciones</th>
+                              <th class="text-center">Fecha</th>
+                              <th class="text-center">Horas</th>
+                              <th class="text-center">Saldo</th>
+                              <th class="text-center" style="width: 10px">Aprobación Finanzas</th>
                           </tr>
                           <tr *ngFor="let informe of informeEstudiante; let i = index">
                               <td>{{i+1}}.</td>
@@ -283,11 +272,6 @@
                               <td class="text-center">
                                 <span *ngIf="informe.aprobadoFinanzas" class="badge bg-green"><i class="fa fa-check"></i></span>
                                 <span *ngIf="!informe.aprobadoFinanzas" class="badge bg-red"><i class="fa fa-times"></i></span>
-                              </td>
-                              <td class="text-center">
-                                  <a class="btn btn-success btn-margin" title="Descontar"><i class="fa fa-toggle-down"></i></a>
-                                  <a class="btn btn-primary btn-margin" title="Ver"><i class="fa fa-eye"></i></a>
-                                  <a class="btn btn-info btn-margin" title="Mas información"><i class="fa fa-plus"></i></a>
                               </td>
                           </tr>
                       </table>

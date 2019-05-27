@@ -6,6 +6,7 @@ import { Persona } from '../../interfaces/persona.interface';
 import { AppTipoPersonaService } from '../../services/app-tipoPersona.service';
 import { AppAcreedorService } from '../../services/app-acreedor.service';
 import { Acreedor } from '../../interfaces/acreedor.interface';
+import { Convenio } from 'src/app/interfaces/convenio.interface';
 
 @Component({
   selector: 'app-gestionar-descuento',
@@ -15,7 +16,7 @@ import { Acreedor } from '../../interfaces/acreedor.interface';
 export class GestionarDescuentoComponent implements OnInit {
   //iDUSUARIO
   IdUsuario:string = "4";
-  infoEstudiante:Persona[];
+  infoEstudiante:Convenio[];
   descuentos:Descuento [];
   //Info Estudiante
   nombreCompleto:string;
@@ -28,7 +29,7 @@ export class GestionarDescuentoComponent implements OnInit {
   carrera:string
   semestre:string
   beca:string;
-  estadoConvenio:boolean;
+  estadoConvenio:string;
   nombreDepartamento:string;
   fotocopiaCI;
   solicitudWork;

@@ -18,9 +18,9 @@ export class AppUserService {
     constructor(private _http:HttpClient) {   }
     //Gestionar User
     //Get Users
-  getUsers(): Observable<Persona[]>{
-
-    return this._http.get<Persona[]>(this.listaUserURL).pipe(map(res => res));
+  getUsers(idRol): Observable<Persona[]>{
+    let url = `${this.listaUserURL}/search/users/${idRol}`;
+    return this._http.get<Persona[]>(url).pipe(map(res => res));
     }
 
   getUser(key$:string):Observable<Persona[]>{

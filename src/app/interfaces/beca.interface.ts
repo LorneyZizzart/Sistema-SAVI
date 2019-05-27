@@ -1,5 +1,5 @@
 export interface Beca {
-  idBeca?:string
+  idBeca?:any
   nombre?:string
-  estado?:string
+  estado?:any
 }

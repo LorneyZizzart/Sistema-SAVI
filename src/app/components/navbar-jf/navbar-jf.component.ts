@@ -7,6 +7,7 @@ import { InformeEstudiante } from '../../interfaces/informe-estudiante.interface
 import { AppInformeEstudianteService } from '../../services/app-informe-estudiante.service';
 import { AppRegistroHoraService } from '../../services/app-registroHora.service';
 import { RegistroHora } from '../../interfaces/registroHora.interface';
+import { User } from 'src/app/interfaces/user.interface';
 
 @Component({
   selector: 'app-navbar-jf',
@@ -16,9 +17,9 @@ import { RegistroHora } from '../../interfaces/registroHora.interface';
 export class NavbarJFComponent implements OnInit {
   IdDepartamento:string = "1"
   fechaHoy:any;
-  Usuario:Persona = {};
-  Persona:Persona = {};
-  datosUsuario:Persona[] = [];
+  Usuario:User = {};
+  Persona:User = {};
+  datosUsuario:User[] = [];
   //Info Usuario
   nombreCompleto:string = 'Cargando...';
   nombres:string = 'Cargando...';
@@ -53,19 +54,13 @@ export class NavbarJFComponent implements OnInit {
   //Gestionar jefe departamento
   getInformeRegisterNow(idDepartamento:string){
     this._appRegistroHoraService.getInformeRegisterNow(idDepartamento)
-    .subscribe((registro : RegistroHora[]) => {this.informesRegistrosNow = registro});
-    setTimeout(() => {
-      this.asistenciasNum = this.informesRegistrosNow.length;
-    }, 3000);
+    .subscribe((registro : RegistroHora[]) => {this.asistenciasNum = registro.length; this.listInformeEstudiante = registro});
   }
 
   //Gestionar Finanzas
   getInfomeEstudiante(){
     this._appInformeEstudianteService.getInformeEstudianteAll()
-    .subscribe((informe : InformeEstudiante[]) => {this.listInformeEstudiante = informe})
-    setTimeout(() => {
-      this.bandejaInformeNum = this.listInformeEstudiante.length;
-    }, 3000);
+    .subscribe((informe : InformeEstudiante[]) => {this.bandejaInformeNum = informe.length; this.listInformeEstudiante = informe})
   }
 
   //Obtener Usuario del localStorage y datos personales
@@ -81,7 +76,7 @@ export class NavbarJFComponent implements OnInit {
     }else{
       this.nombreCompleto = this.Persona.primerNombre + " " + this.Persona.segundoNombre + " " + this.Persona.primerApellido + " " + this.Persona.segundoApellido;
     }
-    this.rol = this.Persona.rol;
+    this.rol = this.Persona.idRol;
     this.idRol = this.Persona.idRol;
     if(this.Persona.segundoNombre != null){
       this.nombres = this.Persona.primerNombre + " " + this.Persona.segundoNombre;

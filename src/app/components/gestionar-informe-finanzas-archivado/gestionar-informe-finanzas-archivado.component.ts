@@ -3,6 +3,7 @@ import { InformeFinanzas } from '../../interfaces/informe-finanzas.interface';
 import { AppInformeFinanzasService } from '../../services/app-informe-finanzas.service';
 import { Persona } from '../../interfaces/persona.interface';
 import { AppTipoPersonaService } from '../../services/app-tipoPersona.service';
+import { Convenio } from 'src/app/interfaces/convenio.interface';
 
 @Component({
   selector: 'app-gestionar-informe-finanzas-archivado',
@@ -26,7 +27,7 @@ export class GestionarInformeFinanzasArchivadoComponent implements OnInit {
   carrera:string
   semestre:string
   beca:string;
-  estadoConvenio:boolean;
+  estadoConvenio:string;
   nombreDepartamento:string;
   fotocopiaCI;
   solicitudWork;
@@ -37,7 +38,7 @@ export class GestionarInformeFinanzasArchivadoComponent implements OnInit {
   //message de desarchivado
   MessageInformeDesarchivado:boolean = false;
   //Lista de estudiantes del departameto
-  estudiantes:Persona[];
+  estudiantes:Convenio[];
 
   constructor(private _appInformeFinanzasService:AppInformeFinanzasService,
               private _appTipoPersonaService:AppTipoPersonaService) { }

@@ -8,6 +8,7 @@ import { Persona } from '../../interfaces/persona.interface';
 import { AppTipoPersonaService } from '../../services/app-tipoPersona.service';
 import { InformeEstudiante } from '../../interfaces/informe-estudiante.interface';
 import { AppInformeEstudianteService } from '../../services/app-informe-estudiante.service';
+import { Convenio } from 'src/app/interfaces/convenio.interface';
 
 @Component({
   selector: 'app-gestionar-informe-hoy',
@@ -31,7 +32,7 @@ export class GestionarInformeHoyComponent implements OnInit {
   listHours:any[] = ['00:00'];
   listSaldo:any[] = ['0'];
   //Lista de estudiantes del departameto
-  estudiantes:Persona[];
+  estudiantes:Convenio[];
   //Estudiante del departamentos
   estudianteDep:Persona[];
   //Objeto para registrar asistencia del estudiante
@@ -67,7 +68,7 @@ export class GestionarInformeHoyComponent implements OnInit {
   carrera:string
   semestre:string
   beca:string;
-  estadoConvenio:boolean;
+  estadoConvenio:string;
   fotocopiaCI;
   solicitudWork;
   fechaInicio;
@@ -207,17 +208,15 @@ export class GestionarInformeHoyComponent implements OnInit {
 
   getInformeRegisterNow(idDepartamento:string){
     this._appRegistroHoraService.getInformeRegisterNow(idDepartamento)
-    .subscribe((registro : RegistroHora[]) => {this.informesRegistrosNow = registro});
-    
-    setTimeout(() => {
-      console.log("horas: ",this.informesRegistrosNow);
+    .subscribe((registro : RegistroHora[]) => {
+      this.informesRegistrosNow = registro;
       this.listHours = ['00:00'];
       this.listSaldo= ['0'];
       this.numStudent = 0;
       this.numHour= '00:00';
       this.totalSaldo = 0;
-      this.totalDatos();   
-      }, 3000);
+      this.totalDatos(); 
+    });
   }
 
   totalDatos(){
@@ -252,8 +251,7 @@ export class GestionarInformeHoyComponent implements OnInit {
         this.listHours.push('00:00');
       }
     }
-    this.totalSaldo = parseFloat(this.totalSaldo).toFixed(2);
-    
+    this.totalSaldo = parseFloat(this.totalSaldo).toFixed(2);    
   }
   //PARA OBTENER LOS DATOS DEL DEPARTAMENTO LUEGO SE PARA AL METODO infoDepartamento
   getDepartament(idDepartamento:string){

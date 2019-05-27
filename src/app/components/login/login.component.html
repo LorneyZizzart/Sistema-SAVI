@@ -14,8 +14,7 @@
         [ngClass]="{'glyphicon':true, 
         'glyphicon-user':inputErrorUsuario, 
         'glyphicon-remove':!inputErrorUsuario, 
-        'form-control-feedback':true, 
-        'ico-success':inputSuccessUsuario,
+        'form-control-feedback':true,
         'ico-error':!inputErrorUsuario}"></span>
       </div>
       <div [ngClass]="{'has-error': !inputErrorPassword, 'has-success':inputSuccessPassword}" class="form-group has-feedback">
@@ -25,7 +24,6 @@
         'glyphicon-remove':!inputErrorPassword,
         'glyphicon-lock':iconPassword,  
         'form-control-feedback':true, 
-        'ico-success':inputSuccessPassword,
         'ico-error':!inputErrorPassword}"></span>
       </div>
       <div class="row opciones-login">   
@@ -45,14 +43,6 @@
     <div class="growl-title"><i class="icon fa fa-close"></i> Error</div>
     <div class="growl-message">{{messageError}}</div>
   </div>
-</div>
-
-<div *ngIf="alertLoading" id="growls-default">
-    <div class="growl growl-info growl-large">
-      <div class="growl-close">×</div>
-      <div class="growl-title"><i class="icon fa fa-spinner fa-spin"></i> Cargando...</div>
-      <div class="growl-message">Comprobando usuario y contraseña</div>
-    </div>
 </div>
 
 <div *ngIf="alertUsuarioDesabilitado" id="growls-default">

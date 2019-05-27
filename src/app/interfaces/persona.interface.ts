@@ -14,21 +14,20 @@ export interface Persona {
   idCarrera?:string
   carrera?:string
   semestre?:string
-  idUsuario?: string;
-  idRol?: string;
-  rol?:string
-  usuario?: string;
-  password?: string;
-  estadoUsuario?: string
+  // idUsuario?: string;
+  // idRol?: string;
+  // rol?:string
+  // usuario?: string;
+  // password?: string;
+  // estadoUsuario?: string
 //Se utiliza para dar info del estudiante en convenio
-  departamento?:string;
-  nombreArea?:string
-  beca?:string;
-  estadoConvenio?:boolean;
-  fechaInicio?:string;
-  fechaFinal?:string;
-  fotocopiaCarnet?:boolean;
-  solicitudTrabajo?:boolean;
+  // departamento?:string;
+  // nombreArea?:string
+  // beca?:string;
+  // fechaInicio?:string;
+  // fechaFinal?:string;
+  // fotocopiaCarnet?:boolean;
+  // solicitudTrabajo?:boolean;
 //SE UTILIZA PARA REGISTRAR ASISTENCIA
-  idConvenio?:string;
+  // idConvenio?:string;
 }

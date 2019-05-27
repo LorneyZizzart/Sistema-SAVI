@@ -8,6 +8,7 @@ import { AppDescuentoService } from '../../services/app-descuento.service';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../interfaces/user.interface';
 import { Router } from '@angular/router';
+import { Convenio } from 'src/app/interfaces/convenio.interface';
 
 
 
@@ -22,7 +23,7 @@ export class GestionarAcreedorComponent implements OnInit {
   //Lista de acreedores
   acreedores:Acreedor[];
   //Lista de estudiantes del departameto
-  estudiantes:Persona[];
+  estudiantes:Convenio[];
   //Info Estudiante
   nombreCompleto:string;
   nacionalidad: string;
@@ -34,7 +35,7 @@ export class GestionarAcreedorComponent implements OnInit {
   carrera:string
   semestre:string
   beca:string;
-  estadoConvenio:boolean;
+  estadoConvenio:string;
   nombreDepartamento:string;
   fotocopiaCI;
   solicitudWork;

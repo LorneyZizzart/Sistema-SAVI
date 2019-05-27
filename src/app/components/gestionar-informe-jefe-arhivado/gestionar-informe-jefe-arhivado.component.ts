@@ -3,6 +3,7 @@ import { InformeEstudiante } from '../../interfaces/informe-estudiante.interface
 import { AppInformeEstudianteService } from '../../services/app-informe-estudiante.service';
 import { Persona } from '../../interfaces/persona.interface';
 import { AppTipoPersonaService } from '../../services/app-tipoPersona.service';
+import { Convenio } from 'src/app/interfaces/convenio.interface';
 
 @Component({
   selector: 'app-gestionar-informe-jefe-arhivado',
@@ -28,7 +29,7 @@ export class GestionarInformeJefeArhivadoComponent implements OnInit {
   carrera:string
   semestre:string
   beca:string;
-  estadoConvenio:boolean;
+  estadoConvenio:string;
   fotocopiaCI;
   solicitudWork;
   fechaInicio;
@@ -40,7 +41,7 @@ export class GestionarInformeJefeArhivadoComponent implements OnInit {
   //messagge
   MessageSuccessArchivar:boolean = false;
   //Lista de estudiantes del departameto
-  estudiantes:Persona[];
+  estudiantes:Convenio[];
 
   constructor(private _appInformeEstudianteService:AppInformeEstudianteService,
               private _appTipoPersonaService:AppTipoPersonaService,) { }

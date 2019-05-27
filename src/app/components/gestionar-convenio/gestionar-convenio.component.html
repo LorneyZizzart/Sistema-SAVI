@@ -13,38 +13,6 @@
             <li class="active">Gestionar convenios</li>
         </ol>
     </section>
-    <div *ngIf="MessageSuccessConvenio == true" class="pad no-print">
-        <div class="callout callout-success">
-            <h4><i class="icon fa fa-check"></i> Registro Exitoso</h4>
-            <p>El registro del convenio se realizó satisfactoriamente.</p>
-        </div>
-    </div>
-    <div *ngIf="MessageFailConvenio == true" class="pad no-print">
-        <div class="callout callout-danger">
-            <h4><i class="icon fa fa-check"></i> Fallo en el registro</h4>
-                <p>Se ha producido un fallo al registrar el Convenio.</p>
-        </div>
-    </div>
-    <div *ngIf="MessageDesableConvenio == true" class="pad no-print">
-        <div class="callout callout-info">
-            <h4><i class="icon fa fa-check"></i> Convenio Deshabilitado</h4>
-        </div>
-    </div>
-    <div *ngIf="MessageEnableConvenio == true" class="pad no-print">
-        <div class="callout callout-success">
-            <h4><i class="icon fa fa-check"></i> Convenio habilitado</h4>
-        </div>
-    </div>
-    <div *ngIf="messageYdelete == true" class="pad no-print">
-        <div class="callout callout-success">
-            <h4><i class="icon fa fa-check"></i> El convenio fue eliminado satisfactoriamente</h4>
-        </div>
-    </div>
-    <div *ngIf="messageNdelete == true" class="pad no-print">
-        <div class="callout callout-danger">
-            <h4><i class="icon fa fa-check"></i> Se produjo un error al eliminar el convenio</h4>
-        </div>
-    </div>
     <!---MODAL-->
     <div class="modal fade" id="modal-horario">
         <div class="modal-dialog">
@@ -105,19 +73,19 @@
                         <span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Editar</h4>
                 </div>
-                <form (ngSubmit)="saveConvenio()" #registroConvenio="ngForm" name="RegistroConvenio" class="form-horizontal">
+                <form #editarConvenio="ngForm" name="editarConvenio" class="form-horizontal">
 
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-3">
                             <div class="box-profile">
                                 <img class="profile-user-img img-responsive img-circle" src="assets/img/avatar.png" alt="User profile picture">
-                                <p class="text-muted text-center">650004813</p>
+                                <p class="text-muted text-center">{{codEstudiante}}</p>
                             </div>
                         </div>
                         <div class="col-md-9">
                             <div class="box-header with-border">
-                                <h3 class="modal-name">Jhonny Gutierrez Villca</h3>
+                                <h3 class="modal-name"><strong>{{ nombreCompleto }}</strong></h3>
                             </div>
                         </div>
                     </div>
@@ -126,7 +94,7 @@
                             <div class="col-md-12">
                                     <div class="form-group">
                                             <label>Departamento:</label>
-                                            <select [(ngModel)]="idDepartamento" name="departamento" class="form-control select2" style="width: 100%;">
+                                            <select #editIdDepto [(ngModel)]="editConvenio.idDepartamento " name="editConvenio.idDepartamento " class="form-control select2" style="width: 100%;">
                                                 <option *ngFor="let departamento of departamentos" [value]="departamento.idDepartamento" >{{ departamento.nombreDepartamento }}</option>
                                             </select>
                                             </div>
@@ -134,46 +102,47 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Beca:</label>
-                                    <select [(ngModel)]="idBeca" name="beca" class="form-control select2" style="width: 100%;">
-                                            <option value="1">Beca Industrial </option>
-                                            <option value="2">Beca Institucional</option>
+                                    <select #editIdBeca [(ngModel)]="editConvenio.idBeca" name="editConvenio.idBeca" class="form-control select2" style="width: 100%;">
+                                            <option *ngFor="let beca of becas" [value]="beca.idBeca" >{{ beca.nombre }}</option>
                                     </select>
                                 </div>                                    
                             </div>
                                 <div class="col-md-12">
-                                    <div class="form-group">
+                                    <div [ngClass]="{'form-group': true, 'has-error': !inputValEditDateStart}">
                                         <label>Fecha inicio:</label>                                    
                                         <div class="input-group date">
                                             <div class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
                                             </div>
-                                            <input [(ngModel)]="convenio.fechaInicio" name="dateInicio" type="text" class="form-control pull-right" id="datepicker" placeholder="2001/01/01">
+                                            <input (keyup)="inputDateStart(editConvenio.fechaInicio, 3)" [(ngModel)]="editConvenio.fechaInicio" name="editConvenio.fechaInicio" type="text" class="form-control pull-right" id="datepicker" placeholder="01/12/2000">
                                         </div>
+                                        <span *ngIf="!inputValEditDateStart" class="help-block"><i class="icon fa fa-warning"></i> {{ messaggeDateStart }}</span>  
                                     </div>
                                 </div>
                                 <div class="col-md-12">
-                                    <div class="form-group">
-                                            <label>Fecha final:</label>                                    
-                                            <div class="input-group date">
-                                                <div class="input-group-addon">
-                                                <i class="fa fa-calendar"></i>
-                                                </div>
-                                                <input [(ngModel)]="convenio.fechaFinal" name="dateFinal" type="text" class="form-control pull-right" id="datepickers" placeholder="2001/01/01">
+                                    <div [ngClass]="{'form-group': true, 'has-error': !inputValEditDateFinish}">
+                                        <label>Fecha final:</label>                                    
+                                        <div class="input-group date">
+                                            <div class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
                                             </div>
+                                            <input (keyup)="inputDateStart(editConvenio.fechaFinal, 4)" [(ngModel)]="editConvenio.fechaFinal" name="editConvenio.fechaFinal" type="text" class="form-control pull-right" id="datepickers" placeholder="01/12/2000">
                                         </div>
+                                        <span *ngIf="!inputValEditDateFinish" class="help-block"><i class="icon fa fa-warning"></i> {{ messaggeDateStart }}</span>  
+                                    </div>
                                 </div>
                             <div class="col-md-12 text-center">
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>
-                                            <input type="checkbox" [(ngModel)]="solicitud" name="solicitud" class="minimal" che> Solicitud de trabajo
+                                            <input type="checkbox" [(ngModel)]="editConvenio.solicitudTrabajo" name="editConvenio.solicitudTrabajo" class="minimal" che> Solicitud de trabajo
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>
-                                            <input type="checkbox" [(ngModel)]="fotocopiaCarnet" name="fotocopiaCarnet" class="minimal"> Fotocopia de carnet
+                                            <input type="checkbox" [(ngModel)]="editConvenio.fotocopiaCarnet" name="editConvenio.fotocopiaCarnet" class="minimal"> Fotocopia de carnet
                                         </label>
                                     </div>
                                 </div>
@@ -181,7 +150,7 @@
                         </div>
                 </div>
                 <div class="modal-footer text-center modal-footer-edit">
-                    <button type="submit" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-refresh"></i> Actualizar</button>
+                    <button (click)="putConvenio(editIdDepto.value, editIdBeca.value)" type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-refresh"></i> Actualizar</button>
                 </div>
             </form>
 
@@ -201,12 +170,12 @@
                         <div class="col-md-3">
                             <div class="box-profile">
                                 <img class="profile-user-img img-responsive img-circle" src="assets/img/avatar.png" alt="User profile picture">
-                                <p class="text-muted text-center">650004813</p>
+                                <p class="text-muted text-center">{{codEstudiante}}</p>
                             </div>
                         </div>
                         <div class="col-md-9">
                             <div class="box-header with-border">
-                                <h3 class="modal-name"><strong>{{ nombreCompleto }}</strong> </h3>
+                                <h3 class="modal-name"><strong>{{ nombreCompleto }}</strong></h3>
                             </div>
                         </div>
                     </div>
@@ -224,7 +193,7 @@
                                 <p>{{ ci }}</p>   
                                 <p>{{ nacionalidad }}</p>
                                 <p>{{ direccion }}</p>
-                                <p>{{ fechaNacimiento | date: 'dd/MM/yyyy' }}</p>
+                                <p>{{ fechaNacimiento | fecha : 1  }}</p>
                                 <p>{{ celular }}</p>
                                 <p>{{ estadoPersona | estado}}</p>
                             </div>
@@ -247,8 +216,8 @@
                                 <p *ngIf="semestre">{{ semestre }}</p>
                                 <p>{{ departamento }}</p>
                                 <p>{{ beca }}</p>
-                                <p>{{ fechaInicio | date: 'dd/MM/yyyy'}}</p>
-                                <p>{{ fechaFinal | date: 'dd/MM/yyyy'}}</p>
+                                <p>{{ fechaInicio | fecha : 1 }}</p>
+                                <p>{{ fechaFinal | fecha : 1 }}</p>
                                 <p>{{ fotocopiaCI | boleano }}</p>
                                 <p>{{ solicitudWork | boleano }}</p>
                                 <p>{{ estadoConvenio | estado }}</p>
@@ -288,8 +257,8 @@
             <div class="col-xs-12">
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
-                        <li (click)="getConvenios()" class="active"><a href="#lista" data-toggle="tab">Lista</a></li>
-                        <li (click)="resetForm(registroConvenio); activaRegister()"><a href="#registrar" data-toggle="tab">Registrar</a></li>
+                        <li class="active"><a href="#lista" data-toggle="tab">Lista</a></li>
+                        <li (click)="activaRegister()"><a href="#registrar" data-toggle="tab">Registrar</a></li>
                         <li><a href="#expediente" data-toggle="tab">Expediente</a></li>
                         <li><a href="#consumir" data-toggle="tab">Agregar estudiante del sistema académico</a></li>
                     </ul>
@@ -297,7 +266,18 @@
                         <!-- LISTA -->
                         <div class="tab-pane active" id="lista">
                             <section id="new">
-                                <h4 class="page-header"><i class="fa fa-list-ul"></i> Lista de convenios</h4>
+                                <div class="box-header with-border">
+                                    <h4 class="page-header"><i class="fa fa-list-ul"></i> Lista de convenios</h4>
+                                    <div class="box-tools left">
+                                        <div class="input-group input-group-sm" style="width: 300px;">
+                                            <input (keyup)="buscarConvenio(buscarEstudiante.value)" #buscarEstudiante type="text" name="buscarName" class="form-control pull-right" placeholder="Buscar estudiante">
+    
+                                            <div class="input-group-btn">
+                                                <button type="button" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                                
                                 <div class="table-responsive pad">
                                     <table class="table table-bordered table-hover">
                                         <tr class="fila-tabla">
@@ -305,8 +285,8 @@
                                             <th>Nombre completo</th>
                                             <th>Departamento</th>
                                             <th>Tipo de beca</th>
-                                            <th style="width: 15px" class="text-center">Fecha de inicio</th>
-                                            <th class="text-center">Fecha final</th>
+                                            <th style="width: 12%" class="text-center">Fecha de inicio</th>
+                                            <th style="width: 12%" class="text-center">Fecha final</th>
                                             <th style="width: 10px" class="text-center">Fotocopia de carnet</th>
                                             <th style="width: 10px" class="text-center">Solicitud trabajo</th>
                                             <th class="text-center">Estado</th>
@@ -317,8 +297,8 @@
                                             <td>{{ convenio.primerApellido }} {{ convenio.segundoApellido }} {{ convenio.primerNombre }} {{ convenio.segundoNombre }}</td>
                                             <td>{{ convenio.departamento }}</td>
                                             <td>{{ convenio.beca }}</td>
-                                            <td>{{ convenio.fechaInicio | date: 'dd/MM/yyyy' }}</td>
-                                            <td>{{ convenio.fechaFinal | date: 'dd/MM/yyyy' }}</td>
+                                            <td>{{ convenio.fechaInicio | fecha : 1 }}</td>
+                                            <td>{{ convenio.fechaFinal | fecha : 1}}</td>
                                             <td class="text-center">
                                                 <span *ngIf="convenio.fotocopiaCarnet != estado" class="badge bg-green"><i class="fa fa-check"></i></span>
                                                 <span *ngIf="convenio.fotocopiaCarnet == estado" class="badge bg-red"><i class="fa fa-times"></i></span>
@@ -328,12 +308,12 @@
                                                 <span *ngIf="convenio.solicitudTrabajo == estado" class="badge bg-red"><i class="fa fa-times"></i></span>
                                             </td>
                                             <td class="text-center">
-                                                <a *ngIf="convenio.estadoConvenio == true"  (click)="editEstadoConvenio(convenio.idConvenio, '0'); messageEnableDesable('inactivo')" class="btn btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
-                                                <a *ngIf="convenio.estadoConvenio == false" (click)="editEstadoConvenio(convenio.idConvenio, '1'); messageEnableDesable('activo')" class="btn btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
+                                                <a *ngIf="convenio.estadoConvenio == true"  (click)="editEstadoConvenio(convenio.idConvenio, '0')" class="btn btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
+                                                <a *ngIf="convenio.estadoConvenio == false" (click)="editEstadoConvenio(convenio.idConvenio, '1')" class="btn btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
                                             </td>
                                             <td class="text-center">
                                                 <a (click)="informacionEstudiante(convenio.idPersona)" data-toggle="modal" class="btn btn-primary btn-margin" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a>
-                                                <a data-toggle="modal" data-target="#modal-editar" class="btn btn-default btn-margin" title="Editar"><i class="fa fa-edit"></i></a>
+                                                <a (click)="searchPutConvenio(convenio.idPersona, convenio.idConvenio)" data-toggle="modal" data-target="#modal-editar" class="btn btn-default btn-margin" title="Editar"><i class="fa fa-edit"></i></a>
                                                 <a (click)="deleteConvenio(convenio.idConvenio)" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger btn-margin" title="Eliminar"><i class="fa fa-trash"></i></a>
                                             </td>
                                         </tr>
@@ -346,7 +326,7 @@
                             <section id="new">
                                 <h4 class="page-header"><i class="fa fa-address-book"></i> Registro de datos personales</h4>
 
-                                <form (ngSubmit)="saveConvenio()" #registroConvenio="ngForm" name="RegistroConvenio" class="form-horizontal">
+                                <form (ngSubmit)="saveConvenio(idEst.value, idDep.value, idBec.value, registroConvenio)" #registroConvenio="ngForm" name="RegistroConvenio" class="form-horizontal">
 
                                     <div class="row form">
 
@@ -356,9 +336,10 @@
                                                 <label for="inputName" class="col-sm-3 control-label">Estudiante</label>
 
                                                 <div class="col-sm-9 select-student">
-                                                    <select [(ngModel)]="idEstudiante" name="estudiante" class="form-control select2" style="width: 100%;">
-                                                      <option *ngFor="let persona of estudiantes" [value]="persona.idPersona">{{ persona.primerNombre }}
-                                                        {{ persona.segundoNombre }} {{persona.primerApellido}} {{persona.segundoApellido}}</option>
+                                                    <select #idEst class="form-control select2" style="width: 100%;">
+                                                      <option *ngFor="let persona of estudiantes" [value]="persona.idPersona">
+                                                        {{persona.primerApellido}} {{persona.segundoApellido}} {{ persona.primerNombre }} {{ persona.segundoNombre }}
+                                                      </option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -366,7 +347,7 @@
                                                 <label for="inputName" class="col-sm-3 control-label">Departamento</label>
 
                                                 <div class="col-sm-9 select-student">
-                                                    <select [(ngModel)]="idDepartamento" name="departamento" class="form-control select2" style="width: 100%;">
+                                                    <select #idDep class="form-control select2" style="width: 100%;">
                                                       <option *ngFor="let departamento of departamentos" [value]="departamento.idDepartamento" >{{ departamento.nombreDepartamento }}</option>
                                                     </select>
                                                 </div>
@@ -377,7 +358,7 @@
                                                 <label for="inputName" class="col-sm-3 control-label">Beca</label>
 
                                                 <div class="col-sm-9 select-student">
-                                                    <select [(ngModel)]="idBeca" name="beca" class="form-control select2" style="width: 100%;">
+                                                    <select #idBec class="form-control select2" style="width: 100%;">
                                                       <option value="1">Beca Industrial </option>
                                                       <option value="2">Beca Institucional</option>
                                                     </select>
@@ -386,25 +367,31 @@
                                         </div>
                                         <div class="col-md-12">
                                             <div class="col-md-6">
-                                                <div class="form-group dateInicio">
-                                                    <label class="col-sm-3">Fecha inicio</label>
+                                                <div [ngClass]="{'form-group': true, 'has-error': !inputValDateStart}">
+                                                    <label class="col-md-3">Fecha inicio *</label>
 
-                                                    <div class="col-md-9 input-group date">
-                                                        <div class="input-group-addon">
-                                                            <i class="fa fa-calendar"></i>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group date dateInicio">
+                                                            <div class="input-group-addon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </div>
+                                                            <input (keyup)="inputDateStart(convenio.fechaInicio, 1)" [(ngModel)]="convenio.fechaInicio" name="convenio.fechaInicio" type="text" class="form-control pull-right" id="datepicker" placeholder="01/01/2000">
                                                         </div>
-                                                        <input [(ngModel)]="convenio.fechaInicio" name="dateInicio" type="text" class="form-control pull-right" id="datepicker" placeholder="2001/01/01">
+                                                        <span *ngIf="!inputValDateStart" class="help-block"><i class="icon fa fa-warning"></i> {{ messaggeDateStart }}</span>                                                           
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
-                                                <div class="form-group dateFinal">
-                                                    <label class="col-sm-3">Fecha final</label>
-                                                    <div class="col-md-9 input-group date">
-                                                        <div class="input-group-addon">
-                                                            <i class="fa fa-calendar"></i>
+                                                <div [ngClass]="{'form-group': true, 'has-error': !inputValDateFinish}">
+                                                    <label class="col-sm-3">Fecha final *</label>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group date dateFinal">
+                                                            <div class="input-group-addon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </div>
+                                                            <input (keyup)="inputDateStart(convenio.fechaFinal, 2)" [(ngModel)]="convenio.fechaFinal" name="convenio.fechaFinal" type="text" class="form-control pull-right" id="datepicker" placeholder="01/01/2000">
                                                         </div>
-                                                        <input [(ngModel)]="convenio.fechaFinal" name="dateFinal" type="text" class="form-control pull-right" id="datepicker" placeholder="2001/01/01">
+                                                        <span *ngIf="!inputValDateFinish" class="help-block"><i class="icon fa fa-warning"></i> {{ messaggeDateStart }}</span>  
                                                     </div>
                                                 </div>
                                             </div>
@@ -898,4 +885,19 @@
 <!-- /.content-wrapper -->
 <app-footer></app-footer> 
 </div>
-<!-- /.content-wrapper -->
+<div id="growls-default">
+    <div [ngClass]="{'growl': true, 'growl-notice':alertSuccess, 
+                    'growl-error':alertError, 
+                    'growl-warning':alertWarning, 
+                    'growl-large':true, 
+                    'growl-outgoing':!activateAlert}">
+        <div [ngClass]="{'growl-close': true, 'growl-outgoing':!activateAlert}">×</div>
+        <div [ngClass]="{'growl-title': true, 'growl-outgoing':!activateAlert}">
+            <i [ngClass]="{'icon': true, 'fa': true, 
+            'fa-check': alertSuccess, 
+            'fa-close': alertError, 
+            'fa-warning': alertWarning}"></i>
+            {{titleAlert}} </div>
+        <div [ngClass]="{'growl-message': true,'growl-outgoing':!activateAlert}">{{messageAlert}}</div>
+    </div>
+</div>

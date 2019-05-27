@@ -20,7 +20,7 @@
                 <!-- Messages: style can be found in dropdown.less-->
                 <li *ngIf="idRol == 2 || idRol == 3" class="dropdown messages-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-file-o"></i>
+                        <i class="fa fa-bell-o"></i>
                         <span *ngIf="bandejaInformeNum > 0" class="label label-warning">{{ bandejaInformeNum }}</span>
                     </a>
                     <ul *ngIf="bandejaInformeNum > 0" class="dropdown-menu">
@@ -138,7 +138,7 @@
                     <i class="fa fa-user"></i> <span>Areas de Departamento</span>                    
                 </a>
             </li>
-            <li *ngIf="idRol== 4"  class="header"><i class="fa fa-tasks"></i> Registros</li>
+            <li *ngIf="idRol== 4"  class="header">Registros</li>
             <li *ngIf="idRol== 4" >
                 <a (click)="gestionarRegistroHoy()">
                     <i class="fa fa-file-text-o"></i> <span>Asistencia de estudiantes</span>                    
@@ -164,7 +164,7 @@
                     <i class="fa fa-file-text-o"></i> <span>Informe personalizado</span>                    
                 </a>
             </li>
-            <li *ngIf="idRol== 4"  class="header"><i class="fa fa-file-zip-o"></i> Informes</li>
+            <li *ngIf="idRol== 4"  class="header">Informes</li>
             <li *ngIf="idRol== 4" >
                 <a (click)="gestionarInformeAprovados()">
                     <i class="fa fa-paste"></i> <span>Informe aprovabados</span>                    
