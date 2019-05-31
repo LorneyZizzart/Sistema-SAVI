@@ -254,11 +254,7 @@
                                             <div [ngClass]="{'form-group': true, 'has-feedback':true, 'has-error': !inputValEditPassword}">
                                                 <label for="inputName" class="col-sm-3 control-label">Contraseña</label>
     
-                                                <div class="col-sm-9">
-                                                    <!-- <input (keyup)="inputPassword1(edituser.password, 2)" [(ngModel)]="edituser.password" name="edituser.password" type="password" class="form-control" id="edituser.password" placeholder="******">
-                                                    <span *ngIf="!inputValEditPassword" class="help-block"><i class="icon fa fa-warning"></i> {{ messagePassword }}</span>
-                                                    <span (click)="hidePassword()" [ngClass]="{'btn-password':true, 'fa':true, 'fa-eye':true, 'form-control-feedback':true}"></span>  -->
-
+                                                <div class="col-sm-9">                                             
                                                     <div class="input-group input-group-sm">
                                                         <input (keyup)="inputPassword1(edituser.password, 2)" [(ngModel)]="edituser.password" name="edituser.password" type="{{typePassword  ? 'text' : 'password' }}" class="form-control">                                                        
                                                         <div class="input-group-btn">
@@ -345,7 +341,7 @@
                                                 <a (click)="buscarEstudiante(user.idPersona)" data-toggle="modal" class="btn btn-primary btn-margin" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a>
                                                 <a (click)="buscarEstudianteEditar(user.idPersona, user.idUsuario)" data-toggle="modal" data-target="#modal-editar" class="btn btn-default btn-margin" title="Editar"><i class="fa fa-edit"></i></a>
                                                 <a (click)="deleteUser(user.idUsuario, user.idPersona)" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger btn-margin" title="Eliminar"><i class="fa fa-trash"></i></a>
-                                            </td>
+                                            </td>                                           
                                         </tr>
                                     </table>
                                 </div>
@@ -358,7 +354,7 @@
                             <section id="new">
                                 <h4 class="page-header"><i class="fa fa-address-book"></i> Registro de datos personales</h4>
 
-                                <form (ngSubmit)="savePersona(idCarr.value, registroPersona)" #registroPersona="ngForm" name="formularioRegistroPersona" class="form-horizontal">
+                                <form (ngSubmit)="savePersona()" #registroPersona="ngForm" name="formularioRegistroPersona" class="form-horizontal">
 
                                     <div class="row">
                                         <div class="col-md-7">
@@ -405,7 +401,7 @@
                                                 <label for="inputName" class="col-sm-3 control-label">Carrera </label>
     
                                                 <div class="col-sm-9 select-student">
-                                                    <select #idCarr [(ngModel)]="persona.idCarrera" name="persona.idCarrera" class="form-control select2" style="width: 100%;">
+                                                    <select [(ngModel)]="persona.idCarrera" name="persona.idCarrera" class="form-control select2" style="width: 100%;">
                                                         <option *ngFor="let carrera of carreras" [value]="carrera.idCarrera" >{{ carrera.nombreCarrera }}</option>
                                                     </select>
                                                 </div>

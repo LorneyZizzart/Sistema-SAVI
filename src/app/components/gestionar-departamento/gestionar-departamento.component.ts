@@ -14,6 +14,13 @@ import { Persona } from '../../interfaces/persona.interface';
 })
 export class GestionarDepartamentoComponent implements OnInit {
 
+  //ALERTS
+  titleAlert:string = null;
+  messageAlert:string = null;
+  activateAlert:boolean = false;
+  alertSuccess:Boolean = false;
+  alertError:Boolean = false;
+  alertWarning:boolean = false;
   MessageEnable:Boolean = false;
   MessageDesable:Boolean = false;
   //DEPARTAMENTO
@@ -84,6 +91,21 @@ export class GestionarDepartamentoComponent implements OnInit {
 
   ngOnDestroy(): void {
 
+  }
+
+  alert(opcion:number, title:string, message:string):void{
+    if(opcion == 1) this.alertSuccess = true;
+    if(opcion == 2) this.alertError = true;      
+    if(opcion == 3) this.alertWarning = true;      
+    this.titleAlert = title;
+    this.messageAlert = message;
+    this.activateAlert = true;
+    setTimeout(() => {
+      this.activateAlert = false;
+      this.alertSuccess = false;
+      this.alertError = false;
+      this.alertWarning = false;
+    }, 5000);
   }
 
   messageEnableDesable(value:string){

@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { NgForm, FormBuilder, FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { User } from '../../interfaces/user.interface';
 import { Persona } from "../../interfaces/persona.interface";
 import { AppUserService } from "../../services/app-user.service";
@@ -16,8 +16,6 @@ import { AuthService } from '../../services/auth.service';
 export class GestionarUsuarioComponent implements OnInit {
   // usuario logeado
   private userLog:User = {};
-  //FormBuilder
-  public formPersona:FormGroup;
   idPersona:string = null;
   idRol:string = null;
   password:string = null;
@@ -29,8 +27,6 @@ export class GestionarUsuarioComponent implements OnInit {
   alertSuccess:Boolean = false;
   alertError:Boolean = false;
   alertWarning:boolean = false;
-  MessageEnable:Boolean = false;
-  MessageDesable:Boolean = false;
   public userPersona: User[];
   //se utiliza para el buscador el usuario
   usuariosArray:User[];
@@ -111,7 +107,6 @@ export class GestionarUsuarioComponent implements OnInit {
     
   constructor( private _appUserService: AppUserService,
               private _appPersonaService: AppPersonaService,
-              private _formBuilder: FormBuilder,
               private _appCarreraService:AppCarreraService,
               private _authService:AuthService) {
   }
@@ -122,7 +117,6 @@ export class GestionarUsuarioComponent implements OnInit {
       this.getUsers(this.userLog.idRol);
       this.getCarreras();
     }    
-    this.formPersona = new FormGroup({});
   }
 
   cargarImg(img){
@@ -800,7 +794,7 @@ export class GestionarUsuarioComponent implements OnInit {
     this._appPersonaService.getPersonas().subscribe((personas:Persona[]) => this.personas = personas);
   }
 
-  savePersona(idCarrera, form:NgForm) {
+  savePersona() {
     if(this.persona.primerNombre == null) {this.inputValFirstName = false;this.messaggeFullName = 'El campo debe ser llenado obligatoriamente.';}
     if(this.persona.primerApellido == null){this.inputValSurname = false;this.messaggeFullName = 'El campo debe ser llenado obligatoriamente.';}
     if(this.persona.nacionalidad == null) {this.inputValNationality = false;this.messaggeNationality = 'El campo debe ser llenado obligatoriamente.';}
@@ -815,15 +809,15 @@ export class GestionarUsuarioComponent implements OnInit {
         let fecha = this.persona.fechaNacimiento.split('/')
         let date = fecha[2]+"/"+fecha[1]+"/"+fecha[0];
         this.persona.fechaNacimiento = date;
-        this.persona.idCarrera = idCarrera;
-        console.log(this.persona);
-        // this._appPersonaService.postPersona(this.persona)
-        // .subscribe((data :Persona[]) => {
-        //   this.alert(1, 'Registro exitoso', 'El registro se realizó satisfactoriamente.');
-        //   this.resetForm(form);
-        // }, res =>{
-        //   this.alert(2, 'Error al registrar','Se ha producido un error en el servidor.');
-        // });
+        this.persona.idCarrera = this.persona.idCarrera;
+
+        this._appPersonaService.postPersona(this.persona)
+        .subscribe((data :Persona[]) => {
+          this.alert(1, 'Registro exitoso', 'El registro se realizó satisfactoriamente.');
+          this.getUsers(this.userLog.idRol);
+        }, res =>{
+          this.alert(2, 'Error al registrar','Se ha producido un error en el servidor.');
+        });
       }else{
         this.alert(2, 'Error al registrar','Se ha producido un error al guardar el registro en el sistema.');
       }   
