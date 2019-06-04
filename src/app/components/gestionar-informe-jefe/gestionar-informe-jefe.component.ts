@@ -6,6 +6,7 @@ import { AppInformeEstudianteService } from '../../services/app-informe-estudian
 import { Persona } from '../../interfaces/persona.interface';
 import { AppTipoPersonaService } from '../../services/app-tipoPersona.service';
 import { Convenio } from 'src/app/interfaces/convenio.interface';
+import { Organizacion } from 'src/app/interfaces/organizacion.interface';
 
 @Component({
   selector: 'app-gestionar-informe-jefe',
@@ -121,7 +122,7 @@ export class GestionarInformeJefeComponent implements OnInit {
           this.codigoDepartamento = departamento.idDepartamento;
           this.nombreDepartamento = departamento.nombreDepartamento;
           this.estadoDepartamento = departamento.estadoDepartamento;
-          this.fechaRegistroHistorialDep = departamento.fechaRegistroHistorialDep;
+          this.fechaRegistroHistorialDep = departamento.fechaRegistroHistorialDepartamento;
           this.limiteEstudiante = departamento.limiteEstudiante;
           this.costoHora = departamento.costoHora;
       }

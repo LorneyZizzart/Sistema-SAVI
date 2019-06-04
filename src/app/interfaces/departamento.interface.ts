@@ -1,24 +1,14 @@
-export interface Departamento {
+import { HistorialDepartamento } from './historialDepartamento.interface';
+import { Organizacion } from './organizacion.interface';
+import { Persona } from './persona.interface';
+
+export interface Departamento extends Organizacion, HistorialDepartamento {
   idDepartamento?:string
   nombreDepartamento?:string
-  limiteEstudiante?:string
   fechaRegistroDepartamento?:string
   estadoDepartamento?:string
-  idPersona?: string
-  primerNombre?: string
-  segundoNombre?: string
-  primerApellido?: string
-  segundoApellido?: string
-  nacionalidad?: string
-  direccion?: string
-  ci?: string
-  celular?: string
-  fechaNacimiento?: string
-  estadoPersona?: string
-  idOrganizacion?:String
-  fechaRegistroOrganizacion?:string
-  estadoOrganizacion?:string
-  costoHora?:string
-  fechaRegistroHistorialDep?:string
-  estadoHistorialDepartamento?:string
+  editDepartamento?:string
+  historialDepartamento?:HistorialDepartamento;
+  organizacionDepartamento?:Organizacion;
+  persona?:Persona
 }

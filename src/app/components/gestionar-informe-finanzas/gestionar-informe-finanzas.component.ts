@@ -326,7 +326,7 @@ export class GestionarInformeFinanzasComponent implements OnInit {
 
     for(let departament of this.departamentos){
       if(departament.idDepartamento == idDepartamento){
-        this.departamento.costoHora = departament.costoHora;
+        // this.departamento.costoHora = departament.costoHora;
         this.departamento.nombreDepartamento = departament.nombreDepartamento;
       }
     }

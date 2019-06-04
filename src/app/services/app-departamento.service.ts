@@ -64,9 +64,9 @@ export class AppDepartamentoService {
 
   //Gestion de HistorialDep
   //Obtenemos todos los departamentos
-  getHistorialDepartamento(){
-    //Lo utilizaremos para obtener el ultimo idDept
-    return this._http.get<Departamento[]>(this.listaHistorialDepartamentoURL).pipe(map(res => res));
+  getHistorialDepartamento(idDepartamento:string){
+    let url = `${this.listaHistorialDepartamentoURL}/${idDepartamento}`;
+    return this._http.get<Departamento[]>(url).pipe(map(res => res));
   }
 
   postHistorialDepartamento(departamento:Departamento):Observable<Departamento[]>{

@@ -11,6 +11,8 @@ export interface Persona {
   celular?: string;
   fechaNacimiento?: string;
   estadoPersona?: boolean;
+  fechaRegistroPersona?:string
+  editPersona?:string
   idCarrera?:string
   carrera?:string
   semestre?:string

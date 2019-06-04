@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from "rxjs";
 import { Departamento } from '../interfaces/departamento.interface';
 import { Persona } from '../interfaces/persona.interface';
+import { Organizacion } from '../interfaces/organizacion.interface';
 
 
 @Injectable({
@@ -17,8 +18,9 @@ export class AppOrganizacionService {
 
   //Gestion de Organizacion de Departamento
 
-  getOrgDepartamentoSJ(){
-    return this._http.get<Departamento[]>(this.listaOrganizacionDepartamentoURL).pipe(map(res => res));
+  getOrgDepartamento(idDepartamento:string){
+    let url = `${this.listaOrganizacionDepartamentoURL}/${idDepartamento}`;
+    return this._http.get<Departamento[]>(url).pipe(map(res => res));
   }
 
   getJefesDepartamento(){

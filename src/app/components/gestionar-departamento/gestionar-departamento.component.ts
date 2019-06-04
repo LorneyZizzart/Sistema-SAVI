@@ -3,7 +3,10 @@ import { NgForm } from '@angular/forms';
 import { AppDepartamentoService } from '../../services/app-departamento.service';
 import { Departamento } from "../../interfaces/departamento.interface";
 import { AppOrganizacionService } from '../../services/app-organizacion.service';
+import { AppPersonaService } from '../../services/app-persona.service';
 import { Persona } from '../../interfaces/persona.interface';
+import { Organizacion } from 'src/app/interfaces/organizacion.interface';
+import { HistorialDepartamento } from 'src/app/interfaces/historialDepartamento.interface';
 
 
 
@@ -24,12 +27,13 @@ export class GestionarDepartamentoComponent implements OnInit {
   MessageEnable:Boolean = false;
   MessageDesable:Boolean = false;
   //DEPARTAMENTO
-  departamentos:Departamento[];
+  departamentos:Departamento[] = [];
   departamento:Departamento = {}
+  //--
+  historialDepartamento:HistorialDepartamento[];
+  organizacionDepartamento:Organizacion[];
 
-  editDepartamento:Departamento = {
-    nombreDepartamento:""
-  }
+  editDepartamento:Departamento = { }
   //Info Departamento
     codigoDepartamento:string;
     nombreCompleto:string;
@@ -51,17 +55,10 @@ export class GestionarDepartamentoComponent implements OnInit {
   //HISTORIAL DEPARTAMENTO
   maxidDept:Departamento[];
   historialDepartamentos:Departamento[];
-  historialDepartamento:Departamento = {
-    idDepartamento:"",
-    limiteEstudiante:"",
-    costoHora:""
-  }
+
 
   editHistorialDepartamento:Departamento = {
-    idDepartamento:"",
-    limiteEstudiante:"",
-    costoHora:"",
-    estadoDepartamento:""
+
   }
   //ORGANIZACION DEPARTAMENTO
   //Sera donde recibiremos el id maximo
@@ -70,23 +67,26 @@ export class GestionarDepartamentoComponent implements OnInit {
   idPersona:string = "";
   idDepartamento:string = "";
   idMax:string = "";
-  listDepSJ:Departamento[];
+  listDepSJ:Organizacion[];
   listJefesDepto:Persona[];
-  organizacionDepartamento:Departamento = {
-    idDepartamento:"",
-    idPersona:""
-  }
-    //Message de confirmacion de delete
-    messageYdelete:boolean = false;
+  //Message de confirmacion de delete
+  messageYdelete:boolean = false;
+  //Inputs
+  //Register depto
+  inputValNameDepto:boolean = true; messaggeNameDepto:string = null;
+  //Edit Depto
+  inputValEditNameDepto:boolean = true;
+
+  simbolos="/*-+|°!#$%&()=¿?,;. :_{}[]><";
   constructor( private _appDepartamentoService: AppDepartamentoService,
-                private _appDeptOrgService: AppOrganizacionService ) {
-    this.getDepartamentos();
-  }
+                private _appDeptOrgService: AppOrganizacionService,
+                private _appPersonaService:AppPersonaService ) { }
 
   ngOnInit() {
-    this.getListJefesDeptarmento();
+    this.getDepartamentos();
+    // this.getListJefesDeptarmento();
     //Lo ejecutamos por que a la primera nos responde undefine-> luego si muestra resultados
-    this.getMaxIdDep();
+    // this.getMaxIdDep();
   }
 
   ngOnDestroy(): void {
@@ -121,52 +121,102 @@ export class GestionarDepartamentoComponent implements OnInit {
       }, 8000);
     }
   }
-  //GEATION DEPARTAMENTOS
-  getDepartamentos(){
-    this._appDepartamentoService.getDepartamentos()
-    .subscribe((departamentos:Departamento[]) => {this.departamentos = departamentos});
-    console.log(this.departamentos);
 
-  }
-
-
-  getMaxIdDep(){
-    this._appDepartamentoService.getHistorialDepartamento()
-      .subscribe((maxidDept:Departamento[]) => {this.maxidDept = maxidDept});
-      console.log("getMAXdEP: ",this.maxidDept )
-  }
-
-  getInfoDepartamento(idDepartamento:string){
-    for(let departamento of this.departamentos){
-      if(departamento.idDepartamento == idDepartamento){
-        if (departamento.segundoNombre == null && departamento.segundoApellido != null ) {
-          this.nombreCompleto = departamento.primerNombre + " " + departamento.primerApellido + " " + departamento.segundoApellido;
-        } else if (departamento.segundoNombre == null && departamento.segundoApellido == null){
-          this.nombreCompleto = departamento.primerNombre + " " + departamento.primerApellido; 
-        }else if (departamento.segundoNombre != null && departamento.segundoApellido == null){ 
-          this.nombreCompleto = departamento.primerNombre + " " + departamento.segundoNombre + " " + departamento.primerApellido;   
-        }else{
-          this.nombreCompleto = departamento.primerNombre + " " + departamento.segundoNombre + " " + departamento.primerApellido + " " + departamento.segundoApellido;
-        }
-        this.nacionalidad = departamento.nacionalidad;
-        this.direccion = departamento.direccion;
-        this.celular = departamento.celular;
-        this.ci = departamento.ci;
-        this.fechaNacimiento = departamento.fechaNacimiento;
-        this.estadoPersona = departamento.estadoPersona;
-        this.codigoDepartamento = departamento.idDepartamento;
-        this.estadoDepartamento = departamento.estadoDepartamento;
-        this.fechaRegistroHistorialDep = departamento.fechaRegistroHistorialDep;
-        this.limiteEstudiante = departamento.limiteEstudiante;
-        this.nombreDepartamento = departamento.nombreDepartamento;
-        this.costoHora = departamento.costoHora;
+  inputNombreDepartamento(value, opcion){
+    console.log("nombre depto: ", value);
+    var valDepto = true;
+    if(value != null){
+    if(value.length > 0 && value != " "){
+      for (let i = 0; i < value.length; i++) {
+        if(this.simbolos.indexOf(value.charAt(i),0)!=-1){valDepto = false; break}
       }
+      if(valDepto){
+        if(opcion == 1) this.inputValNameDepto = true;
+        if(opcion == 2) this.inputValEditNameDepto = true;
+      }else{
+        if(opcion == 1) this.inputValNameDepto = false;
+        if(opcion == 2) this.inputValEditNameDepto = false;
+        this.messaggeNameDepto = 'No se permite caracteres de tipo símbolo.';
+      }  
+    }else{
+      if(opcion == 1) this.inputValNameDepto = false;
+      if(opcion == 2) this.inputValEditNameDepto = false;
+      this.messaggeNameDepto = 'El campo debe ser llenado obligatoriamente.';
+    }
     }
   }
+  //GEATION DEPARTAMENTOS
+  getDepartamentos(){
+    
+    this._appDepartamentoService.getDepartamentos()
+    .subscribe((departamentos:Departamento[]) => {
+      for (let i = 0; i < departamentos.length; i++) {
+        this._appDeptOrgService.getOrgDepartamento(departamentos[i].idDepartamento).subscribe((orgDepartamento:Departamento[])=>{
+          if(orgDepartamento.length > 0){
+            departamentos[i].organizacionDepartamento = orgDepartamento[0];
+
+            this._appPersonaService.getPersona(orgDepartamento[0].idPersona).subscribe((persona:Persona[])=>{
+              departamentos[i].persona =  persona[0];
+            }) 
+          }                
+
+          this._appDepartamentoService.getHistorialDepartamento(departamentos[i].idDepartamento).subscribe((historialDepartamento:Departamento[])=>{
+          departamentos[i].historialDepartamento =  historialDepartamento[0];
+          })
+        })        
+      }
+      console.log("DEPARTAMENTOS: ", departamentos);      
+      this.departamentos = departamentos;      
+    });
+    
+  }
+
+  // POSIBLE BORRAR
+  // getMaxIdDep(){
+  //   // this._appDepartamentoService.getHistorialDepartamento()
+  //   //   .subscribe((maxidDept:Departamento[]) => {this.maxidDept = maxidDept});
+  //   //   console.log("getMAXdEP: ",this.maxidDept )
+  // }
+  // POSIBLE BORRAR
+  // getInfoDepartamento(idDepartamento:string){
+  //   for(let departamento of this.departamentos){
+  //     if(departamento.idDepartamento == idDepartamento){
+  //       if (departamento.segundoNombre == null && departamento.segundoApellido != null ) {
+  //         this.nombreCompleto = departamento.primerNombre + " " + departamento.primerApellido + " " + departamento.segundoApellido;
+  //       } else if (departamento.segundoNombre == null && departamento.segundoApellido == null){
+  //         this.nombreCompleto = departamento.primerNombre + " " + departamento.primerApellido; 
+  //       }else if (departamento.segundoNombre != null && departamento.segundoApellido == null){ 
+  //         this.nombreCompleto = departamento.primerNombre + " " + departamento.segundoNombre + " " + departamento.primerApellido;   
+  //       }else{
+  //         this.nombreCompleto = departamento.primerNombre + " " + departamento.segundoNombre + " " + departamento.primerApellido + " " + departamento.segundoApellido;
+  //       }
+  //       this.nacionalidad = departamento.nacionalidad;
+  //       this.direccion = departamento.direccion;
+  //       this.celular = departamento.celular;
+  //       this.ci = departamento.ci;
+  //       this.fechaNacimiento = departamento.fechaNacimiento;
+  //       this.estadoPersona = departamento.estadoPersona;
+  //       this.codigoDepartamento = departamento.idDepartamento;
+  //       this.estadoDepartamento = departamento.estadoDepartamento;
+  //       this.fechaRegistroHistorialDep = departamento.fechaRegistroHistorialDep;
+  //       this.limiteEstudiante = departamento.limiteEstudiante;
+  //       this.nombreDepartamento = departamento.nombreDepartamento;
+  //       this.costoHora = departamento.costoHora;
+  //     }
+  //   }
+  // }
 
   saveDepartamento(){
-    this._appDepartamentoService.postDepartamento(this.departamento)
-    .subscribe((departamento:Departamento[]) => {console.log(departamento)});
+    if(!this.departamento.nombreDepartamento){this.inputValNameDepto = false;this.messaggeNameDepto = 'El campo debe ser llenado obligatoriamente.';}
+    if(this.inputValNameDepto){
+      this._appDepartamentoService.postDepartamento(this.departamento)
+        .subscribe((departamento:Departamento[]) => {
+          this.getDepartamentos();
+          this.alert(1, 'Registro exitoso','El registro del departamento se realizó satisfactoriamente.');
+        }, res => {
+          this.alert(2, 'Error al registrar','Se ha producido un error en el servidor.');
+        });
+    }else  this.alert(2, 'Error al registrar','Se ha producido un error al guardar en el sistema..'); 
   }
 
   editarDepartamento(){
@@ -216,17 +266,17 @@ export class GestionarDepartamentoComponent implements OnInit {
       this.idMax = id.idDepartamento;
     }
     // //falla del ultimo id
-    this.historialDepartamento.idDepartamento = this.idMax;
-    this._appDepartamentoService.postHistorialDepartamento(this.historialDepartamento)
-      .subscribe((departamento:Departamento[]) => {console.log(departamento)});
+    // this.historialDepartamento.idDepartamento = this.idMax;
+    // this._appDepartamentoService.postHistorialDepartamento(this.historialDepartamento)
+    //   .subscribe((departamento:Departamento[]) => {console.log(departamento)});
 
   }
 
   //GESTIONAR ORGANIZACION DEPARTAMENTO
   //Metodo para obtener los departamentos sin Jefes de Dep -> PERO aun falta perfeccionar
-  getListDeptoSJ(){
-   this._appDeptOrgService.getOrgDepartamentoSJ()
-   .subscribe((departamentos:Departamento[]) => { this.listDepSJ = departamentos});
+  getOrganizacionDepartamento(idDepartamento:string){
+   this._appDeptOrgService.getOrgDepartamento(idDepartamento)
+   .subscribe((departamentos:Organizacion[]) => { this.listDepSJ = departamentos});
   }
 
   getListJefesDeptarmento(){
@@ -237,11 +287,11 @@ export class GestionarDepartamentoComponent implements OnInit {
   saveOrganizacion(){
     if(this.idDepartamento != "" && this.idPersona != ""){
 
-      this.organizacionDepartamento.idPersona = this.idPersona;
-      this.organizacionDepartamento.idDepartamento = this.idDepartamento;
+      // this.organizacionDepartamento.idPersona = this.idPersona;
+      // this.organizacionDepartamento.idDepartamento = this.idDepartamento;
 
-      this._appDeptOrgService.postOrganizacionDepartamento(this.organizacionDepartamento)
-      .subscribe((departamento:Departamento[])=>{console.log(departamento)});
+      // this._appDeptOrgService.postOrganizacionDepartamento(this.organizacionDepartamento)
+      // .subscribe((departamento:Departamento[])=>{console.log(departamento)});
 
     this.MessageSuccessOrg = true;
     setTimeout(()=>{

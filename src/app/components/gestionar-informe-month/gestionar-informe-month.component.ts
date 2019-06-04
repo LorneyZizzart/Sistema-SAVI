@@ -9,6 +9,7 @@ import { AppTipoPersonaService } from '../../services/app-tipoPersona.service';
 import { InformeEstudiante } from '../../interfaces/informe-estudiante.interface';
 import { AppInformeEstudianteService } from '../../services/app-informe-estudiante.service';
 import { Convenio } from 'src/app/interfaces/convenio.interface';
+import { Organizacion } from 'src/app/interfaces/organizacion.interface';
 
 @Component({
   selector: 'app-gestionar-informe-month',
@@ -273,7 +274,7 @@ export class GestionarInformeMonthComponent implements OnInit {
           this.codigoDepartamento = departamento.idDepartamento;
           this.nombreDepartamento = departamento.nombreDepartamento;
           this.estadoDepartamento = departamento.estadoDepartamento;
-          this.fechaRegistroHistorialDep = departamento.fechaRegistroHistorialDep;
+          this.fechaRegistroHistorialDep = departamento.fechaRegistroHistorialDepartamento;
           this.limiteEstudiante = departamento.limiteEstudiante;
           this.costoHora = departamento.costoHora;
       }
