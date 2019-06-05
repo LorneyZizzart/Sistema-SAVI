@@ -3,6 +3,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from "rxjs";
 import { Departamento } from '../interfaces/departamento.interface';
+import { HistorialDepartamento } from '../interfaces/historialDepartamento.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,11 @@ export class AppDepartamentoService {
 
   getDepartamentos(){
     return this._http.get<Departamento[]>(this.listaDepartamentoURL).pipe(map(res => res));
+  }
+
+  getDepartamentoName(nameDepartamento:string){
+    let url = `${this.listaDepartamentoURL}/search/${nameDepartamento}`;
+    return this._http.get<Departamento[]>(url).pipe(map(res => res));
   }
 
   postDepartamento(departamento:Departamento):Observable<Departamento[]>{
@@ -63,9 +69,15 @@ export class AppDepartamentoService {
   }
 
   //Gestion de HistorialDep
-  //Obtenemos todos los departamentos
+  //Obtenemos historial activo  de cada departamento
   getHistorialDepartamento(idDepartamento:string){
     let url = `${this.listaHistorialDepartamentoURL}/${idDepartamento}`;
+    return this._http.get<Departamento[]>(url).pipe(map(res => res));
+  }
+
+  //Obtencion de todo el historial de un departamento
+  getHistorialesDepartamento(idDepartamento:string){
+    let url = `${this.listaHistorialDepartamentoURL}/allHistorial/${idDepartamento}`;
     return this._http.get<Departamento[]>(url).pipe(map(res => res));
   }
 
@@ -75,5 +87,13 @@ export class AppDepartamentoService {
       'Content-Type' : 'application/json'
     });
     return this._http.post<Departamento[]>(this.listaHistorialDepartamentoURL, body, {headers}).pipe();
+  }
+  putEstadoHistorialDepartamento(historialDepartamento:Departamento, idHistorialDepartamento:string):Observable<Departamento[]>{
+    let body = JSON.stringify(historialDepartamento);
+    let headers = new HttpHeaders({
+      'Content-Type':'application/json'
+    });
+    let url = `${this.listaHistorialDepartamentoURL}/editEstado/${idHistorialDepartamento}`;
+    return this._http.put<Departamento[]>(url, body, {headers}).pipe();
   }
 }

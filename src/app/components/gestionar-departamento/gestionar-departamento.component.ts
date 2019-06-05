@@ -24,53 +24,43 @@ export class GestionarDepartamentoComponent implements OnInit {
   alertSuccess:Boolean = false;
   alertError:Boolean = false;
   alertWarning:boolean = false;
-  MessageEnable:Boolean = false;
-  MessageDesable:Boolean = false;
   //DEPARTAMENTO
   departamentos:Departamento[] = [];
   departamento:Departamento = {}
   //--
-  historialDepartamento:HistorialDepartamento[];
   organizacionDepartamento:Organizacion[];
 
   editDepartamento:Departamento = { }
   //Info Departamento
-    codigoDepartamento:string;
-    nombreCompleto:string;
-    nacionalidad: string;
-    direccion: string;
-    ci: string;
-    celular: string;
-    fechaNacimiento: string;
-    estadoPersona;
-    estadoDepartamento;
-    fechaRegistroHistorialDep:string;
-    limiteEstudiante:string;
-    nombreDepartamento:string;
-    cantidadEstudiantes:string = "3"; //falta aun sumar and restar
-    cupos:string = "5"; //falta aun sumar and restar
-    costoHora:string;
-
+  codigoDepartamento:string;
+  nombreCompleto:string;
+  nacionalidad: string;
+  direccion: string;
+  ci: string;
+  celular: string;
+  fechaNacimiento: string;
+  estadoPersona;
+  estadoDepartamento;
+  fechaRegistroHistorialDep:string;
+  limiteEstudiante:string;
+  nombreDepartamento:string;
+  cantidadEstudiantes:string = "3"; //falta aun sumar and restar
+  cupos:string = "5"; //falta aun sumar and restar
+  costoHora:string;
   
   //HISTORIAL DEPARTAMENTO
-  maxidDept:Departamento[];
-  historialDepartamentos:Departamento[];
+  // -- 
+  historialesDepartamento:HistorialDepartamento[];//para almacenar el historial de un solo departamento
+  historialDepartamento:Departamento = {};
 
-
-  editHistorialDepartamento:Departamento = {
-
-  }
   //ORGANIZACION DEPARTAMENTO
   //Sera donde recibiremos el id maximo
-  MessageFailOrg:boolean = false;
-  MessageSuccessOrg:boolean = false;
   idPersona:string = "";
   idDepartamento:string = "";
   idMax:string = "";
   listDepSJ:Organizacion[];
   listJefesDepto:Persona[];
-  //Message de confirmacion de delete
-  messageYdelete:boolean = false;
+
   //Inputs
   //Register depto
   inputValNameDepto:boolean = true; messaggeNameDepto:string = null;
@@ -108,20 +98,6 @@ export class GestionarDepartamentoComponent implements OnInit {
     }, 5000);
   }
 
-  messageEnableDesable(value:string){
-    if (value == 'inactivo') {
-      this.MessageEnable = true;
-      setTimeout(() => {
-        this.MessageEnable = false;
-      }, 8000);
-    }else if (value == 'activo') {
-      this.MessageDesable = true;
-      setTimeout(() => {
-        this.MessageDesable = false;
-      }, 8000);
-    }
-  }
-
   inputNombreDepartamento(value, opcion){
     console.log("nombre depto: ", value);
     var valDepto = true;
@@ -131,8 +107,16 @@ export class GestionarDepartamentoComponent implements OnInit {
         if(this.simbolos.indexOf(value.charAt(i),0)!=-1){valDepto = false; break}
       }
       if(valDepto){
-        if(opcion == 1) this.inputValNameDepto = true;
-        if(opcion == 2) this.inputValEditNameDepto = true;
+        this._appDepartamentoService.getDepartamentoName(value).subscribe((data:Departamento[])=>{
+          if(data.length == 0){
+            if(opcion == 1) this.inputValNameDepto = true;
+            if(opcion == 2) this.inputValEditNameDepto = true;
+          }else{
+            if(opcion == 1) this.inputValNameDepto = false;
+            if(opcion == 2) this.inputValEditNameDepto = false;
+            this.messaggeNameDepto = 'El nombre ya se encuentra registrado.'
+          }
+        })        
       }else{
         if(opcion == 1) this.inputValNameDepto = false;
         if(opcion == 2) this.inputValEditNameDepto = false;
@@ -216,7 +200,7 @@ export class GestionarDepartamentoComponent implements OnInit {
         }, res => {
           this.alert(2, 'Error al registrar','Se ha producido un error en el servidor.');
         });
-    }else  this.alert(2, 'Error al registrar','Se ha producido un error al guardar en el sistema..'); 
+    }else  this.alert(2, 'Error al registrar','Se ha producido un error al guardar en el sistema.'); 
   }
 
   editarDepartamento(){
@@ -247,29 +231,32 @@ export class GestionarDepartamentoComponent implements OnInit {
   eliminarDepartamento(){
     this._appDepartamentoService.deleteDepartamento(this.codigoDepartamento)
     .subscribe((data : Departamento[]) => {console.log(data)})
-    this.messageYdelete = true;
-    setTimeout(() => {
-      this.getDepartamentos();
-    }, 2000);
-    setTimeout(() => {
-      this.messageYdelete = false;
-    }, 8000);
   }
 
   //GESTION HISTORIAL DEPARTAMENTOS
 
-  getHistorialDepartamentos(){
+  getHistorialesDepartamento(idDepartamento:string){
+    console.log("idDepartamento: ",idDepartamento);
+    this._appDepartamentoService.getHistorialesDepartamento(idDepartamento)
+    .subscribe((data:HistorialDepartamento[]) =>{
+      this.historialesDepartamento = data;
+    })
   }
 
   saveHistorialDepartamento(){
-    for(let id of this.maxidDept){
-      this.idMax = id.idDepartamento;
-    }
-    // //falla del ultimo id
-    // this.historialDepartamento.idDepartamento = this.idMax;
-    // this._appDepartamentoService.postHistorialDepartamento(this.historialDepartamento)
-    //   .subscribe((departamento:Departamento[]) => {console.log(departamento)});
+  }
 
+  editEstadoHistorialDepartamento(idDepartamento:string, idHistorialDepartamento:string, estado:string){
+    //Se envia editHistorialDepartamento.idHistorialDepartamento como idDepartamento
+    this.historialDepartamento.idDepartamento = idDepartamento;
+    this.historialDepartamento.estadoHistorialDepartamento = estado;
+    this._appDepartamentoService.putEstadoHistorialDepartamento(this.historialDepartamento, idHistorialDepartamento)
+    .subscribe((data:Departamento[]) =>{
+      if(estado == '1') this.alert(1, 'Departamento habilitado','El departamento fue habilitado satisfactoriamente.');
+      if(estado == '0') this.alert(3, 'Departamento deshabilitado','El departamento fue deshabilitado  satisfactoriamente.');
+      this.getDepartamentos();
+      this.getHistorialesDepartamento(idDepartamento);
+    })
   }
 
   //GESTIONAR ORGANIZACION DEPARTAMENTO
@@ -285,28 +272,13 @@ export class GestionarDepartamentoComponent implements OnInit {
   }
 
   saveOrganizacion(){
-    if(this.idDepartamento != "" && this.idPersona != ""){
+    if(this.idDepartamento != "" && this.idPersona != ""){}
 
       // this.organizacionDepartamento.idPersona = this.idPersona;
       // this.organizacionDepartamento.idDepartamento = this.idDepartamento;
 
       // this._appDeptOrgService.postOrganizacionDepartamento(this.organizacionDepartamento)
-      // .subscribe((departamento:Departamento[])=>{console.log(departamento)});
-
-    this.MessageSuccessOrg = true;
-    setTimeout(()=>{
-      this.MessageSuccessOrg = false;
-    }, 5000);
-
-    }else{
-
-      this.MessageFailOrg = true;
-      setTimeout(()=>{
-        this.MessageFailOrg = false;
-      }, 5000);
-
-    }
-    
+      // .subscribe((departamento:Departamento[])=>{console.log(departamento)});    
   }
 
 }
