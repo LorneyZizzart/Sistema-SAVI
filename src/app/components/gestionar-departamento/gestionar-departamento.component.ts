@@ -240,10 +240,12 @@ export class GestionarDepartamentoComponent implements OnInit {
     this._appDepartamentoService.getHistorialesDepartamento(idDepartamento)
     .subscribe((data:HistorialDepartamento[]) =>{
       this.historialesDepartamento = data;
+      this.historialDepartamento.idDepartamento = idDepartamento;
     })
   }
 
   saveHistorialDepartamento(){
+    console.log(": ", this.historialDepartamento.idDepartamento );
   }
 
   editEstadoHistorialDepartamento(idDepartamento:string, idHistorialDepartamento:string, estado:string){
