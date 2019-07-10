@@ -455,7 +455,7 @@ export class GestionarUsuarioComponent implements OnInit {
     }else{
       if(opcion == 1) this.inputValMobile = false;
       if(opcion == 2) this.inputValEditMobile = false;
-      this.messaggeMobile = 'El campo debe ser llenado obligatoriamente con caracteres numéricos';
+      this.messaggeMobile = 'El campo debe ser llenado obligatoriamente con caracteres numéricos.';
     }
     }
   }

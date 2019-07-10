@@ -4,6 +4,7 @@ import { Persona } from './persona.interface';
 
 export interface Departamento extends Organizacion, HistorialDepartamento {
   idDepartamento?:string
+  idDepartamentoSelect?:string
   nombreDepartamento?:string
   fechaRegistroDepartamento?:string
   estadoDepartamento?:string

@@ -308,13 +308,13 @@
                                                 <span *ngIf="convenio.solicitudTrabajo == estado" class="badge bg-red"><i class="fa fa-times"></i></span>
                                             </td>
                                             <td class="text-center">
-                                                <a *ngIf="convenio.estadoConvenio == true"  (click)="editEstadoConvenio(convenio.idConvenio, '0')" class="btn btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
-                                                <a *ngIf="convenio.estadoConvenio == false" (click)="editEstadoConvenio(convenio.idConvenio, '1')" class="btn btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
+                                                <a *ngIf="convenio.estadoConvenio == true"  (click)="editEstadoConvenio(convenio.idConvenio, '0')" class="btn btn-danger btn-margin btn-xs" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
+                                                <a *ngIf="convenio.estadoConvenio == false" (click)="editEstadoConvenio(convenio.idConvenio, '1')" class="btn btn-success btn-margin btn-xs" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
                                             </td>
                                             <td class="text-center">
-                                                <a (click)="informacionEstudiante(convenio.idPersona)" data-toggle="modal" class="btn btn-primary btn-margin" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a>
-                                                <a (click)="searchPutConvenio(convenio.idPersona, convenio.idConvenio)" data-toggle="modal" data-target="#modal-editar" class="btn btn-default btn-margin" title="Editar"><i class="fa fa-edit"></i></a>
-                                                <a (click)="deleteConvenio(convenio.idConvenio)" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger btn-margin" title="Eliminar"><i class="fa fa-trash"></i></a>
+                                                <a (click)="informacionEstudiante(convenio.idPersona)" data-toggle="modal" class="btn btn-primary btn-margin btn-xs" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a>
+                                                <a (click)="searchPutConvenio(convenio.idPersona, convenio.idConvenio)" data-toggle="modal" data-target="#modal-editar" class="btn btn-default btn-margin btn-xs" title="Editar"><i class="fa fa-edit"></i></a>
+                                                <a (click)="deleteConvenio(convenio.idConvenio)" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger btn-margin btn-xs" title="Eliminar"><i class="fa fa-trash"></i></a>
                                             </td>
                                         </tr>
                                     </table>

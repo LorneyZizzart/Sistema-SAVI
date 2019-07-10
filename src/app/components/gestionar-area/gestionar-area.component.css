@@ -1,3 +1,21 @@
+.content-header{
+    margin: 0 0 0.5% 0
+}
+.breadcrumb{
+    padding: 0.5% 0 0 0;
+    width: 40%;
+}
+.breadcrumb .control-label{
+    width: 30%;
+    padding: 1% 0 0 0;
+    text-align: inherit;
+}
+
+.breadcrumb .select-departamento{
+    width: 50%;
+    padding: 0 2% 0 0%;
+}
+
 .modal-header {
     color: beige;
     background: #3C8DBC;

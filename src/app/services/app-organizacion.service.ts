@@ -23,9 +23,14 @@ export class AppOrganizacionService {
     return this._http.get<Departamento[]>(url).pipe(map(res => res));
   }
 
-  getJefesDepartamento(){
-    let url = this.listaOrganizacionDepartamentoURL + "/administracion";
+  getAdministracion(idRol:string){
+    let url = `${this.listaOrganizacionDepartamentoURL}/administracion/${idRol}`;
     return this._http.get<Persona[]>(url).pipe(map(res => res));
+  }
+
+  getEncargadoDepartamento(idDepartamento:string){
+    let url = `${this.listaOrganizacionDepartamentoURL}/encargadosDepartamento/${idDepartamento}`;
+    return this._http.get<Departamento[]>(url).pipe(map(res => res));
   }
 
   postOrganizacionDepartamento(departamento:Departamento):Observable<Departamento[]>{
@@ -35,4 +40,10 @@ export class AppOrganizacionService {
     });
     return this._http.post<Departamento[]>(this.listaOrganizacionDepartamentoURL, body, {headers}).pipe();
   }
+
+  deleteOrganizacion(idOrganizacion){
+    let url = `${this.listaOrganizacionDepartamentoURL}/${idOrganizacion}`;
+    return this._http.delete(url).pipe(map(res => res));
+  }
+
 }

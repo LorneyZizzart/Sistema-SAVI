@@ -26,8 +26,9 @@ export class GestionarDepartamentoComponent implements OnInit {
   alertWarning:boolean = false;
   //DEPARTAMENTO
   departamentos:Departamento[] = [];
+  //se utiliza para crear departamento y crear organizacion
   departamento:Departamento = {}
-  //--
+  //para listar la organizacion de un solo departamento
   organizacionDepartamento:Organizacion[];
 
   editDepartamento:Departamento = { }
@@ -50,7 +51,7 @@ export class GestionarDepartamentoComponent implements OnInit {
   
   //HISTORIAL DEPARTAMENTO
   // -- 
-  historialesDepartamento:HistorialDepartamento[];//para almacenar el historial de un solo departamento
+  historialesDepartamento:Departamento[];//para almacenar el historial de un solo departamento
   historialDepartamento:Departamento = {};
 
   //ORGANIZACION DEPARTAMENTO
@@ -59,15 +60,21 @@ export class GestionarDepartamentoComponent implements OnInit {
   idDepartamento:string = "";
   idMax:string = "";
   listDepSJ:Organizacion[];
+  //almacenamos la lista de todos los usuarios con rol de jefe de departamento
   listJefesDepto:Persona[];
 
   //Inputs
   //Register depto
   inputValNameDepto:boolean = true; messaggeNameDepto:string = null;
+  inputValCostoDepto:boolean = true;
+  inputValLimiteDepto:boolean = true;
   //Edit Depto
   inputValEditNameDepto:boolean = true;
+  inputValEditCostoDepto:boolean = true; messaggeCostoDepto:string = null;
+  inputValEditLimiteDepto:boolean = true; messaggeLimiteDepto:string = null;
 
   simbolos="/*-+|°!#$%&()=¿?,;. :_{}[]><";
+  letters="abcdefghyjklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
   constructor( private _appDepartamentoService: AppDepartamentoService,
                 private _appDeptOrgService: AppOrganizacionService,
                 private _appPersonaService:AppPersonaService ) { }
@@ -99,7 +106,6 @@ export class GestionarDepartamentoComponent implements OnInit {
   }
 
   inputNombreDepartamento(value, opcion){
-    console.log("nombre depto: ", value);
     var valDepto = true;
     if(value != null){
     if(value.length > 0 && value != " "){
@@ -129,6 +135,57 @@ export class GestionarDepartamentoComponent implements OnInit {
     }
     }
   }
+
+  inputCostoDepartamento(value, opcion){
+    var simbolosNotMoneda="/*-+|°!#$%&()=¿?,; :_{}[]><";
+    var valCosto = true;
+    if(value != null){
+      if(value.length > 0 && value != ''){
+        for (let i = 0; i < value.length; i++) {
+          if(simbolosNotMoneda.indexOf(value.charAt(i),0)!=-1){valCosto = false; break}
+          if(this.letters.indexOf(value.charAt(i),0)!=-1){valCosto = false; break}
+        }
+        if(valCosto){
+          if(opcion == 1) this.inputValCostoDepto = true;
+          if(opcion == 2) this.inputValEditCostoDepto = true;
+        }else{
+          if(opcion == 1) this.inputValCostoDepto = false;
+          if(opcion == 2) this.inputValEditCostoDepto = false;
+          this.messaggeCostoDepto = 'No se permite caracteres literarios ni símbolos.';
+        }
+
+      }else{
+        if(opcion == 1) this.inputValCostoDepto = false;
+        if(opcion == 2) this.inputValEditCostoDepto = false;
+        this.messaggeCostoDepto = 'El campo debe ser llenado obligatoriamente con caracteres numéricos.';
+      }
+    }
+  }
+
+  inputLimiteDepartamento(value, opcion){
+    var valLimite = true;
+    if(value != null){
+      if(value.length > 0 && value != ''){
+        for (let i = 0; i < value.length; i++) {
+          if(this.simbolos.indexOf(value.charAt(i),0)!=-1){valLimite = false; break}
+          if(this.letters.indexOf(value.charAt(i),0)!=-1){valLimite = false; break}
+        }
+        if(valLimite){
+          if(opcion == 1) this.inputValLimiteDepto = true;
+          if(opcion == 2) this.inputValEditLimiteDepto = true;
+        }else{
+          if(opcion == 1) this.inputValLimiteDepto = false;
+          if(opcion == 2) this.inputValEditLimiteDepto = false;
+          this.messaggeLimiteDepto = 'No se permite caracteres literarios ni símbolos.';
+        }
+      }else{
+        if(opcion == 1) this.inputValLimiteDepto = false;
+        if(opcion == 2) this.inputValEditLimiteDepto = false;
+        this.messaggeLimiteDepto = 'El campo debe ser llenado obligatoriamente con caracteres numéricos.';
+      }
+    }
+  }
+
   //GEATION DEPARTAMENTOS
   getDepartamentos(){
     
@@ -148,9 +205,8 @@ export class GestionarDepartamentoComponent implements OnInit {
           departamentos[i].historialDepartamento =  historialDepartamento[0];
           })
         })        
-      }
-      console.log("DEPARTAMENTOS: ", departamentos);      
-      this.departamentos = departamentos;      
+      }   
+      this.departamentos = departamentos;  
     });
     
   }
@@ -161,34 +217,68 @@ export class GestionarDepartamentoComponent implements OnInit {
   //   //   .subscribe((maxidDept:Departamento[]) => {this.maxidDept = maxidDept});
   //   //   console.log("getMAXdEP: ",this.maxidDept )
   // }
-  // POSIBLE BORRAR
-  // getInfoDepartamento(idDepartamento:string){
-  //   for(let departamento of this.departamentos){
-  //     if(departamento.idDepartamento == idDepartamento){
-  //       if (departamento.segundoNombre == null && departamento.segundoApellido != null ) {
-  //         this.nombreCompleto = departamento.primerNombre + " " + departamento.primerApellido + " " + departamento.segundoApellido;
-  //       } else if (departamento.segundoNombre == null && departamento.segundoApellido == null){
-  //         this.nombreCompleto = departamento.primerNombre + " " + departamento.primerApellido; 
-  //       }else if (departamento.segundoNombre != null && departamento.segundoApellido == null){ 
-  //         this.nombreCompleto = departamento.primerNombre + " " + departamento.segundoNombre + " " + departamento.primerApellido;   
-  //       }else{
-  //         this.nombreCompleto = departamento.primerNombre + " " + departamento.segundoNombre + " " + departamento.primerApellido + " " + departamento.segundoApellido;
-  //       }
-  //       this.nacionalidad = departamento.nacionalidad;
-  //       this.direccion = departamento.direccion;
-  //       this.celular = departamento.celular;
-  //       this.ci = departamento.ci;
-  //       this.fechaNacimiento = departamento.fechaNacimiento;
-  //       this.estadoPersona = departamento.estadoPersona;
-  //       this.codigoDepartamento = departamento.idDepartamento;
-  //       this.estadoDepartamento = departamento.estadoDepartamento;
-  //       this.fechaRegistroHistorialDep = departamento.fechaRegistroHistorialDep;
-  //       this.limiteEstudiante = departamento.limiteEstudiante;
-  //       this.nombreDepartamento = departamento.nombreDepartamento;
-  //       this.costoHora = departamento.costoHora;
-  //     }
-  //   }
-  // }
+
+  getInfoDepartamento(idDepartamento:string){
+
+    for(let departamento of this.departamentos){
+      if(departamento.idDepartamento == idDepartamento){
+
+        if(departamento.organizacionDepartamento){
+          if (departamento.persona.segundoNombre == null && departamento.persona.segundoApellido != null ) {
+            this.nombreCompleto = departamento.persona.primerNombre + " " + departamento.persona.primerApellido + " " + departamento.persona.segundoApellido;
+          } else if (departamento.persona.segundoNombre == null && departamento.persona.segundoApellido == null){
+            this.nombreCompleto = departamento.persona.primerNombre + " " + departamento.persona.primerApellido; 
+          }else if (departamento.persona.segundoNombre != null && departamento.persona.segundoApellido == null){ 
+            this.nombreCompleto = departamento.persona.primerNombre + " " + departamento.persona.segundoNombre + " " + departamento.persona.primerApellido;   
+          }else{
+            this.nombreCompleto = departamento.persona.primerNombre + " " + departamento.persona.segundoNombre + " " + departamento.persona.primerApellido + " " + departamento.persona.segundoApellido;
+          }
+          this.nacionalidad = departamento.persona.nacionalidad;
+          this.direccion = departamento.persona.direccion;
+          this.celular = departamento.persona.celular;
+          this.ci = departamento.persona.ci;
+          this.fechaNacimiento = departamento.persona.fechaNacimiento;
+          this.estadoPersona = departamento.persona.estadoPersona;
+        }else{
+          this.nombreCompleto = null;
+          this.nacionalidad = null;
+          this.direccion = null;
+          this.celular = null;
+          this.ci = null;
+          this.fechaNacimiento = null;
+          this.estadoPersona = null;
+        }
+        if(departamento.historialDepartamento){
+          this.fechaRegistroHistorialDep = departamento.historialDepartamento.fechaRegistroHistorialDepartamento;
+          this.limiteEstudiante = departamento.historialDepartamento.limiteEstudiante;
+          this.costoHora = departamento.historialDepartamento.costoHora;
+          this.estadoDepartamento = departamento.historialDepartamento.estadoHistorialDepartamento; 
+        }else{
+          this.fechaRegistroHistorialDep = null;
+          this.limiteEstudiante = "0";
+          this.costoHora = null;
+          this.cantidadEstudiantes = "0";
+          this.cupos = "0";
+          this.estadoDepartamento = null;
+        }
+        
+        this.codigoDepartamento = departamento.idDepartamento;               
+        this.nombreDepartamento = departamento.nombreDepartamento;
+      }
+    }
+  }
+
+  searchPutDepartamento(idDepartamento:string){
+    //para desmarcar lo invalido de los inputs
+    this.inputValEditNameDepto = true;
+    //llenado de los inputs
+    for(let departamento of this.departamentos){
+      if(departamento.idDepartamento == idDepartamento){
+        this.departamento.idDepartamento = departamento.idDepartamento;
+        this.departamento.nombreDepartamento = departamento.nombreDepartamento;       
+      }
+    }
+  }
 
   saveDepartamento(){
     if(!this.departamento.nombreDepartamento){this.inputValNameDepto = false;this.messaggeNameDepto = 'El campo debe ser llenado obligatoriamente.';}
@@ -204,14 +294,17 @@ export class GestionarDepartamentoComponent implements OnInit {
   }
 
   editarDepartamento(){
-    let idDepartamento = "1";
-    console.log(this.editarDepartamento);
-    this._appDepartamentoService.putDepartamento(this.editDepartamento, idDepartamento)
-      .subscribe((data : Departamento[]) => {console.log(data)});
-
-      setTimeout(() => {
-        this.getDepartamentos();
-      }, 2000);
+    if(!this.departamento.nombreDepartamento){this.inputValEditNameDepto = false;this.messaggeNameDepto = 'El campo debe ser llenado obligatoriamente.';}
+    if(this.inputValEditNameDepto){
+      this.departamento.estadoDepartamento = "1";
+      this._appDepartamentoService.putDepartamento(this.departamento, this.departamento.idDepartamento)
+        .subscribe((data:Departamento[]) => {
+          this.getDepartamentos();
+          this.alert(1, 'Actualización exitoso','El registro del departamento se realizó satisfactoriamente.');
+        }, res =>{
+          this.alert(2, 'Error al actualizar','Se ha producido un error en el servidor.');
+        })
+    }    
   }
 
   editEstadoDepartamento(idDepartamento:string, estado:string){
@@ -224,28 +317,72 @@ export class GestionarDepartamentoComponent implements OnInit {
       }, 2000);
   }
 
-  deleteDepartameto(idDepartamento:string){
+  deleteDepartameto(idDepartamento:string, eliminar:boolean){
     this.codigoDepartamento = idDepartamento;
+    if(!eliminar){
+      this.alert(3, 'Error al eliminar','No se puede eliminar por que se encuentra en un estado habilitado.');
+    }
   }
   //una vez confirmado lo eliminamos
   eliminarDepartamento(){
     this._appDepartamentoService.deleteDepartamento(this.codigoDepartamento)
-    .subscribe((data : Departamento[]) => {console.log(data)})
+    .subscribe((data : Departamento[]) => {
+      this.getDepartamentos();
+      this.alert(1, 'Departamento eliminado','El departamento fue eliminado satisfactoriamente.');
+    }, res =>{
+      this.alert(2, 'Error al eliminar','Se ha producido un error en el servidor.');
+    })
   }
 
   //GESTION HISTORIAL DEPARTAMENTOS
 
   getHistorialesDepartamento(idDepartamento:string){
-    console.log("idDepartamento: ",idDepartamento);
+    this.inputValCostoDepto = true;
+    this.inputValLimiteDepto = true;
+    this.historialDepartamento.costoHora = "";
+    this.historialDepartamento.limiteEstudiante = "";
     this._appDepartamentoService.getHistorialesDepartamento(idDepartamento)
-    .subscribe((data:HistorialDepartamento[]) =>{
+    .subscribe((data:Departamento[]) =>{
       this.historialesDepartamento = data;
       this.historialDepartamento.idDepartamento = idDepartamento;
     })
   }
 
   saveHistorialDepartamento(){
-    console.log(": ", this.historialDepartamento.idDepartamento );
+    if(!this.historialDepartamento.costoHora){this.inputValCostoDepto = false;this.messaggeCostoDepto = 'El campo debe ser llenado obligatoriamente.';}
+    if(!this.historialDepartamento.limiteEstudiante){this.inputValLimiteDepto = false;this.messaggeLimiteDepto = 'El campo debe ser llenado obligatoriamente.';}
+    if(this.inputValCostoDepto && this.inputValLimiteDepto){
+      this._appDepartamentoService.postHistorialDepartamento(this.historialDepartamento)
+        .subscribe((data:HistorialDepartamento[]) =>{
+          this.getDepartamentos();
+          this.getHistorialesDepartamento(this.historialDepartamento.idDepartamento);
+          this.alert(1, 'Registro exitoso','El registro del departamento se realizó satisfactoriamente.');
+        }, res =>{
+          this.alert(2, 'Error al registrar','Se ha producido un error en el servidor.');
+        })
+    }  
+  }
+
+  searchEditHistorialDepartamento(idHistorialDepartamento){
+    for(let historialDepto of this.historialesDepartamento){
+      if(historialDepto.idHistorialDepartamento == idHistorialDepartamento){
+        this.historialDepartamento.idDepartamento = historialDepto.idDepartamento;
+        this.historialDepartamento.idHistorialDepartamento = historialDepto.idHistorialDepartamento;
+        this.historialDepartamento.costoHora = historialDepto.costoHora;
+        this.historialDepartamento.limiteEstudiante = historialDepto.limiteEstudiante;
+      }
+    }
+  }
+
+  editHistorialDepartamento(){
+    this._appDepartamentoService.putHistorialDepartamento(this.historialDepartamento.idHistorialDepartamento, this.historialDepartamento)
+      .subscribe((data:Departamento []) => {
+        this.getDepartamentos();
+        this.getHistorialesDepartamento(this.historialDepartamento.idDepartamento);
+        this.alert(1, 'Actualización exitoso','La actualización del historial del departamento se realizó satisfactoriamente.');
+      }, res =>{
+        this.alert(2, 'Error al actualizar','Se ha producido un error en el servidor.');
+      })
   }
 
   editEstadoHistorialDepartamento(idDepartamento:string, idHistorialDepartamento:string, estado:string){
@@ -261,26 +398,72 @@ export class GestionarDepartamentoComponent implements OnInit {
     })
   }
 
+  deleteHistorialDepartamento(idHistorialDepartamento, eliminar:boolean){
+    this.historialDepartamento.idHistorialDepartamento = idHistorialDepartamento;
+    if(!eliminar){
+      this.alert(3, 'Error al eliminar','No se puede eliminar por que se encuentra en un estado habilitado.');
+    }
+  }
+
+  confirmDeleteHistorialDepartamento(){
+    this._appDepartamentoService.deleteHistorialDepartamento(this.historialDepartamento.idHistorialDepartamento)
+      .subscribe((data:Departamento[]) => {
+        this.getHistorialesDepartamento(this.historialDepartamento.idDepartamento);
+        this.alert(1, 'Historial eliminado','El historial del departamento fue eliminado satisfactoriamente.');
+      })
+  }
+
   //GESTIONAR ORGANIZACION DEPARTAMENTO
   //Metodo para obtener los departamentos sin Jefes de Dep -> PERO aun falta perfeccionar
   getOrganizacionDepartamento(idDepartamento:string){
    this._appDeptOrgService.getOrgDepartamento(idDepartamento)
    .subscribe((departamentos:Organizacion[]) => { this.listDepSJ = departamentos});
   }
-
-  getListJefesDeptarmento(){
-    this._appDeptOrgService.getJefesDepartamento()
-      .subscribe((personas:Persona[]) => {this.listJefesDepto = personas});
+  //Listar todos las personas con rol de jefe de departamento
+  getJefesDeptarmento(){
+    this._appDeptOrgService.getAdministracion("4")
+      .subscribe((data:Organizacion[]) => {
+        this.listJefesDepto = data;
+      })
+  }
+  //Lsitar el historial de un departamento de los jefes de departamento
+  getEncargadosDepartamento(idDepartamento:string){
+    this._appDeptOrgService.getEncargadoDepartamento(idDepartamento)
+      .subscribe((data : Departamento[]) => {
+        this.organizacionDepartamento = data;
+        this.departamento.idDepartamento = idDepartamento;
+        console.log(this.organizacionDepartamento);
+      })
   }
 
-  saveOrganizacion(){
-    if(this.idDepartamento != "" && this.idPersona != ""){}
+  saveOrganizacion(idPersona){
+    this.departamento.idPersona = idPersona;
+    this._appDeptOrgService.postOrganizacionDepartamento(this.departamento)
+      .subscribe((data:Departamento[]) =>{ 
+        this.getEncargadosDepartamento(this.departamento.idDepartamento);
+        this.getDepartamentos();
+        this.alert(1, 'Registro exitoso','El registro del nuevo encargado se realizó satisfactoriamente.');
+      }, res =>{
+        this.alert(2, 'Error al registrar','Se ha producido un error en el servidor.');
+      })  
+  }
 
-      // this.organizacionDepartamento.idPersona = this.idPersona;
-      // this.organizacionDepartamento.idDepartamento = this.idDepartamento;
+  deleteOrganizacion(idOrganizacion, eliminar:boolean){
+    this.departamento.idOrganizacion = idOrganizacion;
+    if(!eliminar){
+      this.alert(3, 'Error al eliminar','No se puede eliminar por que se encuentra en un estado habilitado.');
+    }
+    console.log(this.departamento);
+  }
 
-      // this._appDeptOrgService.postOrganizacionDepartamento(this.organizacionDepartamento)
-      // .subscribe((departamento:Departamento[])=>{console.log(departamento)});    
+  confirmarDeleteOrganizacion(){
+    this._appDeptOrgService.deleteOrganizacion(this.departamento.idOrganizacion)
+    .subscribe((data:Departamento[]) => {
+      this.getEncargadosDepartamento(this.departamento.idDepartamento);
+      this.alert(1, 'Registro eliminado','El registro del encargado fue eliminado satisfactoriamente.');
+    }, res =>{
+      this.alert(2, 'Error al eliminar','Se ha producido un error en el servidor.');
+    }) 
   }
 
 }

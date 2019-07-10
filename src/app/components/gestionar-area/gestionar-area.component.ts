@@ -3,6 +3,9 @@ import { AppAreaService } from '../../services/app-area.service';
 import { Area } from '../../interfaces/area.interface';
 import { Persona } from '../../interfaces/persona.interface';
 import { AppTipoPersonaService } from '../../services/app-tipoPersona.service';
+import { Departamento } from 'src/app/interfaces/departamento.interface';
+import { AuthService } from '../../services/auth.service';
+
 
 
 
@@ -14,7 +17,9 @@ import { AppTipoPersonaService } from '../../services/app-tipoPersona.service';
 export class GestionarAreaComponent implements OnInit {
 
   //Id dep Departamento
-  IdDepartamento:string  = "1";
+  IdDepartamento:string  = "0";
+  //departamentos a cargo
+  departamentos:Departamento[];
   nameDept:string = "";
   //GestionarArea
   MessageFailArea:boolean = false;
@@ -41,14 +46,18 @@ export class GestionarAreaComponent implements OnInit {
   MessageSuccessAsignacion:boolean = false;
   MessageFailAsignacion:boolean = false;
   constructor( private _appAreaService : AppAreaService, 
-               private _appTipoPersonaService : AppTipoPersonaService) {
+               private _appTipoPersonaService : AppTipoPersonaService,
+               private _authService : AuthService) {
     
    }
 
   ngOnInit() {
-    this.getAreaDepartamento(this.IdDepartamento);
-    this.getAsignacionArea(this.IdDepartamento);
-    
+    if(this.IdDepartamento == "0"){
+      this.getDepartamentosUser(); 
+    }else{
+      this.searchDepartament(this.IdDepartamento);
+    }
+        
   }
 
   ngOnDestroy(): void {
@@ -67,6 +76,41 @@ export class GestionarAreaComponent implements OnInit {
       }, 8000);
     }
   }
+  //Gestion Departamento
+  getDepartamentosUser(){
+    this.departamentos =  this._authService.getDatosDepartamento();
+    if(this.departamentos.length == 1){
+      this.IdDepartamento = this.departamentos[0].idDepartamento;
+      this.nameDept = this.departamentos[0].nombreDepartamento;
+    }else{
+      for(let departamento of this.departamentos){
+        if(departamento.idDepartamentoSelect == "1"){
+          this.IdDepartamento = departamento.idDepartamento;
+          this.nameDept = departamento.nombreDepartamento;
+        }
+      }
+    }
+  }
+
+  searchDepartament(idDepartamento){
+    let array:Departamento[] = [];  
+    if(idDepartamento){
+      this.IdDepartamento = idDepartamento;
+      for(let departamento of this.departamentos){
+        if(departamento.idDepartamento == idDepartamento){
+          this.nameDept = departamento.nombreDepartamento;
+          departamento.idDepartamentoSelect = "1";
+        }else{
+          departamento.idDepartamentoSelect = "0";
+        }
+       array.push(departamento);
+      }
+      this.departamentos = array;
+      this._authService.setDatosDepartamento(this.departamentos);
+      this.getAreaDepartamento(this.IdDepartamento);
+      this.getAsignacionArea(this.IdDepartamento); 
+    }      
+  }
 
   getEstudiantes(idDepartamento:string){
     this._appTipoPersonaService.getListStudentDepto(idDepartamento)
@@ -75,13 +119,9 @@ export class GestionarAreaComponent implements OnInit {
 
   getAreaDepartamento(idDepto:string){
     this._appAreaService.getAreasDepartamento(idDepto)
-    .subscribe((areas : Area[]) => {this.listaAreaDepartamento = areas});
-    setTimeout(() => {
-      for(let area of this.listaAreaDepartamento ){
-        this.nameDept = area.nombreDepartamento;
-      }
-    }, 2000);
-
+    .subscribe((areas : Area[]) => {
+      this.listaAreaDepartamento = areas
+    });
   }
   
   saveArea(){

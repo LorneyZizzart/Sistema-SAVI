@@ -6,6 +6,7 @@ import { isNullOrUndefined } from "util";
 import { AppUserService } from './app-user.service';
 import { User } from '../interfaces/user.interface';
 import { Persona } from '../interfaces/persona.interface';
+import { Departamento } from '../interfaces/departamento.interface';
 
 
 
@@ -57,8 +58,28 @@ export class AuthService {
     }
   }
 
+  setDatosDepartamento(departamentos:Departamento[]):Boolean{
+    if(departamentos){
+      localStorage.removeItem("departament")
+      let departament =JSON.stringify(departamentos);
+      localStorage.setItem("departament", departament);
+      return true;
+    }else{return false}
+  }
+
+  getDatosDepartamento():Departamento[]{
+    let departament = localStorage.getItem("departament");
+    if(!isNullOrUndefined(departament)){
+      let departaments: User [] = JSON.parse(departament);
+      return departaments;
+    } else {
+      return null;
+    }
+  }
+
   logoutUser(){
     localStorage.removeItem("currentUser")
     localStorage.removeItem("dataPeople")
+    localStorage.removeItem("departament")
   }
 }

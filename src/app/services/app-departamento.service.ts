@@ -37,6 +37,11 @@ export class AppDepartamentoService {
     return this._http.get<Departamento[]>(url).pipe(map(res => res));
   }
 
+  getDepartamentosUser(idRol:string, idUsuario:string){
+    let url = `${this.listaDepartamentoURL}/depsUser/${idRol}/${idUsuario}`;
+    return this._http.get<Departamento[]>(url).pipe(map(res => res));
+  }
+
   postDepartamento(departamento:Departamento):Observable<Departamento[]>{
     let body = JSON.stringify(departamento);
     let headers = new HttpHeaders({
@@ -81,13 +86,14 @@ export class AppDepartamentoService {
     return this._http.get<Departamento[]>(url).pipe(map(res => res));
   }
 
-  postHistorialDepartamento(departamento:Departamento):Observable<Departamento[]>{
-    let body = JSON.stringify(departamento);
+  postHistorialDepartamento(historialDepartamento:HistorialDepartamento):Observable<HistorialDepartamento[]>{
+    let body = JSON.stringify(historialDepartamento);
     let headers = new HttpHeaders({
       'Content-Type' : 'application/json'
     });
-    return this._http.post<Departamento[]>(this.listaHistorialDepartamentoURL, body, {headers}).pipe();
+    return this._http.post<HistorialDepartamento[]>(this.listaHistorialDepartamentoURL, body, {headers}).pipe();
   }
+  
   putEstadoHistorialDepartamento(historialDepartamento:Departamento, idHistorialDepartamento:string):Observable<Departamento[]>{
     let body = JSON.stringify(historialDepartamento);
     let headers = new HttpHeaders({
@@ -95,5 +101,19 @@ export class AppDepartamentoService {
     });
     let url = `${this.listaHistorialDepartamentoURL}/editEstado/${idHistorialDepartamento}`;
     return this._http.put<Departamento[]>(url, body, {headers}).pipe();
+  }
+
+  putHistorialDepartamento(idHistorialDepartamento:string, historialDepartamento:Departamento):Observable<Departamento[]>{
+    let body = JSON.stringify(historialDepartamento);
+    let headers = new HttpHeaders({
+      'Content-Type':'application/json'
+    });
+    let url = `${this.listaHistorialDepartamentoURL}/${idHistorialDepartamento}`;
+    return this._http.put<Departamento[]>(url, body, {headers}).pipe();
+  }
+
+  deleteHistorialDepartamento(idHistorialDepartamento){
+    let url = `${this.listaHistorialDepartamentoURL}/${idHistorialDepartamento}`;
+    return this._http.delete(url).pipe(map(res => res));
   }
 }

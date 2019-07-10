@@ -15,9 +15,25 @@
 }
 
 .modal-footer {
+
+        padding: 1% 6% 4% 6%;
+
     background: #ECF0F5;
 }
 
 .btn-Add{
     float: right;
+}
+
+
+.row-editar{
+    margin-right: 0;
+    margin-left: -10%;
+}
+.figure-editar{
+    width: 50%;
+    margin: 0 26%;
+}
+.modal-encargado{
+    width: 45%;
 }

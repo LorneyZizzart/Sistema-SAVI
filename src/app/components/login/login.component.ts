@@ -4,6 +4,9 @@ import { User } from '../../interfaces/user.interface';
 import { AppUserService } from "../../services/app-user.service";
 import { AuthService } from '../../services/auth.service';
 import { Persona } from '../../interfaces/persona.interface';
+import { AppDepartamentoService } from '../../services/app-departamento.service';
+import { Departamento } from 'src/app/interfaces/departamento.interface';
+
 
 
 @Component({
@@ -15,6 +18,7 @@ export class LoginComponent implements OnInit {
   usuario:User[];
   persona:Persona[];
   private user:User = {};
+  departamento:Departamento[];
   alertUserIncorrect:boolean = false;
   alertUsuarioDesabilitado:boolean = false;
   messageError:string;
@@ -29,7 +33,8 @@ export class LoginComponent implements OnInit {
 
   constructor(private _router:Router, 
               private _appUserService: AppUserService,
-              private _authService:AuthService) { }
+              private _authService:AuthService,
+              private _appDepartamentoService: AppDepartamentoService) { }
 
   ngOnInit() {
   }
@@ -84,7 +89,17 @@ export class LoginComponent implements OnInit {
         if(usuario.length>0){
           if(usuario[0].estado){
             this._appUserService.getUser(usuario[0].idUsuario).subscribe((persona : Persona[]) => {
-              if(this._authService.setUser(usuario[0]) && this._authService.setDatosPersonales(persona[0])){
+              if(usuario[0].idRol == "4"){
+                this._appDepartamentoService.getDepartamentosUser(usuario[0].idRol, usuario[0].idUsuario).subscribe((data:Departamento[]) => {
+
+                  for(let dep of data){
+                    dep.idDepartamentoSelect = "0";
+                    this.departamento = data;
+                  }
+                  this._authService.setDatosDepartamento(data);
+                })
+              }              
+              if(this._authService.setUser(usuario[0]) && this._authService.setDatosPersonales(persona[0])){                
                 this._router.navigate(['/home']);  
               }
             }, res => {

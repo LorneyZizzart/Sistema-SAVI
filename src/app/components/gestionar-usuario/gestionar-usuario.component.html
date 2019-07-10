@@ -62,7 +62,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"> <i class="fa fa-check"></i> Aceptar</button>
                 </div>
             </div>
         </div>
@@ -79,10 +79,12 @@
                     <br>
                     <div class="row text-center">
                         <div class="col-md-6">
-                            <button type="button"  data-dismiss="modal" aria-label="Close" class="btn btn-danger">Cancelar</button>
+                            <button type="button"  data-dismiss="modal" aria-label="Close" class="btn btn-danger">
+                                <i class="fa fa-remove"></i> Cancelar</button>
                         </div>
                         <div class="col-md-6">
-                            <button (click)="eliminarUser()" data-dismiss="modal" aria-label="Close" type="button" class="btn btn-success">Aceptar</button>
+                            <button (click)="eliminarUser()" data-dismiss="modal" aria-label="Close" type="button" class="btn btn-success">
+                                <i class="fa fa-check"></i> Aceptar</button>
                         </div>
                     </div>
                     <br>
@@ -214,7 +216,10 @@
                                         </div>
                                     </div>
                                     <div class="col-md-12 text-center">
-                                        <button (click)="editarPersona()" type="button" name="button" class="btn btn-primary margin">
+                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal" aria-label="Close">
+                                                <i class="fa fa-remove"></i> Cancelar
+                                            </button>
+                                        <button (click)="editarPersona()" type="button" name="button" class="btn btn-primary pull-right">
                                         <i class="fa fa-refresh"></i> Actualizar
                                     </button>
                                     </div>
@@ -224,9 +229,6 @@
                             </div>
                             <div class="tab-pane" id="updateUser">                           
                                 <form name="formularioEditUsuario" class="form-horizontal">
-                                    <div class="with-border">
-                                        <h4 class="page-header">Editar Usuario</h4>        
-                                    </div>
                                     <div class="row row-editar">
                                         <div class="col-md-12">
                                             <div [ngClass]="{'form-group': true, 'has-error': !inputValEditUser}">
@@ -273,8 +275,11 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-12 text-center">    
-                                            <button (click)="editUsers(editIdRol.value)" type="button" name="button" class="btn btn-primary margin" data-dismiss="modal">
+                                        <div class="col-md-12">    
+                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal" aria-label="Close">
+                                                <i class="fa fa-remove"></i> Cancelar
+                                            </button>
+                                            <button (click)="editUsers(editIdRol.value)" type="button" name="button" class="btn btn-primary pull-right" data-dismiss="modal">
                                             <i class="fa fa-refresh"></i> Actualizar
                                         </button>
                                         </div>        
@@ -334,13 +339,13 @@
                                             <td>{{ user.usuario }}</td>
                                             <td>{{ user.idRol | rolUser }}</td>
                                             <td class="text-center" >
-                                                <a *ngIf="user.estadoUsuario == true" (click)="editEstadoUser(user.idRol, user.usuario, user.password, 0, user.idUsuario, user.idPersona)" class="btn btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
-                                                <a *ngIf="user.estadoUsuario == false" (click)="editEstadoUser(user.idRol, user.usuario, user.password, 1, user.idUsuario, user.idPersona)" class="btn  btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
+                                                <a *ngIf="user.estadoUsuario == true" (click)="editEstadoUser(user.idRol, user.usuario, user.password, 0, user.idUsuario, user.idPersona)" class="btn btn-danger btn-margin btn-xs" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
+                                                <a *ngIf="user.estadoUsuario == false" (click)="editEstadoUser(user.idRol, user.usuario, user.password, 1, user.idUsuario, user.idPersona)" class="btn  btn-success btn-margin btn-xs" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
                                             </td>
                                             <td class="text-center">
-                                                <a (click)="buscarEstudiante(user.idPersona)" data-toggle="modal" class="btn btn-primary btn-margin" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a>
-                                                <a (click)="buscarEstudianteEditar(user.idPersona, user.idUsuario)" data-toggle="modal" data-target="#modal-editar" class="btn btn-default btn-margin" title="Editar"><i class="fa fa-edit"></i></a>
-                                                <a (click)="deleteUser(user.idUsuario, user.idPersona)" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger btn-margin" title="Eliminar"><i class="fa fa-trash"></i></a>
+                                                <a (click)="buscarEstudiante(user.idPersona)" data-toggle="modal" class="btn btn-info btn-margin btn-xs" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a>
+                                                <a (click)="buscarEstudianteEditar(user.idPersona, user.idUsuario)" data-toggle="modal" data-target="#modal-editar" class="btn btn-default btn-margin btn-xs" title="Editar"><i class="fa fa-edit"></i></a>
+                                                <a (click)="deleteUser(user.idUsuario, user.idPersona)" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger btn-margin btn-xs" title="Eliminar"><i class="fa fa-trash"></i></a>
                                             </td>                                           
                                         </tr>
                                     </table>

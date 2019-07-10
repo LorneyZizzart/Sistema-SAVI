@@ -8,9 +8,21 @@
             Gestionar
             <small>Áreas del departamento {{ nameDept }}</small>
         </h1>
-        <ol class="breadcrumb">
-            <li><a [routerLink]="['/home']"><i class="fa fa-home"></i> Home</a></li>
-            <li class="active">Gestión de áreas</li>
+        <ol *ngIf="departamentos.length > 1" class="breadcrumb">
+            <form (ngSubmit)="searchDepartament(idDepto.value)" #frmDepartamentos="ngForm" name="frmDepartamentos" class="form-horizontal">
+
+                <div class="form-group">
+                    <label for="inputName" class="col-sm-4 control-label">Seleccionar departamento:</label>
+    
+                    <div class="col-sm-4 select-departamento">
+                        <select #idDepto [(ngModel)]="idConvenio" name="idConvenio"  class="form-control select2" style="width: 100%;">
+                            <option *ngFor="let item of departamentos" [value]="item.idDepartamento">{{ item.nombreDepartamento }}</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-save btn btn-primary">
+                        <i class="fa fa-eye"></i> Ver</button>
+                </div>    
+            </form>
         </ol>
     </section>
     <div *ngIf="messageYdelete == true" class="pad no-print">
@@ -163,8 +175,8 @@
         </div>
 
     <!-- Main content -->
-    <section class="content">
-        <div class="row">
+    <section  class="content">
+        <div *ngIf="IdDepartamento != 0" class="row">
             <div class="col-xs-12">
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">

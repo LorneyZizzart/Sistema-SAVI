@@ -75,10 +75,13 @@
                                             <td *ngIf="!departamento.historialDepartamento"></td>
                                             <td class="text-center">
                                                 <a (click)="getInfoDepartamento(departamento.idDepartamento)" data-toggle="modal" class="btn btn-info btn-margin btn-xs" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a>
-                                                <a data-toggle="modal" data-target="#modal-editar" class="btn btn-primary btn-margin btn-xs" title="Encargado"><i class="fa fa-user"></i></a>
-                                                <a (click)="getHistorialesDepartamento(departamento.idDepartamento)"  data-toggle="modal" data-target="#modal-historial" class="btn btn-success btn-margin btn-xs" title="Historial departamento"><i class="fa fa-header"></i></a>
-                                                <a data-toggle="modal" data-target="#modal-editar" class="btn btn-default btn-margin btn-xs" title="Editar"><i class="fa fa-edit"></i></a>
-                                                <a (click)="deleteDepartameto(departamento.idDepartamento)" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger btn-margin btn-xs" title="Eliminar"><i class="fa fa-trash"></i></a>
+                                                <a (click)="searchPutDepartamento(departamento.idDepartamento)" data-toggle="modal" data-target="#modal-editar" class="btn btn-default btn-margin btn-xs" title="Editar"><i class="fa fa-edit"></i></a>
+                                                <a (click)="getEncargadosDepartamento(departamento.idDepartamento)" class="btn btn-primary btn-margin btn-xs" data-toggle="modal" data-target="#modal-historialEncargado" title="Encargado"><i class="fa fa-user"></i></a>
+                                                <a (click)="getHistorialesDepartamento(departamento.idDepartamento)"  data-toggle="modal" data-target="#modal-historial" class="btn btn-success btn-margin btn-xs" title="Historial departamento"><i class="fa fa-header"></i></a>                                              
+                                                <a *ngIf="!departamento.historialDepartamento && !departamento.persona" (click)="deleteDepartameto(departamento.idDepartamento, true)" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger btn-margin btn-xs" title="Eliminar"><i class="fa fa-trash"></i></a>
+                                                <a *ngIf="departamento.historialDepartamento && departamento.persona" (click)="deleteDepartameto(departamento.idDepartamento, false)" class="btn btn-danger btn-margin btn-xs" title="Eliminar"><i class="fa fa-trash"></i></a>
+                                                <a *ngIf="!departamento.historialDepartamento && departamento.persona" (click)="deleteDepartameto(departamento.idDepartamento, false)" class="btn btn-danger btn-margin btn-xs" title="Eliminar"><i class="fa fa-trash"></i></a>
+                                                <a *ngIf="departamento.historialDepartamento && !departamento.persona" (click)="deleteDepartameto(departamento.idDepartamento, false)" class="btn btn-danger btn-margin btn-xs" title="Eliminar"><i class="fa fa-trash"></i></a>
                                             </td>
                                         </tr>
                                     </table>
@@ -100,7 +103,7 @@
                                                 <div [ngClass]="{'form-group': true, 'has-error': !inputValNameDepto}">
                                                     <label for="inputName" class="col-sm-3 control-label">Nombre</label>    
                                                 <div class="col-sm-9">
-                                                    <input (keyup)="inputNombreDepartamento(departamento.nombreDepartamento, 1)" [(ngModel)]="departamento.nombreDepartamento" name="departamento.nombreDepartamento" type="text" class="form-control"  placeholder="">
+                                                    <input (keyup)="inputNombreDepartamento(departamento.nombreDepartamento, 1)" [(ngModel)]="departamento.nombreDepartamento" name="departamento.nombreDepartamento" type="text" class="form-control">
                                                     <span *ngIf="!inputValNameDepto" class="help-block"><i class="icon fa fa-warning"></i> {{ messaggeNameDepto }}</span>
                                                 </div>
                                             </div>
@@ -127,6 +130,107 @@
         <!-- /.row -->
     </section>
     <!-- MODAL -->
+    <div class="modal fade" id="modal-historialEncargado">
+            <div class="modal-dialog modal-encargado">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <a (click)="getJefesDeptarmento()" data-toggle="modal" data-target="#modal-addEncargado" data-dismiss="modal" class="btn btn-default btn-Add" title="Añadir Historial"><i class="fa fa-plus"></i></a>
+                        <h4 class="modal-title">Encargado</h4>
+                    </div>
+                        <div class="table-responsive no-padding">
+                            <table class="table table-bordered table-hover">
+                                <tr class="fila-tabla">
+                                    <th style="width: 10px">#</th>
+                                    <th>Nombre</th>
+                                    <th>Dirección</th>
+                                    <th>Celular</th>
+                                    <th>Fecha de inicio</th>
+                                    <th style="width: 10px">Estado</th>
+                                    <th style="width: 10%" class="text-center">Opciones</th>
+                                </tr>
+                                <tr *ngFor="let item of organizacionDepartamento; let i = index">
+                                    <td>{{ i+1 }}.</td>
+                                    <td>{{ item.primerApellido }} {{ item.segundoApellido }} {{ item.primerNombre }} {{ item.segundoNombre }}</td>
+                                    <td>{{ item.direccion }}</td>
+                                    <td>{{ item.celular }}</td>
+                                    <td>{{ item.fechaRegistroOrganizacion | date: 'dd/MM/yyyy' }}</td>
+                                    <td class="text-center">
+                                        <a *ngIf="!item.estadoOrganizacion" (click)="editEstadoHistorialDepartamento(historialDepto.idDepartamento, historialDepto.idHistorialDepartamento, '1')" class="btn  btn-danger btn-margin btn-xs" title="Deshabilitado"><i class="fa fa-close"></i></a>
+                                        <a *ngIf="item.estadoOrganizacion" (click)="editEstadoHistorialDepartamento(historialDepto.idDepartamento, historialDepto.idHistorialDepartamento, '0')" class="btn btn-success btn-margin btn-xs" title="Habilitado"><i class="fa fa-check"></i></a>
+                                    </td>
+                                    <td class="text-center">
+                                        <a *ngIf="!item.estadoOrganizacion" (click)="deleteOrganizacion(item.idOrganizacion, true)" data-toggle="modal" data-target="#modal-eliminarEncargado" data-dismiss="modal" class="btn btn-danger btn-margin btn-xs" title="Eliminar"><i class="fa fa-trash"></i></a>
+                                        <a *ngIf="item.estadoOrganizacion" (click)="deleteOrganizacion(item.idOrganizacion, false)" class="btn btn-danger btn-margin btn-xs" title="Eliminar"><i class="fa fa-trash"></i></a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                </div>
+            </div>
+    </div>
+
+    <div class="modal fade" id="modal-addEncargado">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Registrar</h4>
+                    </div>
+                    <form #saveJefeDepartamento="ngForm" name="formularioJefeDepartamento" class="form-horizontal">
+                    <div class="modal-body">   
+                            <div class="row row-editar">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="inputName" class="col-sm-3 control-label">Nombres</label>
+
+                                        <div class="col-sm-9 select-student">
+                                            <select #idPersona class="form-control select2" style="width: 100%;">
+                                                <option *ngFor="let persona of listJefesDepto" [value]="persona.idPersona">
+                                                {{persona.primerApellido}} {{persona.segundoApellido}} {{ persona.primerNombre }} {{ persona.segundoNombre }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>    
+                            </div>
+                    </div>
+                    <div class="modal-footer ">
+                        <button type="button" class="btn btn-default pull-left" data-toggle="modal" data-target="#modal-historialEncargado" data-dismiss="modal" aria-label="Close">
+                            <i class="fa fa-remove"></i> Cancelar
+                        </button>
+                        <button (click)="saveOrganizacion(idPersona.value)" type="submit" name="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#modal-historialEncargado" data-dismiss="modal" aria-label="Close">
+                            <i class="fa fa-save"></i> Guardar
+                        </button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+    </div>
+    <div class="modal fade" id="modal-eliminarEncargado">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Confirmar</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row text-center">
+                        <div class="col-md-6">
+                            <button type="button" data-toggle="modal" data-target="#modal-historialEncargado" data-dismiss="modal" aria-label="Close" class="btn btn-danger">
+                                <i class="fa fa-close"></i> Cancelar</button>
+                        </div>
+                        <div class="col-md-6">
+                            <button (click)="confirmarDeleteOrganizacion()" data-toggle="modal" data-target="#modal-historialEncargado" data-dismiss="modal" aria-label="Close" type="button" class="btn btn-success">
+                                <i class="fa fa-check"></i> Aceptar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="modal-historial">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -140,7 +244,7 @@
                                 <th style="width: 10px">#</th>
                                 <th>Limite de estudiantes</th>
                                 <th>Costo de hora</th>
-                                <th>Fecha de registro</th>
+                                <th>Fecha de inicio</th>
                                 <th style="width: 10px">Estado</th>
                                 <th style="width: 10%" class="text-center">Opciones</th>
                             </tr>
@@ -148,18 +252,86 @@
                                 <td>{{ i+1 }}.</td>
                                 <td>{{ historialDepto.limiteEstudiante }}</td>
                                 <td>{{ historialDepto.costoHora }} Bs.</td>
-                                <td>{{ historialDepto.fechaRegistroHistorialDepartamento }}</td>
+                                <td>{{ historialDepto.fechaRegistroHistorialDepartamento | date: 'dd/MM/yyyy' }}</td>
                                 <td class="text-center">
                                     <a *ngIf="!historialDepto.estadoHistorialDepartamento" (click)="editEstadoHistorialDepartamento(historialDepto.idDepartamento, historialDepto.idHistorialDepartamento, '1')" class="btn  btn-danger btn-margin btn-xs" title="Deshabilitado"><i class="fa fa-close"></i></a>
                                     <a *ngIf="historialDepto.estadoHistorialDepartamento" (click)="editEstadoHistorialDepartamento(historialDepto.idDepartamento, historialDepto.idHistorialDepartamento, '0')" class="btn btn-success btn-margin btn-xs" title="Habilitado"><i class="fa fa-check"></i></a>
                                 </td>
                                 <td class="text-center">
-                                    <a data-toggle="modal" data-target="#modal-editar" class="btn btn-default btn-margin btn-xs" title="Editar"><i class="fa fa-edit"></i></a>
-                                    <a (click)="deleteDepartameto(departamento.idDepartamento)" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger btn-margin btn-xs" title="Eliminar"><i class="fa fa-trash"></i></a>
+                                    <a (click)="searchEditHistorialDepartamento(historialDepto.idHistorialDepartamento)" data-toggle="modal" data-target="#modal-editHistorial" data-dismiss="modal" class="btn btn-default btn-margin btn-xs" title="Editar"><i class="fa fa-edit"></i></a>
+                                    <a *ngIf="!historialDepto.estadoHistorialDepartamento" (click)="deleteHistorialDepartamento(historialDepto.idHistorialDepartamento, true)" data-toggle="modal" data-target="#modal-eliminarHistorial" data-dismiss="modal" class="btn btn-danger btn-margin btn-xs" title="Eliminar"><i class="fa fa-trash"></i></a>
+                                    <a *ngIf="historialDepto.estadoHistorialDepartamento" (click)="deleteHistorialDepartamento(historialDepto.idHistorialDepartamento, false)" class="btn btn-danger btn-margin btn-xs" title="Eliminar"><i class="fa fa-trash"></i></a>
                                 </td>
                             </tr>
                         </table>
                     </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-eliminarHistorial">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Confirmar</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row text-center">
+                        <div class="col-md-6">
+                            <button type="button" data-toggle="modal" data-target="#modal-historial" data-dismiss="modal" aria-label="Close" class="btn btn-danger">
+                                <i class="fa fa-close"></i> Cancelar</button>
+                        </div>
+                        <div class="col-md-6">
+                            <button (click)="confirmDeleteHistorialDepartamento()" data-toggle="modal" data-target="#modal-historial" data-dismiss="modal" aria-label="Close" type="button" class="btn btn-success">
+                                <i class="fa fa-check"></i> Aceptar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-editHistorial">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Editar</h4>
+                </div>
+                <form #saveHistorialDepartament="ngForm" name="formularioSaveHistorialDepartament" class="form-horizontal">
+                <div class="modal-body">   
+                        <div class="row row-editar">
+                            <div class="col-md-12">
+                                <div [ngClass]="{'form-group': true, 'has-error': !inputValCostoDepto}">
+                                    <label for="inputName" class="col-sm-3 control-label">Costo de hora</label>
+
+                                    <div class="col-sm-9">
+                                        <input (keyup)="inputCostoDepartamento(historialDepartamento.costoHora, 1)" [(ngModel)]="historialDepartamento.costoHora" name="historialDepartamento.costoHora" type="text" class="form-control" id="costoHora" placeholder="">
+                                        <span *ngIf="!inputValCostoDepto" class="help-block"><i class="icon fa fa-warning"></i> {{ messaggeCostoDepto }}</span>
+                                    </div>
+                                </div>
+                                <div [ngClass]="{'form-group': true, 'has-error': !inputValLimiteDepto}">
+                                    <label for="inputName" class="col-sm-3 control-label">Limite de estudiantes</label>
+
+                                    <div class="col-sm-9">
+                                        <input (keyup)="inputLimiteDepartamento(historialDepartamento.limiteEstudiante, 1)" [(ngModel)]="historialDepartamento.limiteEstudiante" name="historialDepartamento.limiteEstudiante" type="text" class="form-control" id="limiteEstudiante" placeholder="">
+                                        <span *ngIf="!inputValLimiteDepto" class="help-block"><i class="icon fa fa-warning"></i> {{ messaggeLimiteDepto }}</span>
+                                    </div>
+                                </div>
+                            </div>    
+                        </div>
+                </div>
+                <div class="modal-footer ">
+                    <button type="button" class="btn btn-default pull-left" data-toggle="modal" data-target="#modal-historial" data-dismiss="modal" aria-label="Close">
+                        <i class="fa fa-remove"></i> Cancelar
+                    </button>
+                    <button (click)="editHistorialDepartamento()" type="submit" name="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#modal-historial" data-dismiss="modal" aria-label="Close">
+                        <i class="fa fa-refresh"></i> Actualizar
+                    </button>
+                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -172,38 +344,41 @@
                     <span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">Registrar</h4>
                     </div>
-                    <div class="modal-body">
-                        <form #saveHistorialDepartamento="ngForm" name="formulariosaveHistorialDepartament" class="form-horizontal">
-    
+                    <form #saveHistorialDepartament="ngForm" name="formularioSaveHistorialDepartament" class="form-horizontal">
+                    <div class="modal-body">   
                             <div class="row row-editar">
                                 <div class="col-md-12">
-                                    <div class="form-group">
+                                    <div [ngClass]="{'form-group': true, 'has-error': !inputValCostoDepto}">
                                         <label for="inputName" class="col-sm-3 control-label">Costo de hora</label>
     
                                         <div class="col-sm-9">
-                                            <input [(ngModel)]="departamento.costoHora" name="costoHora" type="text" class="form-control" id="costoHora" placeholder="">
+                                            <input (keyup)="inputCostoDepartamento(historialDepartamento.costoHora, 1)" [(ngModel)]="historialDepartamento.costoHora" name="historialDepartamento.costoHora" type="text" class="form-control" id="costoHora" placeholder="">
+                                            <span *ngIf="!inputValCostoDepto" class="help-block"><i class="icon fa fa-warning"></i> {{ messaggeCostoDepto }}</span>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div [ngClass]="{'form-group': true, 'has-error': !inputValLimiteDepto}">
                                         <label for="inputName" class="col-sm-3 control-label">Limite de estudiantes</label>
     
                                         <div class="col-sm-9">
-                                            <input [(ngModel)]="departamento.limiteEstudiante" name="limiteEstudiante" type="text" class="form-control" id="limiteEstudiante" placeholder="">
+                                            <input (keyup)="inputLimiteDepartamento(historialDepartamento.limiteEstudiante, 1)" [(ngModel)]="historialDepartamento.limiteEstudiante" name="historialDepartamento.limiteEstudiante" type="text" class="form-control" id="limiteEstudiante" placeholder="">
+                                            <span *ngIf="!inputValLimiteDepto" class="help-block"><i class="icon fa fa-warning"></i> {{ messaggeLimiteDepto }}</span>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-md-12 text-center">    
-                                    <button type="button" name="button" class="btn btn-primary margin" data-toggle="modal" data-target="#modal-historial" data-dismiss="modal">
-                                    <i (click)="saveHistorialDepartamento()" class="fa fa-save"></i> Guardar
-                                    </button>
-                                </div>
-    
+                                </div>    
                             </div>
-                        </form>
                     </div>
+                    <div class="modal-footer ">
+                        <button type="button" class="btn btn-default pull-left" data-toggle="modal" data-target="#modal-historial" data-dismiss="modal" aria-label="Close">
+                            <i class="fa fa-remove"></i> Cancelar
+                        </button>
+                        <button (click)="saveHistorialDepartamento()" type="submit" name="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#modal-historial" data-dismiss="modal" aria-label="Close">
+                            <i class="fa fa-save"></i> Guardar
+                        </button>
+                    </div>
+                    </form>
                 </div>
             </div>
-        </div>
+    </div>
 
     <div class="modal fade" id="modal-editar">
         <div class="modal-dialog">
@@ -213,50 +388,38 @@
                 <span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Editar</h4>
                 </div>
+            <form (ngSubmit)="editarDepartamento()" #editDepartamento="ngForm" name="formularioEditDepartamento" class="form-horizontal">
                 <div class="modal-body">
-                    <form (ngSubmit)="editDepartamento()" #editPersona="ngForm" name="formularioEditPersona" class="form-horizontal">
-
                         <div class="row row-editar">
                             <div class="col-md-12">
-                                <figure class="figure text-center">
+                                <figure class="figure text-center figure-editar">
                                     <img src="../../../assets/img/departamento.png" class="figure-img img-fluid rounded img-thumbnail" alt="A generic square placeholder image with rounded corners in a figure.">
                                     <figcaption class="figure-caption text-center">Fotografia para la identifiación</figcaption>
                                     <button type="button" class="btn btn-default btn-subir-foto">
                                 <i class="fa fa-upload"></i> Subir fotografía</button>
                                 </figure>
                                 <br>
-                                <div class="form-group">
+                                <div [ngClass]="{'form-group': true, 'has-error': !inputValEditNameDepto}">
                                     <label for="inputName" class="col-sm-3 control-label">Nombre</label>
 
                                     <div class="col-sm-9">
-                                        <input [(ngModel)]="departamento.nombreDepartamento" name="nombreDepartamento" type="text" class="form-control" id="pNombre" placeholder="">
+                                        <input (keyup)="inputNombreDepartamento(departamento.nombreDepartamento, 2)" [(ngModel)]="departamento.nombreDepartamento" name="departamento.nombreDepartamento" type="text" class="form-control" id="pNombre">
+                                        <span *ngIf="!inputValEditNameDepto" class="help-block"><i class="icon fa fa-warning"></i> {{ messaggeNameDepto }}</span>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputName" class="col-sm-3 control-label">Costo de hora</label>
-
-                                    <div class="col-sm-9">
-                                        <input [(ngModel)]="departamento.costoHora" name="costoHora" type="text" class="form-control" id="costoHora" placeholder="">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputName" class="col-sm-3 control-label">Limite de estudiantes</label>
-
-                                    <div class="col-sm-9">
-                                        <input [(ngModel)]="departamento.limiteEstudiante" name="limiteEstudiante" type="text" class="form-control" id="limiteEstudiante" placeholder="">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12 text-center">
-
-                                <button (click)="mensajeSuccess()" type="submit" name="button" class="btn btn-primary margin" data-dismiss="modal">
-                            <i class="fa fa-refresh"></i> Actualizar
-                            </button>
+                                </div>                                
                             </div>
 
-                        </div>
-                    </form>
+                        </div>                    
                 </div>
+                <div class="modal-footer ">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal" aria-label="Close">
+                                <i class="fa fa-remove"></i> Cancelar
+                                </button>
+                    <button type="submit" name="button" class="btn btn-primary pull-right">
+                    <i class="fa fa-refresh"></i> Actualizar
+                    </button>
+                </div>
+            </form>
             </div>
         </div>
     </div>
@@ -311,7 +474,7 @@
                                 <p><strong><i class="fa fa-slack margin-r-5"></i> Código departamento:</strong></p>
                                 <p><strong><i class="fa fa-building margin-r-5"></i> Nombre del departamento:</strong></p>
                                 <p><strong><i class="fa fa-money margin-r-5"></i> Costo de hora:</strong></p>
-                                <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha de registro:</strong></p>
+                                <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha inicio:</strong></p>
                                 <p><strong><i class="fa fa-step-forward margin-r-5"></i> Limite de estudiantes:</strong></p>
                                 <p><strong><i class="fa fa-play margin-r-5"></i> Cant. Est. trabajando:</strong></p>
                                 <p><strong><i class="fa fa-forward margin-r-5"></i> Cupos:</strong></p>
@@ -320,8 +483,10 @@
                             <div class="col-md-7">
                                 <p>{{ codigoDepartamento }}</p>
                                 <p>{{ nombreDepartamento }}</p>
-                                <p>{{ costoHora }} Bs.</p>
-                                <p>{{ fechaRegistroHistorialDep | date: 'dd/MM/yyyy' }}</p>
+                                <p *ngIf="costoHora != null">{{ costoHora }} Bs.</p>
+                                <p *ngIf="costoHora == null"> 00.00 Bs. </p>
+                                <p *ngIf="fechaRegistroHistorialDep != null">{{ fechaRegistroHistorialDep | date: 'dd/MM/yyyy' }}</p>
+                                <p *ngIf="fechaRegistroHistorialDep == null">00/00/0000</p>
                                 <p>{{ limiteEstudiante }}</p>
                                 <p>{{ cantidadEstudiantes }}</p>
                                 <p>{{ cupos }}</p>
@@ -330,7 +495,7 @@
                         </div>
                     </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-check"></i> Aceptar</button>
                 </div>
             </div>
         </div>
@@ -346,10 +511,12 @@
                 <div class="modal-body">
                     <div class="row text-center">
                         <div class="col-md-6">
-                            <button type="button"  data-dismiss="modal" aria-label="Close" class="btn btn-danger">Cancelar</button>
+                            <button type="button"  data-dismiss="modal" aria-label="Close" class="btn btn-danger">
+                                <i class="fa fa-close"></i> Cancelar</button>
                         </div>
                         <div class="col-md-6">
-                            <button (click)="eliminarDepartamento()" data-dismiss="modal" aria-label="Close" type="button" class="btn btn-success">Aceptar</button>
+                            <button (click)="eliminarDepartamento()" data-dismiss="modal" aria-label="Close" type="button" class="btn btn-success">
+                                <i class="fa fa-check"></i> Aceptar</button>
                         </div>
                     </div>
                 </div>
