@@ -40,18 +40,6 @@
             <h4><i class="icon fa fa-check"></i> Area Deshabilitado</h4>
         </div>
     </div>
-    <div *ngIf="MessageSuccessArea == true" class="pad no-print">
-        <div class="callout callout-success">
-            <h4><i class="icon fa fa-check"></i> Registro Exitoso</h4>
-            <p>El registro del área del departamento, fue satisfactoria.</p>
-        </div>
-    </div>
-    <div *ngIf="MessageFailArea == true" class="pad no-print">
-        <div class="callout callout-danger">
-            <h4><i class="icon fa fa-check"></i> Fallo en el registro</h4>
-            <p>Se ha producido un error al registrar el área .</p>
-        </div>
-    </div>
     <div *ngIf="MessageSuccessAsignacion == true" class="pad no-print">
         <div class="callout callout-success">
             <h4><i class="icon fa fa-check"></i> Registro Exitoso</h4>
@@ -96,12 +84,12 @@
                                                 <td *ngIf="area.idArea == IdArea">{{ area.primerNombre }} {{ area.segundoNombre }} {{ area.primerApellido }} {{ area.segundoApellido }}</td>
                                                 <td *ngIf="area.idArea == IdArea">{{ area.fechaRegistroAsignacion | date: 'dd/MM/yyyy' }}</td>
                                                 <td *ngIf="area.idArea == IdArea" class="text-center">
-                                                    <a *ngIf="area.estadoAsignacion == true" (click)="editAsignacion(area.idAsignacionArea, '0')" class="btn btn-min-red" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
-                                                    <a *ngIf="area.estadoAsignacion == false" (click)="editAsignacion(area.idAsignacionArea, '1')" class="btn btn-min-green" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
+                                                    <a *ngIf="area.estadoAsignacion == true" (click)="editAsignacion(area.idAsignacionArea, '0')" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
+                                                    <a *ngIf="area.estadoAsignacion == false" (click)="editAsignacion(area.idAsignacionArea, '1')" class="btn btn-min-green btn-xs" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
                                                 </td>
                                                 <td *ngIf="area.idArea == IdArea" class="text-center">
-                                                    <a  data-toggle="modal" data-target="#modal-editar" class="btn " title="Editar"><i class="fa fa-edit"></i></a>
-                                                    <a (click)="deleteAsignacion(area.idAsignacionArea)" class="btn btn-min-red"  title="Eliminar"><i class="fa fa-fw fa-trash"></i></a>
+                                                    <a  data-toggle="modal" data-target="#modal-editar" class="btn btn-xs " title="Editar"><i class="fa fa-edit"></i></a>
+                                                    <a (click)="deleteAsignacion(area.idAsignacionArea)" class="btn btn-danger btn-xs"  title="Eliminar"><i class="fa fa-fw fa-trash"></i></a>
                                                 </td>
                                             </tr>
                                         </table>
@@ -180,7 +168,7 @@
             <div class="col-xs-12">
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
-                        <li (click)="getAreaDepartamento(IdDepartamento); getAsignacionArea(this.IdDepartamento)" class="active"><a href="#lista" data-toggle="tab">Lista</a></li>
+                        <li class="active"><a href="#lista" data-toggle="tab">Lista</a></li>
                         <li><a href="#registrar" data-toggle="tab">Registrar</a></li>
                         <li (click)="getEstudiantes(IdDepartamento)" ><a href="#asignar" data-toggle="tab">Asignar estudiante a un área</a></li>
                     </ul>
@@ -216,13 +204,13 @@
                                             <td>{{ area.nombreArea }}</td>
                                             <td>{{ area.fechaRegistroArea | date: 'dd/MM/yyyy' }}</td>
                                             <td class="text-center">
-                                                <a *ngIf="area.estadoArea == true" (click)="editEstadoArea(area.idArea, '0')" class="btn btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
-                                                <a *ngIf="area.estadoArea == false" (click)="editEstadoArea(area.idArea, '1')" class="btn btn-success btn-margin" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
+                                                <a *ngIf="area.estadoArea == true" (click)="editEstadoArea(area.idArea, '0')" class="btn btn-danger " data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
+                                                <a *ngIf="area.estadoArea == false" (click)="editEstadoArea(area.idArea, '1')" class="btn btn-success " data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
                                             </td>
                                             <td class="text-center">
-                                                <a (click)="verStudentArea(area.idArea)" data-toggle="modal" class="btn btn-primary btn-margin" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a>
-                                                <a data-toggle="modal" data-target="#modal-editar" class="btn btn-default btn-margin" title="Editar"><i class="fa fa-edit"></i></a>
-                                                <a (click)="deleteArea(area.idArea)" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger btn-margin"  title="Eliminar"><i class="fa fa-fw fa-trash"></i></a>
+                                                <a (click)="verStudentArea(area.idArea)" data-toggle="modal" class="btn btn-primary " data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a>
+                                                <a data-toggle="modal" data-target="#modal-editar" class="btn btn-default" title="Editar"><i class="fa fa-edit"></i></a>
+                                                <a (click)="deleteArea(area.idArea)" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger"  title="Eliminar"><i class="fa fa-fw fa-trash"></i></a>
                                             </td>
                                         </tr>
                                     </table>
@@ -319,4 +307,19 @@
 <!-- /.content-wrapper -->
 <app-footer></app-footer> 
 </div>
-<!-- /.content-wrapper -->
+<div id="growls-default">
+    <div [ngClass]="{'growl': true, 'growl-notice':alertSuccess, 
+                    'growl-error':alertError, 
+                    'growl-warning':alertWarning, 
+                    'growl-large':true, 
+                    'growl-outgoing':!activateAlert}">
+        <div [ngClass]="{'growl-close': true, 'growl-outgoing':!activateAlert}">×</div>
+        <div [ngClass]="{'growl-title': true, 'growl-outgoing':!activateAlert}">
+            <i [ngClass]="{'icon': true, 'fa': true, 
+            'fa-check': alertSuccess, 
+            'fa-close': alertError, 
+            'fa-warning': alertWarning}"></i>
+            {{titleAlert}} </div>
+        <div [ngClass]="{'growl-message': true,'growl-outgoing':!activateAlert}">{{messageAlert}}</div>
+    </div>
+</div>

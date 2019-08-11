@@ -113,6 +113,10 @@ export class NavbarJFComponent implements OnInit {
     this._router.navigate(['/departamento']);    
   }
 
+  gestionarInfoDepartamento(){
+    this._router.navigate(['/infoDepartamento']);    
+  }
+
   gestionarAreaDepto(){
     this._router.navigate(['/area']);    
   }

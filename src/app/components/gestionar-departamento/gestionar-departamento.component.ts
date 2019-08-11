@@ -26,6 +26,7 @@ export class GestionarDepartamentoComponent implements OnInit {
   alertWarning:boolean = false;
   //DEPARTAMENTO
   departamentos:Departamento[] = [];
+  departamentosArray:Departamento[];
   //se utiliza para crear departamento y crear organizacion
   departamento:Departamento = {}
   //para listar la organizacion de un solo departamento
@@ -206,17 +207,24 @@ export class GestionarDepartamentoComponent implements OnInit {
           })
         })        
       }   
-      this.departamentos = departamentos;  
+      this.departamentos = departamentos; 
+      this.departamentosArray = departamentos;
     });
     
   }
 
-  // POSIBLE BORRAR
-  // getMaxIdDep(){
-  //   // this._appDepartamentoService.getHistorialDepartamento()
-  //   //   .subscribe((maxidDept:Departamento[]) => {this.maxidDept = maxidDept});
-  //   //   console.log("getMAXdEP: ",this.maxidDept )
-  // }
+  //Buscar Departamento
+  searchDepartamento(value:string){
+    let array:Departamento[] = [];
+    value = value.toLowerCase();
+    this.departamentos = this.departamentosArray;
+    for(let item of this.departamentos){
+      if(item.nombreDepartamento.toLowerCase().indexOf(value) >= 0){
+        array.push(item);        
+      }  
+    }
+    this.departamentos = array; 
+  }
 
   getInfoDepartamento(idDepartamento:string){
 

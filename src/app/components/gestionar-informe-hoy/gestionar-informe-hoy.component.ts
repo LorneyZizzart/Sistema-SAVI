@@ -21,6 +21,13 @@ export class GestionarInformeHoyComponent implements OnInit {
   //Variable global para almacenar el id del departamento
   IdDepartamento:string = "1"
   fechaHoy:any;
+  //ALERTS
+  titleAlert:string = null;
+  messageAlert:string = null;
+  activateAlert:boolean = false;
+  alertSuccess:Boolean = false;
+  alertError:Boolean = false;
+  alertWarning:boolean = false;
   //FOOTER
   numStudent:number = 0;
   numHour:any = '00:00';
@@ -50,12 +57,9 @@ export class GestionarInformeHoyComponent implements OnInit {
   cantidadEstudiantes:string = "3"; //falta aun sumar and restar
   cupos:string = "5"; //falta aun sumar and restar
   costoHora:string;
-  //Message of exit the student
-  messageExit:boolean = false;
-  //Message de registro de asistencia
-  messageDelete:boolean = false;
-  messageSuccess:boolean = false;
-  messageFail:boolean = false;
+
+
+
   //para guardar el informe de estudiante
   informeEstudiante:InformeEstudiante = {}
   //Info Estudiante
@@ -86,21 +90,29 @@ export class GestionarInformeHoyComponent implements OnInit {
   constructor(private _appRegistroHoraService:AppRegistroHoraService,
               private _appDepartamentoService:AppDepartamentoService,
               private _appTipoPersonaService:AppTipoPersonaService,
-              private _appInformeEstudianteService:AppInformeEstudianteService ) { 
+              private _appInformeEstudianteService:AppInformeEstudianteService ) {  
   }
 
   ngOnInit() {
-    this.fechaHoy = new Date();
-    this.getDepartament(this.IdDepartamento);
-    this.getInformeRegisterNow(this.IdDepartamento);
-    this.getEstudiantesDept(this.IdDepartamento);
-    this.getEstudiantes(this.IdDepartamento);
+      //una vez que se ejecute la funcion se ejecuta la funcion getInformeRegisterNow posteriormente
+      // getEstudiantes
+      this.getDepartament();
+      this.fechaHoy = new Date(); 
   }
 
-  //resetear el FORMULARIO no estamos usando
-  resetForm(formulario: NgForm) {
-    formulario.reset({
-    });
+  alert(opcion:number, title:string, message:string):void{
+    if(opcion == 1) this.alertSuccess = true;
+    if(opcion == 2) this.alertError = true;      
+    if(opcion == 3) this.alertWarning = true;      
+    this.titleAlert = title;
+    this.messageAlert = message;
+    this.activateAlert = true;
+    setTimeout(() => {
+      this.activateAlert = false;
+      this.alertSuccess = false;
+      this.alertError = false;
+      this.alertWarning = false;
+    }, 5000);
   }
 
   calculadoraSaldo(hora, saldo){
@@ -217,6 +229,7 @@ export class GestionarInformeHoyComponent implements OnInit {
       this.numHour= '00:00';
       this.totalSaldo = 0;
       this.totalDatos(); 
+      this.getEstudiantes();
     });
   }
 
@@ -255,25 +268,28 @@ export class GestionarInformeHoyComponent implements OnInit {
     this.totalSaldo = parseFloat(this.totalSaldo).toFixed(2);    
   }
   //PARA OBTENER LOS DATOS DEL DEPARTAMENTO LUEGO SE PARA AL METODO infoDepartamento
-  getDepartament(idDepartamento:string){
-    this._appDepartamentoService.getDepartamento(idDepartamento)
-    .subscribe((departamento : Departamento[]) => {this.departamento = departamento});
-    setTimeout(() => {
-      this.infoDepartamento(idDepartamento);
-    }, 2000);
+  getDepartament(){
+    this._appDepartamentoService.getDepartamento(this.IdDepartamento)
+    .subscribe((departamento : Departamento[]) => {
+      this.departamento = departamento;
+      this.infoDepartamento(this.IdDepartamento);
+      this.getInformeRegisterNow(this.IdDepartamento);
+    }, res => {
+      this.alert(2, 'Error en el servidor', 'Se ha producido un error en el servidor en la petición.');     
+    });
   }
   //Lista de los estudiantes para registrar hora de ingreso
-  getEstudiantesDept(idDepartamento:string){
-    this._appTipoPersonaService.getListStudentDepto(idDepartamento)
+  getEstudiantesDept(){
+    this._appTipoPersonaService.getListStudentDepto(this.IdDepartamento)
     .subscribe((estudiantes :Persona[]) => {this.estudianteDep = estudiantes});
   }
   //Obtener los estudiantes del departamento para informacion;
-  getEstudiantes(idDepartamento:string){
-    this._appTipoPersonaService.getInfoEstudiantes(idDepartamento)
+  getEstudiantes(){
+    this._appTipoPersonaService.getInfoEstudiantes(this.IdDepartamento)
     .subscribe((estudiantes : Persona[]) => {this.estudiantes = estudiantes});
   }
 
-  informacionEstudiante(idRegistroHora, idEstudiante){
+  informacionEstudiante(idRegistroHora, idEstudiante){    
     this.areas = [];
     for(let estudiante of this.estudiantes){
       if(estudiante.idPersona == idEstudiante){
@@ -326,30 +342,27 @@ export class GestionarInformeHoyComponent implements OnInit {
           this.codigoDepartamento = departamento.idDepartamento;
           this.nombreDepartamento = departamento.nombreDepartamento;
           this.estadoDepartamento = departamento.estadoDepartamento;
-          this.fechaRegistroHistorialDep = departamento.fechaRegistroHistorialDepartamento;
+          this.fechaRegistroHistorialDep = departamento.editHistorialDepartamento;
           this.limiteEstudiante = departamento.limiteEstudiante;
           this.costoHora = departamento.costoHora;
       }
     }
   }
 
-  registrarAsistencia(){
-    if(this.idConvenio != undefined || this.idConvenio != null){
-      this.registro.idConvenio = this.idConvenio;
+  registrarAsistencia(idConvenio:string, formulario: NgForm){
+    if(idConvenio != undefined || idConvenio != null){
+      this.registro.idConvenio = idConvenio;
       this._appRegistroHoraService.postRegistroHora(this.registro)
-      .subscribe((data: RegistroHora[]) => {console.log(data)});
-      this.messageSuccess = true;
-      setTimeout(() => {
+      .subscribe((data: RegistroHora[]) => {
+        formulario.reset({});
         this.getInformeRegisterNow(this.IdDepartamento);
-      }, 2000);
-      setTimeout(() => {
-        this.messageSuccess = false;
-      }, 5000);
+        this.alert(1, 'Registro exitoso', 'El registro de asistencia se realizó exitosamente.');
+        console.log(data)
+      }, res => {
+        this.alert(2, 'Error al registrar', 'Se ha producido un error en el servidor al registrar.');
+      });
     }else{
-      this.messageFail = true;
-      setTimeout(() => {
-        this.messageFail = false;
-      }, 5000);
+      this.alert(2, 'Error al registrar', 'Se ha producido un error en el sistema al registrar.');
     }    
 
   }
@@ -357,14 +370,12 @@ export class GestionarInformeHoyComponent implements OnInit {
   registrarSalida(idRegistro:string, fecha){
     this.eliminarInformeEstudiante(fecha, idRegistro); 
     this._appRegistroHoraService.putRegistroSalida(idRegistro, this.registro)
-    .subscribe((data : RegistroHora []) => {console.log(data)});
-    this.messageExit = true;
-    setTimeout(() => {
-      this.messageExit = false;
-    }, 5000);
-    setTimeout(() => {      
+    .subscribe((data : RegistroHora []) => {
       this.getInformeRegisterNow(this.IdDepartamento);
-    }, 2000);
+      this.alert(1, 'Registro exitoso', 'El registro de salida se realizó exitosamente.');
+    }, res => {
+      this.alert(2, 'Error al registrar', 'Se ha producido un error en el servidor al registrar.');
+    });
   }
 
   registrarAprobacion(idEstudiante, idRegistro:string, aprobado:string, fecha:string, idRegistroHora:string){
@@ -394,21 +405,14 @@ export class GestionarInformeHoyComponent implements OnInit {
       this.registro.observacionRegistroHora = this.registro.observacionRegistroHora;
     }
     this._appRegistroHoraService.putRegsitroAprovacion(this.idRegistro, this.registro)
-    .subscribe((data : RegistroHora[]) => {console.log(data)});
-
-    if(this.registro.aprobadoRegistroHora == '1'){
-      setTimeout(() => {
-      this.saveInformeEstudiante(this.idRegistro);        
-      }, 1000);
-    }else{
-      setTimeout(() => {
-        this.eliminarInformeEstudiante(this.fecha, this.idRegistroHora);     
-        }, 1000);
-    }
-
-    setTimeout(() => {
+    .subscribe((data : RegistroHora[]) => {
+      if(this.registro.aprobadoRegistroHora == '1'){
+        this.saveInformeEstudiante(this.idRegistro);      
+      }else{
+          this.eliminarInformeEstudiante(this.fecha, this.idRegistroHora);   
+      }
       this.getInformeRegisterNow(this.IdDepartamento);
-    }, 2000);
+    });
   }
 
   eliminarAsistencia(idRegistro:string){
@@ -419,14 +423,12 @@ export class GestionarInformeHoyComponent implements OnInit {
 
   confirmacionDelete(){
     this._appRegistroHoraService.deleteRegistroHora(this.idRegistro, this.registro)
-    .subscribe((data : RegistroHora[]) => {console.log(data)});
-    this.messageDelete = true;
-    setTimeout(() => {
-      this.messageDelete = false;
-    }, 5000);
-    setTimeout(() => {
+    .subscribe((data : RegistroHora[]) => {
       this.getInformeRegisterNow(this.IdDepartamento);
-    }, 2000);
+      this.alert(1, 'Registro eliminado', 'El registro fue eliminado satisfactoriamente.');
+    }, res => {
+      this.alert(2, 'Error al aliminar', 'Se ha producido un error en el servidor al eliminar.');
+    });
   }
   //GESTION DE INFORME ESTUDIANTE
   saveInformeEstudiante(idRegistroHora:string){

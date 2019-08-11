@@ -100,6 +100,7 @@ export class GestionarConvenioComponent implements OnInit {
       this.alertWarning = false;
     }, 5000);
   }
+  
   activaRegister(){
     this.getEstudiantes();
     setTimeout(() => {

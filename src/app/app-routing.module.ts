@@ -22,6 +22,8 @@ import { GestionarInformeAyerComponent } from "./components/gestionar-informe-ay
 import { GestionarInformeWeekComponent } from './components/gestionar-informe-week/gestionar-informe-week.component';
 import { GestionarInformeMonthComponent } from './components/gestionar-informe-month/gestionar-informe-month.component';
 import { GestionarAcreedorHistorialComponent } from './components/gestionar-acreedor-historial/gestionar-acreedor-historial.component';
+import { GestionarInfoDepartamentoComponent } from './components/gestionar-info-departamento/gestionar-info-departamento.component';
+
 
 import { LoginComponent } from './components/login/login.component';
 
@@ -36,6 +38,7 @@ const routes: Routes = [
   { path: 'beca', component: GestionarBecaComponent, canActivate: [AuthGuard] },
   { path: 'convenio', component: GestionarConvenioComponent, canActivate: [AuthGuard] },
   { path: 'departamento', component: GestionarDepartamentoComponent, canActivate: [AuthGuard] },
+  { path: 'infoDepartamento', component: GestionarInfoDepartamentoComponent, canActivate: [AuthGuard] },
   { path: 'descuento', component: GestionarDescuentoComponent, canActivate: [AuthGuard] },
   { path: 'informeEstudiante', component: GestionarInformeEstudianteComponent, canActivate: [AuthGuard] },
   { path: 'informeFinanzas', component: GestionarInformeFinanzasComponent, canActivate: [AuthGuard] },
