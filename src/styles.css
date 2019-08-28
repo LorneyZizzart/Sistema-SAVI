@@ -6,5 +6,29 @@ body {
     background: rgba(0,0,0,0.2);
 }
 
+.skin-blue .main-header .logo {
+    background-color: #541686;
+}
+
+.skin-blue .main-header .navbar {
+    background-color: #541686;
+}
+
+.skin-blue .wrapper, .skin-blue .main-sidebar, .skin-blue .left-side {
+    background-color: #210835;
+}
+
+.skin-blue .sidebar-menu>li.header {
+    color: #f7f7f7;
+    background: #12041c;
+}
+
+.box.box-primary {
+    border-top-color: #541686;
+}
+
+.skin-blue .main-header li.user-header {
+    background-color: #541686;
+}
 
 /* You can add global styles to this file, and also import other style files */

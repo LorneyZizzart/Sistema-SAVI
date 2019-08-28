@@ -17,13 +17,18 @@ import { AuthService } from '../../services/auth.service';
 export class GestionarAreaComponent implements OnInit {
 
   //Id dep Departamento
-  IdDepartamento:string  = "0";
+  IdDepartamento:string  = "25";
   //departamentos a cargo
   departamentos:Departamento[];
   nameDept:string = "";
+  //ALERTS
+  titleAlert:string = null;
+  messageAlert:string = null;
+  activateAlert:boolean = false;
+  alertSuccess:Boolean = false;
+  alertError:Boolean = false;
+  alertWarning:boolean = false;
   //GestionarArea
-  MessageFailArea:boolean = false;
-  MessageSuccessArea:boolean = false;
   MessageEnabled:Boolean = false;
   MessageDisabled:Boolean = false;
   listaAreaDepartamento:Area[];
@@ -63,6 +68,21 @@ export class GestionarAreaComponent implements OnInit {
   ngOnDestroy(): void {
   }
 
+  alert(opcion:number, title:string, message:string):void{
+    if(opcion == 1) this.alertSuccess = true;
+    if(opcion == 2) this.alertError = true;      
+    if(opcion == 3) this.alertWarning = true;      
+    this.titleAlert = title;
+    this.messageAlert = message;
+    this.activateAlert = true;
+    setTimeout(() => {
+      this.activateAlert = false;
+      this.alertSuccess = false;
+      this.alertError = false;
+      this.alertWarning = false;
+    }, 5000);
+  }
+
   messageEnableDesable(value:string){
     if (value == 'inactivo') {
       this.MessageDisabled = true;      
@@ -93,6 +113,8 @@ export class GestionarAreaComponent implements OnInit {
   }
 
   searchDepartament(idDepartamento){
+    this.departamentos =  this._authService.getDatosDepartamento();
+    console.log("id: ", idDepartamento);
     let array:Departamento[] = [];  
     if(idDepartamento){
       this.IdDepartamento = idDepartamento;
@@ -127,18 +149,14 @@ export class GestionarAreaComponent implements OnInit {
   saveArea(){
     if (this.area.nombreArea != null) {
       this.area.idDepartamento = this.IdDepartamento;
-      this._appAreaService.postArea(this.area).subscribe((area:Area[])=>{console.log(area)});
-
-      this.MessageSuccessArea = true;
-      setTimeout(()=>{
-        this.MessageSuccessArea = false;
-    }, 5000);
+      this._appAreaService.postArea(this.area).subscribe((area:Area[])=>{
+        this.getAreaDepartamento(this.IdDepartamento);
+        this.alert(1, 'Registro exitoso', 'El área del departamento se registro satisfactoriamente.');
+      }, res => {
+        this.alert(2, 'Error al registrar', 'Se ha producido un error en el servidor al registrar.');
+      });
     }else{
-
-      this.MessageFailArea = true;
-      setTimeout(()=>{
-        this.MessageFailArea = false;
-      }, 5000);
+      this.alert(2, 'Error al registrar', 'Se ha producido un error al registrar el sistema.');
     }
   }
 
@@ -175,7 +193,7 @@ export class GestionarAreaComponent implements OnInit {
     }, 8000);
   }
 
-  //gestionar asignacion area
+  //gestionar asignacion area aun no se ejecuta
   getAsignacionArea(idDepartamento:string){
     this._appAreaService.getAsignacionArea(idDepartamento)
     .subscribe((area : Area []) => { this.studentArea = area})

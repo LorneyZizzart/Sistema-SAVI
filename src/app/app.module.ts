@@ -67,6 +67,7 @@ import { GestionarInformeMonthComponent } from './components/gestionar-informe-m
 import { GestionarInformeJefeArhivadoComponent } from './components/gestionar-informe-jefe-arhivado/gestionar-informe-jefe-arhivado.component';
 import { GestionarInformeFinanzasAprobadoComponent } from './components/gestionar-informe-finanzas-aprobado/gestionar-informe-finanzas-aprobado.component';
 import { GestionarInformeFinanzasArchivadoComponent } from './components/gestionar-informe-finanzas-archivado/gestionar-informe-finanzas-archivado.component';
+import { GestionarInfoDepartamentoComponent } from './components/gestionar-info-departamento/gestionar-info-departamento.component';
 
 //auth
 import { AuthGuard } from './auth.guard';
@@ -116,7 +117,8 @@ import { FechaPipe } from './pipes/fecha.pipe';
     GestionarInformeFinanzasArchivadoComponent,
     LoginComponent,
     GestionarAcreedorHistorialComponent,
-    FechaPipe
+    FechaPipe,
+    GestionarInfoDepartamentoComponent
   ],
   imports: [
     BrowserModule,

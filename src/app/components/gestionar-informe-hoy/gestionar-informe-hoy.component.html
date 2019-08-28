@@ -13,26 +13,6 @@
             <li class="active">Informe de hoy</li>
         </ol>   
     </section>
-    <div *ngIf="messageExit == true" class="pad no-print">
-        <div class="callout callout-success">
-            <h4><i class="icon fa fa-check"></i> El registro de la salida fue exitosa</h4>
-        </div>
-    </div>
-    <div *ngIf="messageDelete == true" class="pad no-print">
-        <div class="callout callout-success">
-            <h4><i class="icon fa fa-check"></i> El registro fue eliminado</h4>
-        </div>
-    </div>
-    <div *ngIf="messageSuccess == true" class="pad no-print">
-        <div class="callout callout-success">
-            <h4><i class="icon fa fa-check"></i> El registro de asistencia fue exitosa</h4>
-        </div>
-    </div>
-    <div *ngIf="messageFail == true" class="pad no-print">
-        <div class="callout callout-danger">
-            <h4><i class="icon fa fa-check"></i> Se produjo un error al registrar la asistencia</h4>
-        </div>
-    </div>
 <!-- Modal -->
 <div class="modal fade" id="modal-registrar">
     <div class="modal-dialog">
@@ -42,7 +22,7 @@
                 <span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Registrar</h4>
             </div>
-        <form (ngSubmit)="registrarAsistencia()" #formAsistencia="ngForm" name="formAsistencia" class="form-horizontal">
+        <form (ngSubmit)="registrarAsistencia(idConv.value, formAsistencia)" #formAsistencia="ngForm" name="formAsistencia" class="form-horizontal">
             <div class="infoConvenio modal-body">
                 <div class="row text-center">
                     <div class="col-md-11">
@@ -56,7 +36,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                         <label>Estudiante:</label>
-                        <select [(ngModel)]="idConvenio" name="idConvenio" class="form-control select2" style="width: 100%;">
+                        <select  #idConv [(ngModel)]="idConvenio" name="idConvenio" class="form-control select2" style="width: 100%;">
                             <option *ngFor="let estudiante of estudianteDep" [value]="estudiante.idConvenio" >{{ estudiante.primerApellido }} {{ estudiante.segundoApellido }} {{ estudiante.primerNombre }} {{ estudiante.segundoNombre }}</option>
                         </select>
                         </div>
@@ -70,7 +50,8 @@
                 </div>
                 </div>
             <div class="modal-footer modal-footer-register">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Registrar</button>
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><i class="fa fa-close"></i> Cancelar</button>
+                <button type="submit" class="btn btn-primary pull-right"><i class="fa fa-save"></i> Registrar</button>
             </div>
         </form>
         </div>
@@ -133,7 +114,7 @@
                     </div>
                 </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-check"></i> Aceptar</button>
             </div>
         </div>
     </div>
@@ -223,7 +204,7 @@
                     </div>
                 </div>                
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-check"></i> Aceptar</button>
             </div>
         </div>
     </div>
@@ -245,15 +226,12 @@
                                 <textarea [(ngModel)]="registro.observacionRegistroHora" name="registro.observacionRegistroHora" class="form-control" rows="3" placeholder="obsevaciones ..."></textarea>
                             </div>
                         </div>
-                    </div>
-                    <br>
-                    <div class="row text-center">
                         <div class="col-md-6">
-                            <button type="button"  data-dismiss="modal" aria-label="Close" class="btn btn-danger">Cancelar</button>
+                            <button type="button"  data-dismiss="modal" aria-label="Close" class="btn btn-default"><i class="fa fa-close"></i> Cancelar</button>
                         </div>
                         <div class="col-md-6">
-                            <button *ngIf="btnConfirmacion == 'aprovacion'"  (click)="confirmarAprovacion()" data-dismiss="modal" aria-label="Close" type="button" class="btn btn-success">Guardar</button>
-                            <button *ngIf="btnConfirmacion == 'delete'" (click)="confirmacionDelete()" data-dismiss="modal" aria-label="Close" type="button" class="btn btn-success">Guardar</button>
+                            <button *ngIf="btnConfirmacion == 'aprovacion'"  (click)="confirmarAprovacion()" data-dismiss="modal" aria-label="Close" type="button" class="btn btn-primary pull-right"><i class="fa fa-check"></i> Aprobar</button>
+                            <button *ngIf="btnConfirmacion == 'delete'" (click)="confirmacionDelete()" data-dismiss="modal" aria-label="Close" type="button" class="btn btn-danger pull-right"><i class="fa fa-trash"></i> Eliminar</button>
                         </div>
                     </div>
                 </div>                    
@@ -277,7 +255,7 @@
                                       <span class="sr-only">Toggle Dropdown</span>
                                     </button>
                                     <ul class="dropdown-menu" role="menu">
-                                      <li><a (click)="resetForm(formAsistencia)" data-toggle="modal" data-target="#modal-registrar" >Registrar</a></li>
+                                      <li><a (click)="getEstudiantesDept()" data-toggle="modal" data-target="#modal-registrar" >Registrar</a></li>
                                       <li><a data-toggle="modal" data-target="#modal-informacion" >Informacion</a></li>
                                       <li class="divider"></li>
                                       <li><a href="#">Imprimir</a></li>
@@ -320,14 +298,14 @@
                                             <a *ngIf="registro.aprobadoFinanzas == true" class="btn btn-success btn-margin disabled" title="Marcar salida"><i class="fa fa-sign-in"></i></a>
                                         </td>
                                         <td class="text-center">
-                                            <a *ngIf="registro.aprobadoRegistroHora == true && registro.aprobadoFinanzas == false" (click)="registrarAprobacion(registro.idPersona, registro.idRegistroHora, '0', registro.fechaEntrada, registro.idRegistroHora); resetForm(formAprobacion)" data-toggle="modal" data-target="#modal-aprobacion" class="btn btn-success btn-margin" title="Aprobado"><i class="fa fa-check"></i></a>
+                                            <a *ngIf="registro.aprobadoRegistroHora == true && registro.aprobadoFinanzas == false" (click)="registrarAprobacion(registro.idPersona, registro.idRegistroHora, '0', registro.fechaEntrada, registro.idRegistroHora)" data-toggle="modal" data-target="#modal-aprobacion" class="btn btn-success btn-margin" title="Aprobado"><i class="fa fa-check"></i></a>
                                             <a *ngIf="registro.aprobadoRegistroHora == true && registro.aprobadoFinanzas == true" class="btn btn-success btn-margin disabled" title="Aprobado"><i class="fa fa-check"></i></a>
-                                            <a *ngIf="registro.aprobadoRegistroHora == false && registro.horaSalida != NULL" (click)="registrarAprobacion(registro.idPersona, registro.idRegistroHora, '1', registro.fechaEntrada, registro.idRegistroHora); resetForm(formAprobacion)" data-toggle="modal" data-target="#modal-aprobacion" class="btn btn-danger btn-margin" title="No aprobado"><i class="fa fa-close"></i></a>
+                                            <a *ngIf="registro.aprobadoRegistroHora == false && registro.horaSalida != NULL" (click)="registrarAprobacion(registro.idPersona, registro.idRegistroHora, '1', registro.fechaEntrada, registro.idRegistroHora)" data-toggle="modal" data-target="#modal-aprobacion" class="btn btn-danger btn-margin" title="No aprobado"><i class="fa fa-close"></i></a>
                                             <a *ngIf="registro.aprobadoRegistroHora == false && registro.horaSalida == NULL" class="btn btn-danger btn-margin disabled" title="No aprobado"><i class="fa fa-close"></i></a>
                                         </td>
                                         <td class="text-center">
                                             <a (click)="informacionEstudiante(registro.idRegistroHora, registro.idPersona)" data-toggle="modal" data-target="#modal-informacionEstudiante" class="btn btn-primary btn-margin" title="Ver"><i class="fa fa-eye"></i></a>
-                                            <a *ngIf="registro.aprobadoRegistroHora == false" (click)="eliminarAsistencia(registro.idRegistroHora); resetForm(formAprobacion)" data-toggle="modal" data-target="#modal-aprobacion" class="btn btn-danger btn-margin" title="Eliminar"><i class="fa fa-trash"></i></a>
+                                            <a *ngIf="registro.aprobadoRegistroHora == false" (click)="eliminarAsistencia(registro.idRegistroHora)" data-toggle="modal" data-target="#modal-aprobacion" class="btn btn-danger btn-margin" title="Eliminar"><i class="fa fa-trash"></i></a>
                                             <a *ngIf="registro.aprobadoRegistroHora == true" class="btn btn-danger btn-margin disabled" title="Eliminar"><i class="fa fa-trash"></i></a>
                                         </td>
                                     </tr>
@@ -387,3 +365,19 @@
 <app-footer></app-footer> 
 </div>
 <!-- /.content-wrapper -->
+<div id="growls-default">
+    <div [ngClass]="{'growl': true, 'growl-notice':alertSuccess, 
+                    'growl-error':alertError, 
+                    'growl-warning':alertWarning, 
+                    'growl-large':true, 
+                    'growl-outgoing':!activateAlert}">
+        <div [ngClass]="{'growl-close': true, 'growl-outgoing':!activateAlert}">×</div>
+        <div [ngClass]="{'growl-title': true, 'growl-outgoing':!activateAlert}">
+            <i [ngClass]="{'icon': true, 'fa': true, 
+            'fa-check': alertSuccess, 
+            'fa-close': alertError, 
+            'fa-warning': alertWarning}"></i>
+            {{titleAlert}} </div>
+        <div [ngClass]="{'growl-message': true,'growl-outgoing':!activateAlert}">{{messageAlert}}</div>
+    </div>
+</div>
