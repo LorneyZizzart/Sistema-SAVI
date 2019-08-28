@@ -2,64 +2,136 @@
   <app-navbar-jf></app-navbar-jf>
   <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-  <!-- Content Header (Page header) -->
-  <section class="content-header">
-      <h1>
-          Departamento
-          <small> Limpieza</small>
-      </h1>
-      <ol class="breadcrumb">
-        <li><a [routerLink]="['/home']"><i class="fa fa-home"></i> Home</a></li>
-        <li class="active">Información del departamento</li>
-    </ol>
-  </section>
   <section class="content">
-      <div class="box box-primary">
-          <div class="box-header">
-
-            <h4 class="page-header"><i class="fa fa-list-ul"></i>  Historial</h4>
-            <div class="box-tools left" style="padding-top: 0.6%">
-                <div class="input-group input-group-sm" style="width: 300px;">
-                    <input (keyup)="searchDepartamento(buscarEstudiante.value)" #buscarEstudiante type="text" name="buscarName" class="form-control pull-right" placeholder="Buscar fecha">
-  
-                    <div class="input-group-btn">
-                        <button type="button" class="btn btn-default"><i class="fa fa-search"></i></button>
-                    </div>
-                </div>
-            </div>
-          </div>
-          <!-- /.box-header -->
-          <div class="box-body">
-              <div class="table-responsive pad">
-                  <table class="table table-bordered table-hover">
-                      <tr class="fila-tabla">
-                          <th style="width: 5px">#</th>
-                          <th style="width: 12%" class="text-center">Fecha de inicio</th>
-                          <th style="width: 12%" class="text-center">Fecha final</th>
-
-                          <th class="text-center">Estado</th>
-                          <th style="width: 15%" class="text-center">Opciones</th>
-                      </tr>
-                      <tr *ngFor="let convenio of convenios; let i = index">
-                          <td class="text-center">{{ i+1 }}.</td>
-                          <td>{{ convenio.fechaInicio | fecha : 1 }}</td>
-                          <td>{{ convenio.fechaFinal | fecha : 1}}</td>
-                          <td class="text-center">
-                              <a *ngIf="convenio.estadoConvenio == true"  (click)="editEstadoConvenio(convenio.idConvenio, '0')" class="btn btn-danger btn-margin btn-xs" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
-                              <a *ngIf="convenio.estadoConvenio == false" (click)="editEstadoConvenio(convenio.idConvenio, '1')" class="btn btn-success btn-margin btn-xs" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
-                          </td>
-                          <td class="text-center">
-                              <a (click)="informacionEstudiante(convenio.idPersona)" data-toggle="modal" class="btn btn-primary btn-margin btn-xs" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a>
-                              <a (click)="searchPutConvenio(convenio.idPersona, convenio.idConvenio)" data-toggle="modal" data-target="#modal-editar" class="btn btn-default btn-margin btn-xs" title="Editar"><i class="fa fa-edit"></i></a>
-                              <a (click)="deleteConvenio(convenio.idConvenio)" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger btn-margin btn-xs" title="Eliminar"><i class="fa fa-trash"></i></a>
-                          </td>
-                      </tr>
-                  </table>
-              </div>
-          </div>
-          <!-- /.box-body -->
+    <div class="box box-widget widget-user">
+        <!-- Add the bg color to the header using any of the bg-* classes -->
+        <div class="widget-user-header bg-black" style="background: url('../../../../assets/img/photo1.png') center center;">
+          <h3 class="widget-user-username">Historial del departamento</h3>
+          <h5 class="widget-user-desc">Limpieza</h5>
         </div>
-    <!-- /.row -->
+        <div class="box-body" >
+            <ul class="timeline timeline-inverse">
+                <!-- timeline time label -->
+                <li class="time-label">
+                      <span class="bg-red">
+                        10 Feb. 2014
+                      </span>
+                </li>
+                <!-- /.timeline-label -->
+                <!-- timeline item -->
+                <li>
+                  <i class="fa fa-envelope bg-blue"></i>
+
+                  <div class="timeline-item">
+                    <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
+
+                    <h3 class="timeline-header"><a href="#">Support Team</a> sent you an email</h3>
+
+                    <div class="timeline-body">
+                      Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles,
+                      weebly ning heekya handango imeem plugg dopplr jibjab, movity
+                      jajah plickers sifteo edmodo ifttt zimbra. Babblely odeo kaboodle
+                      quora plaxo ideeli hulu weebly balihoo...
+                    </div>
+                    <div class="timeline-footer">
+                      <a class="btn btn-primary btn-xs">Read more</a>
+                      <a class="btn btn-danger btn-xs">Delete</a>
+                    </div>
+                  </div>
+                </li>
+                <!-- END timeline item -->
+                <!-- timeline item -->
+                <li>
+                  <i class="fa fa-user bg-aqua"></i>
+
+                  <div class="timeline-item">
+                    <span class="time"><i class="fa fa-clock-o"></i> 5 mins ago</span>
+
+                    <h3 class="timeline-header no-border"><a href="#">Sarah Young</a> accepted your friend request
+                    </h3>
+                  </div>
+                </li>
+                <!-- END timeline item -->
+                <!-- timeline item -->
+                <li>
+                  <i class="fa fa-comments bg-yellow"></i>
+
+                  <div class="timeline-item">
+                    <span class="time"><i class="fa fa-clock-o"></i> 27 mins ago</span>
+
+                    <h3 class="timeline-header"><a href="#">Jay White</a> commented on your post</h3>
+
+                    <div class="timeline-body">
+                      Take me to your leader!
+                      Switzerland is small and neutral!
+                      We are more like Germany, ambitious and misunderstood!
+                    </div>
+                    <div class="timeline-footer">
+                      <a class="btn btn-warning btn-flat btn-xs">View comment</a>
+                    </div>
+                  </div>
+                </li>
+                <!-- END timeline item -->
+                <!-- timeline time label -->
+                <li class="time-label">
+                      <span class="bg-green">
+                        3 Jan. 2014
+                      </span>
+                </li>
+                <!-- /.timeline-label -->
+                <!-- timeline item -->
+                <li>
+                  <i class="fa fa-camera bg-purple"></i>
+
+                  <div class="timeline-item">
+                    <span class="time"><i class="fa fa-clock-o"></i> 2 days ago</span>
+
+                    <h3 class="timeline-header"><a href="#">Mina Lee</a> uploaded new photos</h3>
+
+                    <div class="timeline-body">
+                      <img src="http://placehold.it/150x100" alt="..." class="margin">
+                      <img src="http://placehold.it/150x100" alt="..." class="margin">
+                      <img src="http://placehold.it/150x100" alt="..." class="margin">
+                      <img src="http://placehold.it/150x100" alt="..." class="margin">
+                    </div>
+                  </div>
+                </li>
+                <!-- END timeline item -->
+                <li>
+                  <i class="fa fa-clock-o bg-gray"></i>
+                </li>
+              </ul> 
+        </div>
+        <div class="box-footer">
+          <div class="row">
+            <div class="col-sm-4 border-right">
+              <div class="description-block">
+                <h5 class="description-header">3,200</h5>
+                <span class="description-text">SALES</span>
+              </div>
+              <!-- /.description-block -->
+            </div>
+            <!-- /.col -->
+            <div class="col-sm-4 border-right">
+              <div class="description-block">
+                <h5 class="description-header">13,000</h5>
+                <span class="description-text">FOLLOWERS</span>
+              </div>
+              <!-- /.description-block -->
+            </div>
+            <!-- /.col -->
+            <div class="col-sm-4">
+              <div class="description-block">
+                <h5 class="description-header">35</h5>
+                <span class="description-text">PRODUCTS</span>
+              </div>
+              <!-- /.description-block -->
+            </div>
+            <!-- /.col -->
+          </div>
+          <!-- /.row -->
+        </div>
+      </div>
 </section>
 </div>
 <!-- /.content-wrapper -->
