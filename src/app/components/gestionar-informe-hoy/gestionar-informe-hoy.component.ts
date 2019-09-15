@@ -98,6 +98,13 @@ export class GestionarInformeHoyComponent implements OnInit {
       // getEstudiantes
       this.getDepartament();
       this.fechaHoy = new Date(); 
+      this.gethospitales();
+  }
+
+  gethospitales(){
+    this._appTipoPersonaService.getInfoEstudiantes(this.IdDepartamento)
+    .subscribe((estudiantes : any) => {console.log("asas: ",estudiantes);
+    });
   }
 
   alert(opcion:number, title:string, message:string):void{

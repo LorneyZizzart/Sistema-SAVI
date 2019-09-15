@@ -58,7 +58,7 @@ export class AuthService {
     }
   }
 
-  setDatosDepartamento(departamentos:Departamento[]):Boolean{
+  setDatosDepartamento(departamentos:Departamento):Boolean{
     if(departamentos){
       localStorage.removeItem("departament")
       let departament =JSON.stringify(departamentos);
@@ -67,10 +67,10 @@ export class AuthService {
     }else{return false}
   }
 
-  getDatosDepartamento():Departamento[]{
+  getDatosDepartamento():Departamento{
     let departament = localStorage.getItem("departament");
     if(!isNullOrUndefined(departament)){
-      let departaments: User [] = JSON.parse(departament);
+      let departaments: Departamento = JSON.parse(departament);
       return departaments;
     } else {
       return null;

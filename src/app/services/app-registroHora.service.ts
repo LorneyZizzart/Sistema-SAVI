@@ -10,8 +10,14 @@ import { RegistroHora } from '../interfaces/registroHora.interface';
 export class AppRegistroHoraService {
 
   listaRegistroHora = "http://localhost:3000/registrohora";
+  uriHospital = "http://hospitals.fixturebol.com/public/api";
 
   constructor(private _http: HttpClient) { }
+
+  getListaHospitales(){
+    let url = `${this.uriHospital}/hospitales`;
+    return this._http.get<any[]>(url).pipe(map(res => res));
+  }
 
   getInformeRegisterNow(idDepartamento:string):Observable<RegistroHora[]>{
     let url = `${this.listaRegistroHora}/dateNow/${idDepartamento}`;

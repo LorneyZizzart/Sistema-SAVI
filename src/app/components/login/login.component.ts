@@ -81,7 +81,7 @@ export class LoginComponent implements OnInit {
       }
     }   
   }
-
+  // [InfoDepartamento]
   verificarUsuario(){
     if(this.inputSuccessUsuario && this.inputSuccessPassword){
       this._appUserService.getVerificarUser(this.user)
@@ -90,12 +90,7 @@ export class LoginComponent implements OnInit {
           if(usuario[0].estado){
             this._appUserService.getUser(usuario[0].idUsuario).subscribe((persona : Persona[]) => {
               if(usuario[0].idRol == "4"){
-                this._appDepartamentoService.getDepartamentosUser(usuario[0].idRol, usuario[0].idUsuario).subscribe((data:Departamento[]) => {
-
-                  for(let dep of data){
-                    dep.idDepartamentoSelect = "0";
-                    this.departamento = data;
-                  }
+                this._appDepartamentoService.getDepartamentosUser(usuario[0].idRol, usuario[0].idUsuario).subscribe((data:Departamento) => {
                   this._authService.setDatosDepartamento(data);
                 })
               }              

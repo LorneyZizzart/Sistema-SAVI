@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Departamento } from "../../interfaces/departamento.interface";
+import { AppDepartamentoService } from '../../services/app-departamento.service';
+import { AuthService } from '../../services/auth.service';
+
 
 @Component({
   selector: 'app-gestionar-info-departamento',
@@ -7,9 +11,25 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GestionarInfoDepartamentoComponent implements OnInit {
 
-  constructor() { }
+  historialDepartamento:Departamento[];
+  departamento:Departamento;
+
+  constructor(private _appDepartamentoService: AppDepartamentoService,
+              private _appAuthService : AuthService) {
+
+   }
 
   ngOnInit() {
+    this.departamento = this._appAuthService.getDatosDepartamento();
+    this.getHistorialesDepartamento(this.departamento[0].idDepartamento);
+    console.log("depto: ",this.departamento);
+  }
+
+  getHistorialesDepartamento(idDepartamento:string){
+    this._appDepartamentoService.getHistorialesDepartamento(idDepartamento).subscribe((historial:Departamento[]) => {
+      this.historialDepartamento = historial;
+      console.log("historial: ",this.historialDepartamento);
+    })
   }
 
 }

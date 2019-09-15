@@ -16,6 +16,7 @@ export class AppDepartamentoService {
 
   constructor(private _http: HttpClient) { }
 
+
   //gestion de Departamentos
   //Obtener un deppartamento con sus datos actuales y activos
   getDepartamento(idDepartamento:string){
@@ -39,7 +40,7 @@ export class AppDepartamentoService {
 
   getDepartamentosUser(idRol:string, idUsuario:string){
     let url = `${this.listaDepartamentoURL}/depsUser/${idRol}/${idUsuario}`;
-    return this._http.get<Departamento[]>(url).pipe(map(res => res));
+    return this._http.get<Departamento>(url).pipe(map(res => res));
   }
 
   postDepartamento(departamento:Departamento):Observable<Departamento[]>{
@@ -80,7 +81,7 @@ export class AppDepartamentoService {
     return this._http.get<Departamento[]>(url).pipe(map(res => res));
   }
 
-  //Obtencion de todo el historial de un departamento
+  //Obtencion de todo el historial de un departamento [INFO DEPARTAMENTO]
   getHistorialesDepartamento(idDepartamento:string){
     let url = `${this.listaHistorialDepartamentoURL}/allHistorial/${idDepartamento}`;
     return this._http.get<Departamento[]>(url).pipe(map(res => res));

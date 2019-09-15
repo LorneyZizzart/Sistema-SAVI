@@ -19,7 +19,7 @@ export class GestionarAreaComponent implements OnInit {
   //Id dep Departamento
   IdDepartamento:string  = "25";
   //departamentos a cargo
-  departamentos:Departamento[];
+  departamento:Departamento;
   nameDept:string = "";
   //ALERTS
   titleAlert:string = null;
@@ -98,37 +98,15 @@ export class GestionarAreaComponent implements OnInit {
   }
   //Gestion Departamento
   getDepartamentosUser(){
-    this.departamentos =  this._authService.getDatosDepartamento();
-    if(this.departamentos.length == 1){
-      this.IdDepartamento = this.departamentos[0].idDepartamento;
-      this.nameDept = this.departamentos[0].nombreDepartamento;
-    }else{
-      for(let departamento of this.departamentos){
-        if(departamento.idDepartamentoSelect == "1"){
-          this.IdDepartamento = departamento.idDepartamento;
-          this.nameDept = departamento.nombreDepartamento;
-        }
-      }
-    }
+    this.departamento =  this._authService.getDatosDepartamento();
   }
 
   searchDepartament(idDepartamento){
-    this.departamentos =  this._authService.getDatosDepartamento();
+    this.departamento =  this._authService.getDatosDepartamento();
     console.log("id: ", idDepartamento);
     let array:Departamento[] = [];  
     if(idDepartamento){
       this.IdDepartamento = idDepartamento;
-      for(let departamento of this.departamentos){
-        if(departamento.idDepartamento == idDepartamento){
-          this.nameDept = departamento.nombreDepartamento;
-          departamento.idDepartamentoSelect = "1";
-        }else{
-          departamento.idDepartamentoSelect = "0";
-        }
-       array.push(departamento);
-      }
-      this.departamentos = array;
-      this._authService.setDatosDepartamento(this.departamentos);
       this.getAreaDepartamento(this.IdDepartamento);
       this.getAsignacionArea(this.IdDepartamento); 
     }      
