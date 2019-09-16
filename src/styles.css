@@ -35,4 +35,10 @@ body {
     border-top-color: #541686;
 }
 
+.modal-header {
+    background: #541686;
+}
+
+
+
 /* You can add global styles to this file, and also import other style files */

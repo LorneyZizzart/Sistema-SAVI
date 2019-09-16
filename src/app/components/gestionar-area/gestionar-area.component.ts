@@ -16,7 +16,6 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./gestionar-area.component.css']
 })
 export class GestionarAreaComponent implements OnInit {
-
   //Id dep Departamento
   IdDepartamento:string  = "25";
   //departamentos a cargo
@@ -30,8 +29,6 @@ export class GestionarAreaComponent implements OnInit {
   alertError:Boolean = false;
   alertWarning:boolean = false;
   //GestionarArea
-  MessageEnabled:Boolean = false;
-  MessageDisabled:Boolean = false;
   listaAreaDepartamento:Area[];
   private area:Area = {}
   private estadoUpdate:Area = {}
@@ -41,16 +38,12 @@ export class GestionarAreaComponent implements OnInit {
   //PAra registrar asignar area
   idConvenio:string;
   idArea:string;
-  //Message de confirmacion de delete
-  messageYdelete:boolean = false;
   //Lista de las areas con sus respectivos estudiantes
   studentArea:Area[];
   //NOMBRE AREA
   nombreArea:string;
   IdArea:Area;
-  //message de asignacoin de area
-  MessageSuccessAsignacion:boolean = false;
-  MessageFailAsignacion:boolean = false;
+
   constructor( private _appAreaService : AppAreaService, 
                private _appTipoPersonaService : AppTipoPersonaService,
                private _authService : AuthService) {
@@ -84,20 +77,6 @@ export class GestionarAreaComponent implements OnInit {
       this.alertError = false;
       this.alertWarning = false;
     }, 5000);
-  }
-
-  messageEnableDesable(value:string){
-    if (value == 'inactivo') {
-      this.MessageDisabled = true;      
-      setTimeout(() => {
-        this.MessageDisabled = false;
-      }, 8000);
-    }else if (value == 'activo') {
-      this.MessageEnabled = true;
-      setTimeout(() => {
-        this.MessageEnabled = false;
-      }, 8000);
-    }
   }
   //Gestion Departamento
   getDepartamentoUser(){
@@ -149,15 +128,14 @@ export class GestionarAreaComponent implements OnInit {
   }
 
   eliminarArea(){
+    
     this._appAreaService.deleteArea(this.idArea)
-    .subscribe((data : Area[])=>{console.log(data)})
-    this.messageYdelete = true;
-    setTimeout(() => {
-    this.getAreaDepartamento(this.IdDepartamento);      
-    }, 2000);
-    setTimeout(() => {
-      this.messageYdelete = false;
-    }, 8000);
+    .subscribe((data : Area[])=>{
+      this.getAreaDepartamento(this.departamento[0].idDepartamento);  
+      this.alert(1, 'Registro eliminado', 'El área fue eliminado satisfactoriamente.');
+      }, res => {
+        this.alert(2, 'Error al eliminar', 'Se ha producido un error en el servidor al eliminar.');
+      });
   }
 
   //gestionar asignacion area aun no se ejecuta
@@ -166,26 +144,19 @@ export class GestionarAreaComponent implements OnInit {
     .subscribe((area : Area []) => { this.studentArea = area})
   }
 
-  saveAsignarArea(idConvenio, idArea, frm){
-    console.log("idconvenio: ", idConvenio )
-    console.log("idArea: ", idArea )
-    if(this.idConvenio != null && this.idArea != null){
+  saveAsignarArea(idConvenio, idArea, form){ 
+
       this.area.idConvenio = idConvenio;
       this.area.idArea = idArea;
   
       this._appAreaService.postAsignarArea(this.area)
-      .subscribe((area : Area[]) => {console.log(area)})
+      .subscribe((area : Area[]) => {
+        this.alert(1, 'Registro exitoso', 'El registro de asignación se realizó satisfactoriamente.');
+        this.resetForm(form);
+      }, res => {
+        this.alert(2, 'Error al registrar', 'Se ha producido un error en el servidor al registrar.');
+      })
 
-      this.MessageSuccessAsignacion = true;
-      setTimeout(() => {
-      this.MessageSuccessAsignacion = false;        
-      }, 6000);
-    }else{
-      this.MessageFailAsignacion = true;
-      setTimeout(() => {
-      this.MessageFailAsignacion = false;        
-      }, 6000);
-    }
     
   }
 
