@@ -16,4 +16,10 @@ export class AppCarreraService {
   getListCarrera(){
     return this._http.get<Carrera[]>(this.uriCarrera).pipe(map(res => res));
   }
+
+  getCarrera(idCarrera:number){
+    let url = `${this.uriCarrera}/${idCarrera}`;
+    return this._http.get<Carrera>(url).pipe(map(res => res));
+  }
+
 }

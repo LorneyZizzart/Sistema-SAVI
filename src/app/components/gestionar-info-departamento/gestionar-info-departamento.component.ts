@@ -22,13 +22,12 @@ export class GestionarInfoDepartamentoComponent implements OnInit {
   ngOnInit() {
     this.departamento = this._appAuthService.getDatosDepartamento();
     this.getHistorialesDepartamento(this.departamento[0].idDepartamento);
-    console.log("depto: ",this.departamento);
+
   }
 
   getHistorialesDepartamento(idDepartamento:string){
     this._appDepartamentoService.getHistorialesDepartamento(idDepartamento).subscribe((historial:Departamento[]) => {
       this.historialDepartamento = historial;
-      console.log("historial: ",this.historialDepartamento);
     })
   }
 

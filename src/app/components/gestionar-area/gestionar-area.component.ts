@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgForm} from '@angular/forms';
 import { AppAreaService } from '../../services/app-area.service';
 import { Area } from '../../interfaces/area.interface';
 import { Persona } from '../../interfaces/persona.interface';
@@ -57,15 +58,17 @@ export class GestionarAreaComponent implements OnInit {
    }
 
   ngOnInit() {
-    if(this.IdDepartamento == "0"){
-      this.getDepartamentosUser(); 
-    }else{
-      this.searchDepartament(this.IdDepartamento);
-    }
-        
+      this.getDepartamentoUser(); 
+      this.getAreaDepartamento(this.departamento[0].idDepartamento);
+      this.getAsignacionArea(this.departamento[0].idDepartamento);        
   }
 
   ngOnDestroy(): void {
+  }
+
+  resetForm(formulario: NgForm) {
+    formulario.reset({
+    });
   }
 
   alert(opcion:number, title:string, message:string):void{
@@ -97,23 +100,13 @@ export class GestionarAreaComponent implements OnInit {
     }
   }
   //Gestion Departamento
-  getDepartamentosUser(){
+  getDepartamentoUser(){
     this.departamento =  this._authService.getDatosDepartamento();
   }
 
-  searchDepartament(idDepartamento){
-    this.departamento =  this._authService.getDatosDepartamento();
-    console.log("id: ", idDepartamento);
-    let array:Departamento[] = [];  
-    if(idDepartamento){
-      this.IdDepartamento = idDepartamento;
-      this.getAreaDepartamento(this.IdDepartamento);
-      this.getAsignacionArea(this.IdDepartamento); 
-    }      
-  }
 
-  getEstudiantes(idDepartamento:string){
-    this._appTipoPersonaService.getListStudentDepto(idDepartamento)
+  getEstudiantes(){
+    this._appTipoPersonaService.getListStudentDepto(this.departamento[0].idDepartamento)
     .subscribe((estudiantes : Persona[]) => {this.estudiantes =  estudiantes});
   }
 
@@ -126,9 +119,9 @@ export class GestionarAreaComponent implements OnInit {
   
   saveArea(){
     if (this.area.nombreArea != null) {
-      this.area.idDepartamento = this.IdDepartamento;
+      this.area.idDepartamento = this.departamento[0].idDepartamento;
       this._appAreaService.postArea(this.area).subscribe((area:Area[])=>{
-        this.getAreaDepartamento(this.IdDepartamento);
+        this.getAreaDepartamento(this.departamento[0].idDepartamento);
         this.alert(1, 'Registro exitoso', 'El área del departamento se registro satisfactoriamente.');
       }, res => {
         this.alert(2, 'Error al registrar', 'Se ha producido un error en el servidor al registrar.');
@@ -139,19 +132,15 @@ export class GestionarAreaComponent implements OnInit {
   }
 
   editEstadoArea(idArea:Area, estado:string){
-    
-    if(estado != ""){
       this.estadoUpdate.estadoArea = estado; 
-      this._appAreaService.putEstado(this.estadoUpdate, idArea).subscribe((data : Area[]) => {console.log(data)})
-
-      if(estado == "1"){
-        this.messageEnableDesable('activo');
-      }else{this.messageEnableDesable('inactivo');}
-    }else{} 
-
-    setTimeout(() => {
-      this.getAreaDepartamento("1");
-    }, 2000);
+      this._appAreaService.putEstado(this.estadoUpdate, idArea).subscribe((data : Area[]) => {
+        this.getAreaDepartamento(this.departamento[0].idDepartamento);
+        if(estado == "1")
+        this.alert(1, 'Registro exitoso', 'El área fue habilitada satisfactoriamente.');
+        else this.alert(1, 'Registro exitoso', 'El área fue deshabilitado satisfactoriamente.');
+      }, res => {
+        this.alert(2, 'Error al registrar', 'Se ha producido un error en el servidor.');
+      })
   }
 
   editarArea(){}
@@ -177,10 +166,12 @@ export class GestionarAreaComponent implements OnInit {
     .subscribe((area : Area []) => { this.studentArea = area})
   }
 
-  saveAsignarArea(){
+  saveAsignarArea(idConvenio, idArea, frm){
+    console.log("idconvenio: ", idConvenio )
+    console.log("idArea: ", idArea )
     if(this.idConvenio != null && this.idArea != null){
-      this.area.idConvenio = this.idConvenio;
-      this.area.idArea = this.idArea;
+      this.area.idConvenio = idConvenio;
+      this.area.idArea = idArea;
   
       this._appAreaService.postAsignarArea(this.area)
       .subscribe((area : Area[]) => {console.log(area)})

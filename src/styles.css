@@ -31,4 +31,8 @@ body {
     background-color: #541686;
 }
 
+.nav-tabs-custom>.nav-tabs>li.active {
+    border-top-color: #541686;
+}
+
 /* You can add global styles to this file, and also import other style files */

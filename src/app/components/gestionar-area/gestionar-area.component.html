@@ -8,22 +8,6 @@
             Gestionar
             <small>Áreas del departamento {{ nameDept }}</small>
         </h1>
-        <ol *ngIf="departamentos.length > 1" class="breadcrumb">
-            <form (ngSubmit)="searchDepartament(idDepto.value)" #frmDepartamentos="ngForm" name="frmDepartamentos" class="form-horizontal">
-
-                <div class="form-group">
-                    <label for="inputName" class="col-sm-4 control-label">Seleccionar departamento:</label>
-    
-                    <div class="col-sm-4 select-departamento">
-                        <select #idDepto [(ngModel)]="idConvenio" name="idConvenio"  class="form-control select2" style="width: 100%;">
-                            <option *ngFor="let item of departamentos" [value]="item.idDepartamento">{{ item.nombreDepartamento }}</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn-save btn btn-primary">
-                        <i class="fa fa-eye"></i> Ver</button>
-                </div>    
-            </form>
-        </ol>
     </section>
     <div *ngIf="messageYdelete == true" class="pad no-print">
         <div class="callout callout-success">
@@ -170,7 +154,7 @@
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#lista" data-toggle="tab">Lista</a></li>
                         <li><a href="#registrar" data-toggle="tab">Registrar</a></li>
-                        <li (click)="getEstudiantes(IdDepartamento)" ><a href="#asignar" data-toggle="tab">Asignar estudiante a un área</a></li>
+                        <li (click)="getEstudiantes()" ><a href="#asignar" data-toggle="tab">Asignar estudiante a un área</a></li>
                     </ul>
                     <div class="tab-content">
                         <!-- LISTA -->
@@ -204,13 +188,13 @@
                                             <td>{{ area.nombreArea }}</td>
                                             <td>{{ area.fechaRegistroArea | date: 'dd/MM/yyyy' }}</td>
                                             <td class="text-center">
-                                                <a *ngIf="area.estadoArea == true" (click)="editEstadoArea(area.idArea, '0')" class="btn btn-danger " data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
-                                                <a *ngIf="area.estadoArea == false" (click)="editEstadoArea(area.idArea, '1')" class="btn btn-success " data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
+                                                <a *ngIf="area.estadoArea == true" (click)="editEstadoArea(area.idArea, '0')" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
+                                                <a *ngIf="area.estadoArea == false" (click)="editEstadoArea(area.idArea, '1')" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
                                             </td>
                                             <td class="text-center">
-                                                <a (click)="verStudentArea(area.idArea)" data-toggle="modal" class="btn btn-primary " data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a>
-                                                <a data-toggle="modal" data-target="#modal-editar" class="btn btn-default" title="Editar"><i class="fa fa-edit"></i></a>
-                                                <a (click)="deleteArea(area.idArea)" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger"  title="Eliminar"><i class="fa fa-fw fa-trash"></i></a>
+                                                <a (click)="verStudentArea(area.idArea)" data-toggle="modal" class="btn btn-primary btn-xs" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a>
+                                                <a data-toggle="modal" data-target="#modal-editar" class="btn btn-default btn-xs" title="Editar"><i class="fa fa-edit"></i></a>
+                                                <a (click)="deleteArea(area.idArea)" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger btn-xs"  title="Eliminar"><i class="fa fa-fw fa-trash"></i></a>
                                             </td>
                                         </tr>
                                     </table>
@@ -253,7 +237,7 @@
                             <section id="new">
                                 <h4 class="page-header"><i class="fa fa-address-book"></i> Asignación de área a estudiantes</h4>
 
-                                <form (ngSubmit)="saveAsignarArea()" #frmAsignacionArea="ngForm" name="frmAsignacionArea" class="form-horizontal">
+                                <form (ngSubmit)="saveAsignarArea(idCon.value, idAr.value, frmAsignacionArea)" #frmAsignacionArea="ngForm" name="frmAsignacionArea" class="form-horizontal">
 
                                     <div class="row">
                                         <div class="col-md-6">
@@ -262,7 +246,7 @@
                                                 <label for="inputName" class="col-sm-4 control-label">Buscar nombre:</label>
 
                                                 <div class="col-sm-8 select-student">
-                                                    <select [(ngModel)]="idConvenio" name="idConvenio"  class="form-control select2" style="width: 100%;">
+                                                    <select #idCon [(ngModel)]="idConvenio" name="idConvenio"  class="form-control select2" style="width: 100%;">
                                                         <option *ngFor="let persona of estudiantes" [value]="persona.idConvenio">{{ persona.primerNombre }}
                                                             {{ persona.segundoNombre }} {{persona.primerApellido}} {{persona.segundoApellido}}</option>
                                                     </select>
@@ -276,7 +260,7 @@
                                                 <label for="inputName" class="col-sm-4 control-label">Buscar areas:</label>
 
                                                 <div class="col-sm-8 select-student">
-                                                    <select [(ngModel)]="idArea" name="idArea" class="form-control select2" style="width: 100%;">
+                                                    <select #idAr [(ngModel)]="idArea" name="idArea" class="form-control select2" style="width: 100%;">
                                                             <option *ngFor="let area of listaAreaDepartamento" [value]="area.idArea">{{ area.nombreArea }}</option>
                                                     </select>
                                                 </div>
