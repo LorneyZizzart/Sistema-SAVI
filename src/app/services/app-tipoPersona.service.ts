@@ -33,8 +33,8 @@ export class AppTipoPersonaService {
     return this._http.get<Persona[]>(url).pipe(map(res => res));
   }
 
-  getInfoEstudiantes(idDepartamento:string){
-    let url = `${this.listaTipoPersonaURL}/infoEstudiante/${idDepartamento}`;
+  getInfoEstudiantes(idDepartamento:string, idPesona:string){
+    let url = `${this.listaTipoPersonaURL}/infoEstudiante/${idDepartamento}/${idPesona}`;
     return this._http.get<Persona[]>(url).pipe(map(res => res));
   }
 

@@ -149,6 +149,10 @@ export class NavbarJFComponent implements OnInit {
     this._router.navigate(['/informeJefeArchivado']);    
   }
 
+  gestionarInformeEliminado(){
+    this._router.navigate(['/informeJefeEliminado']);    
+  }
+
   gestionarBandejaInformes(){
     this._router.navigate(['/informeFinanzas']);    
   }

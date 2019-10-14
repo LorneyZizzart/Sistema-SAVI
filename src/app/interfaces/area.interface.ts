@@ -1,6 +1,7 @@
 export interface Area {
   idArea?:string
   idDepartamento?:string
+  idPersona?:string
   nombreDepartamento?:string
   fechaRegistroDepartamento?:string
   estadoDepartamento?:string

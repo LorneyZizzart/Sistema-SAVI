@@ -13,22 +13,6 @@
           <li class="active">Informe de los estudiantes aprobados</li>
       </ol>
   </section>
-
-  <div *ngIf="messageDelete == true" class="pad no-print">
-      <div class="callout callout-success">
-          <h4><i class="icon fa fa-check"></i> El registro fue eliminado</h4>
-      </div>
-  </div>
-  <div *ngIf="messageInformeSave == true" class="pad no-print">
-    <div class="callout callout-success">
-        <h4><i class="icon fa fa-check"></i> El informe semanal de horas se genero exitosamente</h4>
-    </div>
-</div>
-<div *ngIf="MessageSuccessArchivar == true" class="pad no-print">
-    <div class="callout callout-success">
-        <h4><i class="icon fa fa-check"></i> El informe fue archivado</h4>
-    </div>
-</div>
 <!-- Modal -->
 <div class="modal fade" id="modal-informacion">
   <div class="modal-dialog">
@@ -98,7 +82,7 @@
           <div class="modal-header text-center">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title">Confirmar</h4>
+              <h4 class="modal-title">¿Esta seguro de eliminar?</h4>
           </div>
           <div class="modal-body">
               <div class="row text-center">
@@ -106,7 +90,7 @@
                       <button type="button"  data-dismiss="modal" aria-label="Close" class="btn btn-danger">Cancelar</button>
                   </div>
                   <div class="col-md-6">
-                      <button  data-dismiss="modal" aria-label="Close" type="button" class="btn btn-success">Aceptar</button>
+                      <button (click)="bajaInformeEstudiante()"  data-dismiss="modal" aria-label="Close" type="button" class="btn btn-success">Aceptar</button>
                   </div>
               </div>
           </div>
@@ -126,7 +110,7 @@
                 <div class="col-md-3">
                     <div class="box-profile">
                         <img class="profile-user-img img-responsive img-circle" src="assets/img/avatar.png" alt="User profile picture">
-                        <p class="text-muted text-center">650004813</p>
+                        <p class="text-muted text-center">{{codEstudiante}}</p>
                     </div>
                 </div>
                 <div class="col-md-9">
@@ -259,11 +243,11 @@
                                         <span *ngIf="informe.aprobadoFinanzas == false" class="badge bg-red"><i class="fa fa-times"></i></span>
                                     </td>
                                       <td class="text-center">
-                                          <a (click)="informacionEstudiante(informe.idRegistroHora, informe.idPersona)" data-toggle="modal" data-target="#modal-informacionStudiante"  class="btn btn-primary btn-margin" title="Ver"><i class="fa fa-eye"></i></a>
-                                          <a *ngIf="informe.aprobadoFinanzas == true" (click)="archivarInforme(informe.idInformeEstudiante)" class="btn btn-success btn-margin" title="Archivar"><i class="fa fa-folder"></i></a>
-                                          <a *ngIf="informe.aprobadoFinanzas == false" class="btn btn-success btn-margin disabled" title="Archivar"><i class="fa fa-folder"></i></a>
-                                          <a *ngIf="informe.aprobadoFinanzas == false" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger btn-margin" title="Eliminar"><i class="fa fa-trash"></i></a>
-                                          <a *ngIf="informe.aprobadoFinanzas == true" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger btn-margin disabled" title="Eliminar"><i class="fa fa-trash"></i></a>
+                                          <a (click)="informacionEstudiante(informe.idRegistroHora, informe.idPersona)" data-toggle="modal" data-target="#modal-informacionStudiante"  class="btn btn-primary btn-xs" title="Ver"><i class="fa fa-eye"></i></a>
+                                          <a *ngIf="informe.aprobadoFinanzas == true" (click)="archivarInforme(informe.idInformeEstudiante)" class="btn btn-success btn-xs" title="Archivar"><i class="fa fa-folder"></i></a>
+                                          <a *ngIf="informe.aprobadoFinanzas == false" class="btn btn-success btn-xs disabled" title="Archivar"><i class="fa fa-folder"></i></a>
+                                          <a (click)="eliminarInformeEstudiante(informe.idInformeEstudiante)" *ngIf="informe.aprobadoFinanzas == false" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger btn-xs" title="Eliminar"><i class="fa fa-trash"></i></a>
+                                          <a *ngIf="informe.aprobadoFinanzas == true" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger btn-xs disabled" title="Eliminar"><i class="fa fa-trash"></i></a>
                                       </td>
                                   </tr>
                               </table>
@@ -322,3 +306,19 @@
 <app-footer></app-footer> 
 </div>
 <!-- /.content-wrapper -->
+<div id="growls-default">
+    <div [ngClass]="{'growl': true, 'growl-notice':alertSuccess, 
+                    'growl-error':alertError, 
+                    'growl-warning':alertWarning, 
+                    'growl-large':true, 
+                    'growl-outgoing':!activateAlert}">
+        <div [ngClass]="{'growl-close': true, 'growl-outgoing':!activateAlert}">×</div>
+        <div [ngClass]="{'growl-title': true, 'growl-outgoing':!activateAlert}">
+            <i [ngClass]="{'icon': true, 'fa': true, 
+            'fa-check': alertSuccess, 
+            'fa-close': alertError, 
+            'fa-warning': alertWarning}"></i>
+            {{titleAlert}} </div>
+        <div [ngClass]="{'growl-message': true,'growl-outgoing':!activateAlert}">{{messageAlert}}</div>
+    </div>
+</div>

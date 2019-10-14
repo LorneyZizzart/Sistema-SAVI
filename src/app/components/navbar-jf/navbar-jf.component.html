@@ -55,7 +55,7 @@
                         <li class="header">Tiene {{asistenciasNum}} informes sin revisar</li>
                         <li>
                             <ul class="menu">
-                                <li *ngFor="let registro of informesRegistrosNow; let i = index">
+                                <li *ngFor="let registro of listInformeEstudiante; let i = index">
                                     <a (click)="gestionarRegistroHoy()">
                                         <div class="pull-left ico-informe">
                                             <h2 class="ico-informe" ><i class="fa fa-user"></i></h2> 
@@ -63,7 +63,7 @@
                                         <h4>
                                             {{registro.primerApellido}} {{registro.segundoApellido}} {{registro.primerNombre}}  {{registro.segundoNombre}}
                                         </h4>
-                                        <p><strong>{{registro.horaEntrada | hora }}:{{registro.minutoEntrada | minuto}}</strong></p>
+                                        <p><strong>{{registro.horaEntrada | hora }}:{{registro.minutoEntrada | minuto}}</strong> Hora de ingreso</p>
                                     </a>
                                 </li>
                             </ul>
@@ -118,12 +118,12 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">Menu de navegación</li>
-            <li *ngIf="idRol == 2 || idRol == 3" [routerLinkActive]="['is-active']">
+            <li *ngIf="idRol == 2 || idRol == 3" >
                 <a (click)="gestionarUser()">
                     <i class="fa fa-user"></i> <span>Usuario</span>
                 </a>
             </li>
-            <li *ngIf="idRol == 2 || idRol == 3" [routerLinkActive]="['is-active']">
+            <li *ngIf="idRol == 2 || idRol == 3" >
                 <a (click)="gestionarConvenio()">
                     <i class="fa fa-file-text"></i> <span>Convenio</span>
                 </a>
@@ -178,6 +178,11 @@
             <li *ngIf="idRol== 4" >
                 <a (click)="gestionarInformeArchivados()">
                     <i class="fa fa-folder"></i> <span>Informe archivados</span>                    
+                </a>
+            </li>
+            <li *ngIf="idRol== 4" >
+                <a (click)="gestionarInformeEliminado()">
+                    <i class="fa fa-trash"></i> <span>Informe eliminados</span>                    
                 </a>
             </li>
             <li *ngIf="idRol == 2 || idRol == 3" >

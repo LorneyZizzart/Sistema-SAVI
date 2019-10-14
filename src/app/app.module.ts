@@ -74,6 +74,7 @@ import { AuthGuard } from './auth.guard';
 import { LoginComponent } from './components/login/login.component';
 import { GestionarAcreedorHistorialComponent } from './components/gestionar-acreedor-historial/gestionar-acreedor-historial.component';
 import { FechaPipe } from './pipes/fecha.pipe';
+import { GestionarInformeJefeEliminadoComponent } from './components/gestionar-informe-jefe-eliminado/gestionar-informe-jefe-eliminado.component';
 
 @NgModule({
   declarations: [
@@ -118,7 +119,8 @@ import { FechaPipe } from './pipes/fecha.pipe';
     LoginComponent,
     GestionarAcreedorHistorialComponent,
     FechaPipe,
-    GestionarInfoDepartamentoComponent
+    GestionarInfoDepartamentoComponent,
+    GestionarInformeJefeEliminadoComponent
   ],
   imports: [
     BrowserModule,

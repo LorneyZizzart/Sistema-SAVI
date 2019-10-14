@@ -9,21 +9,6 @@
             <small>Áreas del departamento {{ nameDept }}</small>
         </h1>
     </section>
-    <div *ngIf="messageYdelete == true" class="pad no-print">
-        <div class="callout callout-success">
-            <h4><i class="icon fa fa-check"></i> El área fue eliminada satisfactoriamente</h4>
-        </div>
-    </div>
-    <div *ngIf="MessageEnabled == true" class="pad no-print">
-        <div class="callout callout-success">
-            <h4><i class="icon fa fa-check"></i> Area habilitado</h4>
-        </div>
-    </div>
-    <div *ngIf="MessageDisabled == true" class="pad no-print">
-        <div class="callout callout-info">
-            <h4><i class="icon fa fa-check"></i> Area Deshabilitado</h4>
-        </div>
-    </div>
 
     <!---MODAL-->
     <div class="modal fade" id="modal-informacion">
@@ -32,7 +17,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Mas información...</h4>
+                    <h4 class="modal-title">Mas información ...</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -47,21 +32,21 @@
                                             <tr class="fila-tabla">
                                                 <th style="width: 10px">#</th>
                                                 <th>Nombre completo</th>
-                                                <th>Fecha de registro</th>
+                                                <th>Fecha de asignación</th>
                                                 <th style="width: 10%">Estado</th>
                                                 <th style="width: 18%"class="text-center">Opciones</th>
                                             </tr>
                                             <tr *ngFor="let area of studentArea; let i = index">
-                                                <td *ngIf="area.idArea == IdArea">{{ i+1 }}.</td>
-                                                <td *ngIf="area.idArea == IdArea">{{ area.primerNombre }} {{ area.segundoNombre }} {{ area.primerApellido }} {{ area.segundoApellido }}</td>
-                                                <td *ngIf="area.idArea == IdArea">{{ area.fechaRegistroAsignacion | date: 'dd/MM/yyyy' }}</td>
-                                                <td *ngIf="area.idArea == IdArea" class="text-center">
-                                                    <a *ngIf="area.estadoAsignacion == true" (click)="editAsignacion(area.idAsignacionArea, '0')" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
-                                                    <a *ngIf="area.estadoAsignacion == false" (click)="editAsignacion(area.idAsignacionArea, '1')" class="btn btn-min-green btn-xs" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
+                                                <td >{{ i+1 }}.</td>
+                                                <td >{{ area.primerApellido }} {{ area.segundoApellido }} {{ area.primerNombre }} {{ area.segundoNombre }}</td>
+                                                <td >{{ area.fechaRegistroAsignacion | date: 'dd/MM/yyyy' }}</td>
+                                                <td class="text-center">
+                                                    <a *ngIf="area.estadoAsignacion == true" (click)="editAsignacion(area.idArea, area.idAsignacionArea, '0')" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="right" title="Deshabilitar"><i class="fa fa-close"></i></a>
+                                                    <a *ngIf="area.estadoAsignacion == false" (click)="editAsignacion(area.idArea, area.idAsignacionArea, '1')" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
                                                 </td>
-                                                <td *ngIf="area.idArea == IdArea" class="text-center">
-                                                    <a  data-toggle="modal" data-target="#modal-editar" class="btn btn-xs " title="Editar"><i class="fa fa-edit"></i></a>
-                                                    <a (click)="deleteAsignacion(area.idAsignacionArea)" class="btn btn-danger btn-xs"  title="Eliminar"><i class="fa fa-fw fa-trash"></i></a>
+                                                <td  class="text-center">
+                                                    <a (click)="cambiarArea(area.idConvenio, area.idAsignacionArea)" data-toggle="modal" data-target="#modal-cambiarArea" class="btn btn-default btn-xs" title="Cambiar de área"><i class="fa fa-edit"></i></a>
+                                                    <a (click)="deleteAsignacion(area.idArea, area.idAsignacionArea)" class="btn btn-danger btn-xs"  title="Eliminar"><i class="fa fa-fw fa-trash"></i></a>
                                                 </td>
                                             </tr>
                                         </table>
@@ -87,7 +72,7 @@
                     <h4 class="modal-title">Editar</h4>
                 </div>
                 <div class="modal-body">
-                    <form (ngSubmit)="editarArea()" #editarArea="ngForm" name="formularioEditPersona" class="form-horizontal">
+                    <form name="frmEditarArea" class="form-horizontal">
 
                         <div class="row row-editar">
                             <div class="col-md-12">
@@ -95,15 +80,46 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Nombre:</label>
-                                        <input  name="nombreArea" type="text" class="form-control" id="nombreArea" placeholder="">
+                                        <input [(ngModel)]="area.nombreArea" name="area.nombreArea" type="text" class="form-control" id="nombreArea">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-12 text-center">
 
-                                <button  type="submit" name="button" class="btn btn-primary margin" data-dismiss="modal">
+                                <button (click)="putArea()" type="submit" name="button" class="btn btn-primary margin" data-dismiss="modal">
                                     <i class="fa fa-refresh"></i> Actualizar
                           </button>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-cambiarArea">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Cambiar de área</h4>
+                </div>
+                <div class="modal-body">
+                    <form name="frmCambiarArea" class="form-horizontal">
+                        <div class="row" style="margin-right: 2%;margin-left: 2%;">
+                            <div class="form-group">
+                                <label>Buscar areas: </label>
+                                <select #idAre [(ngModel)]="area.idArea" name="area.idArea" class="form-control select2" style="width: 100%;">
+                                    <option *ngFor="let area of listaAreaDepartamento" [value]="area.idArea">{{ area.nombreArea }}</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-12 text-center">
+
+                                <button  (click)="putAsignacionArea(idAre.value)" type="submit" name="button" class="btn btn-primary margin" data-dismiss="modal">
+                                    <i class="fa fa-refresh"></i> Actualizar
+                                </button>
                             </div>
 
                         </div>
@@ -152,7 +168,7 @@
                                     <h4 class="page-header"><i class="fa fa-list-ul"></i> Lista de áreas del departamento </h4>
                                     <div class="box-tools left">
                                         <div class="input-group input-group-sm" style="width: 300px;">
-                                            <input type="text" name="table_search" class="form-control pull-right" placeholder="Buscar area">
+                                            <input (keyup)="buscarArea(buscarNombre.value)" #buscarNombre type="text" name="buscarNombre" class="form-control pull-right" placeholder="Buscar area">
 
                                             <div class="input-group-btn">
                                                 <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
@@ -180,8 +196,8 @@
                                                 <a *ngIf="area.estadoArea == false" (click)="editEstadoArea(area.idArea, '1')" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="right" title="Habilitar"><i class="fa fa-check"></i></a>
                                             </td>
                                             <td class="text-center">
-                                                <a (click)="verStudentArea(area.idArea)" data-toggle="modal" class="btn btn-primary btn-xs" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a>
-                                                <a data-toggle="modal" data-target="#modal-editar" class="btn btn-default btn-xs" title="Editar"><i class="fa fa-edit"></i></a>
+                                                <a (click)="verAsignacionArea(area.nombreArea, area.idArea)" data-toggle="modal" class="btn btn-primary btn-xs" data-target="#modal-informacion" title="Ver"><i class="fa fa-eye"></i></a>
+                                                <a (click)="editArea(area.nombreArea, area.idArea)" data-toggle="modal" data-target="#modal-editar" class="btn btn-default btn-xs" title="Editar"><i class="fa fa-edit"></i></a>
                                                 <a (click)="deleteArea(area.idArea)" data-toggle="modal" data-target="#modal-eliminar" class="btn btn-danger btn-xs"  title="Eliminar"><i class="fa fa-fw fa-trash"></i></a>
                                             </td>
                                         </tr>
@@ -194,7 +210,7 @@
                         <!-- REGISTRAR -->
                         <div class="tab-pane" id="registrar">
                             <section id="new">
-                                <h4 class="page-header"><i class="fa fa-address-book"></i> Registro de área en el departamento</h4>
+                                <h4 class="page-header"><i class="fa fa-address-book"></i> Nueva área</h4>
 
                                 <form (ngSubmit)="saveArea()" #registroArea="ngForm" name="formularioRegistroArea" class="form-horizontal">
 

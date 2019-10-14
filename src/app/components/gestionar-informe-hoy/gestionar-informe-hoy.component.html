@@ -6,7 +6,7 @@
     <section class="content-header">
         <h1>
             Departamento
-            <small> de {{ nombreDepartamento }}</small>
+            <small> de {{ departament[0].nombreDepartamento }}</small>
         </h1>
         <ol class="breadcrumb">
             <li><a [routerLink]="['/home']"><i class="fa fa-home"></i> Home</a></li>
@@ -132,7 +132,7 @@
                     <div class="col-md-3">
                         <div class="box-profile">
                             <img class="profile-user-img img-responsive img-circle" src="assets/img/avatar.png" alt="User profile picture">
-                            <p class="text-muted text-center">650004813</p>
+                            <p class="text-muted text-center">{{codEstudiante}}</p>
                         </div>
                     </div>
                     <div class="col-md-9">
@@ -256,7 +256,7 @@
                                     </button>
                                     <ul class="dropdown-menu" role="menu">
                                       <li><a (click)="getEstudiantesDept()" data-toggle="modal" data-target="#modal-registrar" >Registrar</a></li>
-                                      <li><a data-toggle="modal" data-target="#modal-informacion" >Informacion</a></li>
+                                      <li><a (click)="getDepartament()" data-toggle="modal" data-target="#modal-informacion" >Informacion</a></li>
                                       <li class="divider"></li>
                                       <li><a href="#">Imprimir</a></li>
                                       <li><a href="#">Generar PDF</a></li>
@@ -294,19 +294,19 @@
                                         <td class="text-center">{{listHours[i+1] | undefineHora}}</td>
                                         <td class="text-center">{{listSaldo[i+1] | undefineSaldo}} Bs.</td>
                                         <td class="text-center">
-                                            <a *ngIf="registro.aprobadoFinanzas == false" (click)="registrarSalida(registro.idRegistroHora, registro.fechaEntrada)" class="btn btn-success btn-margin" title="Marcar salida"><i class="fa fa-sign-in"></i></a>
-                                            <a *ngIf="registro.aprobadoFinanzas == true" class="btn btn-success btn-margin disabled" title="Marcar salida"><i class="fa fa-sign-in"></i></a>
+                                            <a *ngIf="registro.aprobadoFinanzas == false" (click)="registrarSalida(registro.idRegistroHora, registro.fechaEntrada)" class="btn btn-success btn-xs" title="Marcar salida"><i class="fa fa-sign-in"></i></a>
+                                            <a *ngIf="registro.aprobadoFinanzas == true" class="btn btn-success btn-xs disabled" title="Marcar salida"><i class="fa fa-sign-in"></i></a>
                                         </td>
                                         <td class="text-center">
-                                            <a *ngIf="registro.aprobadoRegistroHora == true && registro.aprobadoFinanzas == false" (click)="registrarAprobacion(registro.idPersona, registro.idRegistroHora, '0', registro.fechaEntrada, registro.idRegistroHora)" data-toggle="modal" data-target="#modal-aprobacion" class="btn btn-success btn-margin" title="Aprobado"><i class="fa fa-check"></i></a>
-                                            <a *ngIf="registro.aprobadoRegistroHora == true && registro.aprobadoFinanzas == true" class="btn btn-success btn-margin disabled" title="Aprobado"><i class="fa fa-check"></i></a>
-                                            <a *ngIf="registro.aprobadoRegistroHora == false && registro.horaSalida != NULL" (click)="registrarAprobacion(registro.idPersona, registro.idRegistroHora, '1', registro.fechaEntrada, registro.idRegistroHora)" data-toggle="modal" data-target="#modal-aprobacion" class="btn btn-danger btn-margin" title="No aprobado"><i class="fa fa-close"></i></a>
-                                            <a *ngIf="registro.aprobadoRegistroHora == false && registro.horaSalida == NULL" class="btn btn-danger btn-margin disabled" title="No aprobado"><i class="fa fa-close"></i></a>
+                                            <a *ngIf="registro.aprobadoRegistroHora == true && registro.aprobadoFinanzas == false" (click)="registrarAprobacion(registro.idPersona, registro.idRegistroHora, '0', registro.fechaEntrada, registro.idRegistroHora)" data-toggle="modal" data-target="#modal-aprobacion" class="btn btn-success btn-xs" title="Aprobado"><i class="fa fa-check"></i></a>
+                                            <a *ngIf="registro.aprobadoRegistroHora == true && registro.aprobadoFinanzas == true" class="btn btn-success btn-xs disabled" title="Aprobado"><i class="fa fa-check"></i></a>
+                                            <a *ngIf="registro.aprobadoRegistroHora == false && registro.horaSalida != NULL" (click)="registrarAprobacion(registro.idPersona, registro.idRegistroHora, '1', registro.fechaEntrada, registro.idRegistroHora)" data-toggle="modal" data-target="#modal-aprobacion" class="btn btn-danger btn-xs" title="No aprobado"><i class="fa fa-close"></i></a>
+                                            <a *ngIf="registro.aprobadoRegistroHora == false && registro.horaSalida == NULL" class="btn btn-danger btn-xs disabled" title="No aprobado"><i class="fa fa-close"></i></a>
                                         </td>
                                         <td class="text-center">
-                                            <a (click)="informacionEstudiante(registro.idRegistroHora, registro.idPersona)" data-toggle="modal" data-target="#modal-informacionEstudiante" class="btn btn-primary btn-margin" title="Ver"><i class="fa fa-eye"></i></a>
-                                            <a *ngIf="registro.aprobadoRegistroHora == false" (click)="eliminarAsistencia(registro.idRegistroHora)" data-toggle="modal" data-target="#modal-aprobacion" class="btn btn-danger btn-margin" title="Eliminar"><i class="fa fa-trash"></i></a>
-                                            <a *ngIf="registro.aprobadoRegistroHora == true" class="btn btn-danger btn-margin disabled" title="Eliminar"><i class="fa fa-trash"></i></a>
+                                            <a (click)="informacionEstudiante(registro.idRegistroHora, registro.idPersona)" data-toggle="modal" data-target="#modal-informacionEstudiante" class="btn btn-primary btn-xs" title="Ver"><i class="fa fa-eye"></i></a>
+                                            <a *ngIf="registro.aprobadoRegistroHora == false" (click)="eliminarAsistencia(registro.idRegistroHora)" data-toggle="modal" data-target="#modal-aprobacion" class="btn btn-danger btn-xs" title="Eliminar"><i class="fa fa-trash"></i></a>
+                                            <a *ngIf="registro.aprobadoRegistroHora == true" class="btn btn-danger btn-xs disabled" title="Eliminar"><i class="fa fa-trash"></i></a>
                                         </td>
                                     </tr>
                                 </table>

@@ -6,18 +6,13 @@
   <section class="content-header">
       <h1>
           Departamento
-          <small> de {{ nombreDepartamento }}</small>
+          <small> de {{ auxDepartamento[0].nombreDepartamento }}</small>
       </h1>
       <ol class="breadcrumb">
           <li><a [routerLink]="['/home']"><i class="fa fa-home"></i> Home</a></li>
           <li class="active">Informe archivados de horas de los estudiantes </li>
       </ol>
   </section>
-    <div *ngIf="MessageSuccessArchivar == true" class="pad no-print">
-        <div class="callout callout-warning">
-            <h4><i class="icon fa fa-info"></i> El informe fue desarchivado</h4>
-        </div>
-    </div>
 <!-- Modal -->
 <div class="modal fade" id="modal-informacionStudiante">
     <div class="modal-dialog">
@@ -32,7 +27,7 @@
                 <div class="col-md-3">
                     <div class="box-profile">
                         <img class="profile-user-img img-responsive img-circle" src="assets/img/avatar.png" alt="User profile picture">
-                        <p class="text-muted text-center">650004813</p>
+                        <p class="text-muted text-center">{{codEstudiante}}</p>
                     </div>
                 </div>
                 <div class="col-md-9">
@@ -116,12 +111,6 @@
               <div class="box box-primary">
                   <div class="box-header with-border">
                       <h4 class="page-header"><i class="fa fa-folder"></i> Informes archivados de horas de los estudiantes</h4>
-
-                      <div class="btn-opciones box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                        </button>
-                          
-                      </div>
                   </div>
                   <!-- /.box-header -->
                   <div class="box-body">
@@ -154,8 +143,8 @@
                                         <span *ngIf="informe.aprobadoFinanzas == false" class="badge bg-red"><i class="fa fa-times"></i></span>
                                     </td>
                                       <td class="text-center">
-                                          <a (click)="informacionEstudiante(informe.idRegistroHora, informe.idPersona)" data-toggle="modal" data-target="#modal-informacionStudiante"  class="btn btn-primary btn-margin" title="Ver"><i class="fa fa-eye"></i></a>
-                                          <a (click)="archivarInforme(informe.idInformeEstudiante)" class="btn btn-success btn-margin" title="Desarchivar"><i class="fa fa-folder-open"></i></a>
+                                          <a (click)="informacionEstudiante(informe.idRegistroHora, informe.idPersona)" data-toggle="modal" data-target="#modal-informacionStudiante"  class="btn btn-primary btn-xs" title="Ver"><i class="fa fa-eye"></i></a>
+                                          <a (click)="archivarInforme(informe.idInformeEstudiante)" class="btn btn-success btn-xs" title="Desarchivar"><i class="fa fa-folder-open"></i></a>
                                       </td>
                                   </tr>
                               </table>
@@ -175,3 +164,19 @@
 <app-footer></app-footer> 
 </div>
 <!-- /.content-wrapper -->
+<div id="growls-default">
+    <div [ngClass]="{'growl': true, 'growl-notice':alertSuccess, 
+                    'growl-error':alertError, 
+                    'growl-warning':alertWarning, 
+                    'growl-large':true, 
+                    'growl-outgoing':!activateAlert}">
+        <div [ngClass]="{'growl-close': true, 'growl-outgoing':!activateAlert}">×</div>
+        <div [ngClass]="{'growl-title': true, 'growl-outgoing':!activateAlert}">
+            <i [ngClass]="{'icon': true, 'fa': true, 
+            'fa-check': alertSuccess, 
+            'fa-close': alertError, 
+            'fa-warning': alertWarning}"></i>
+            {{titleAlert}} </div>
+        <div [ngClass]="{'growl-message': true,'growl-outgoing':!activateAlert}">{{messageAlert}}</div>
+    </div>
+</div>

@@ -30,6 +30,7 @@ export class GestionarAreaComponent implements OnInit {
   alertWarning:boolean = false;
   //GestionarArea
   listaAreaDepartamento:Area[];
+  auxListaAreaDepartamento:Area[];
   private area:Area = {}
   private estadoUpdate:Area = {}
 
@@ -37,7 +38,6 @@ export class GestionarAreaComponent implements OnInit {
   estudiantes:Persona[];
   //PAra registrar asignar area
   idConvenio:string;
-  idArea:string;
   //Lista de las areas con sus respectivos estudiantes
   studentArea:Area[];
   //NOMBRE AREA
@@ -52,8 +52,7 @@ export class GestionarAreaComponent implements OnInit {
 
   ngOnInit() {
       this.getDepartamentoUser(); 
-      this.getAreaDepartamento(this.departamento[0].idDepartamento);
-      this.getAsignacionArea(this.departamento[0].idDepartamento);        
+      this.getAreaDepartamento(this.departamento[0].idDepartamento);    
   }
 
   ngOnDestroy(): void {
@@ -89,10 +88,30 @@ export class GestionarAreaComponent implements OnInit {
     .subscribe((estudiantes : Persona[]) => {this.estudiantes =  estudiantes});
   }
 
+  // gestionar area
+  buscarArea(nombre:string){
+    let array:Area[] = [];
+    nombre = nombre.toLowerCase();
+    var name;
+    this.listaAreaDepartamento = this.auxListaAreaDepartamento;
+    for(let l of this.listaAreaDepartamento){
+      name = l.nombreArea.toLocaleLowerCase();
+      if(name.indexOf(nombre) >= 0){
+        array.push(l);        
+      }  
+    }
+    this.listaAreaDepartamento = array;     
+  }
+
+
   getAreaDepartamento(idDepto:string){
     this._appAreaService.getAreasDepartamento(idDepto)
     .subscribe((areas : Area[]) => {
-      this.listaAreaDepartamento = areas
+      if(areas.length > 0 ){
+        this.listaAreaDepartamento = areas;
+        this.auxListaAreaDepartamento = this.listaAreaDepartamento;
+      }
+      
     });
   }
   
@@ -122,26 +141,57 @@ export class GestionarAreaComponent implements OnInit {
       })
   }
 
-  editarArea(){}
-  deleteArea(idArea:string){
-    this.idArea = idArea;
+  editArea(nombreArea:string, idArea:string){
+    this.area.nombreArea = nombreArea;
+    this.area.idArea = idArea;   
   }
 
-  eliminarArea(){
-    
-    this._appAreaService.deleteArea(this.idArea)
+  putArea(){
+    this._appAreaService.putArea(this.area, this.area.idArea)
     .subscribe((data : Area[])=>{
       this.getAreaDepartamento(this.departamento[0].idDepartamento);  
-      this.alert(1, 'Registro eliminado', 'El área fue eliminado satisfactoriamente.');
+      this.alert(1, 'Registro actualizado', 'El área fue actualizado satisfactoriamente.');
       }, res => {
-        this.alert(2, 'Error al eliminar', 'Se ha producido un error en el servidor al eliminar.');
+        this.alert(2, 'Error al actualizar', 'Se ha producido un error en el servidor al actualizar.');
       });
   }
 
+  deleteArea(idArea:string){
+    this.area.idArea = idArea;
+  }
+
+  eliminarArea(){
+    this._appAreaService.getAsignacionArea(this.area.idArea)
+    .subscribe((area : Area []) => {       
+      if(area.length == 0){        
+        this._appAreaService.deleteArea(this.area.idArea)
+        .subscribe((data : Area[])=>{
+          this.getAreaDepartamento(this.departamento[0].idDepartamento);  
+          this.alert(1, 'Registro eliminado', 'El área fue eliminado satisfactoriamente.');
+          }, res => {
+            this.alert(2, 'Error al eliminar', 'Se ha producido un error en el servidor al eliminar.');
+          });
+      }else{
+        this.alert(3, 'Alerta de ejecución', 'No se puede eliminar por que tiene estudiantes asignados al área.');
+      }      
+    })    
+  }
+
   //gestionar asignacion area aun no se ejecuta
-  getAsignacionArea(idDepartamento:string){
-    this._appAreaService.getAsignacionArea(idDepartamento)
-    .subscribe((area : Area []) => { this.studentArea = area})
+  verAsignacionArea(nombreArea:string, idArea:string){
+    this.nombreArea = nombreArea;
+    this.getAsignacionArea(idArea);
+  }
+
+  getAsignacionArea(idArea:string){
+    this._appAreaService.getAsignacionArea(idArea)
+    .subscribe((area : Area []) => {       
+      if(area.length > 0){        
+        this.studentArea = area;
+      }else{
+        this.studentArea = null;
+      }      
+    })
   }
 
   saveAsignarArea(idConvenio, idArea, form){ 
@@ -160,34 +210,42 @@ export class GestionarAreaComponent implements OnInit {
     
   }
 
-  verStudentArea(idArea:Area){    
-    // this.listStudent= [{id:0, area:[]}];
-    // var i = 1;
-
-    for(let student of this.studentArea){
-      if(student.idArea == idArea){
-        this.nombreArea = student.nombreArea;
-        // this.listStudent.push({id:i, area:[]});
-        // this.listStudent[i].area.push(student);
-        // i++;
-      }
-    }
-    this.IdArea = idArea;
-  }
-
-  editAsignacion(idAsignacion:string, estado:string){
+  editAsignacion(idArea:string, idAsignacion:string, estado:string){
     this.area.estadoAsignacion = estado;
     this._appAreaService.putAsignacionArea(idAsignacion, this.area)
-    .subscribe((data: Area[]) => {console.log(data)});
-    setTimeout(() => {
-      this.getAsignacionArea(this.IdDepartamento);
-    }, 2000);
+    .subscribe((data: Area[]) => {
+      this.getAsignacionArea(idArea);
+      if(estado ==  '1')
+      this.alert(1, 'Habilitación exitoso', 'El estudiante fue habilitado satisfactoriamente.');
+      else this.alert(1, 'Deshabilitación exitoso', 'El estudiante fue deshabilitado satisfactoriamente.');
+    }, res => {
+      this.alert(2, 'Error al cambiar de estado', 'Se ha producido un error en el servidor al cambiar de estado.');
+    });
   }
-  deleteAsignacion(idAsignacion:string){
+  //obtenemso el id del convenio para luego cambiarle de area
+  cambiarArea(idConvenio:string, idAsignacion:string,){
+    this.area.idConvenio = idConvenio;
+    this.area.idAsignacionArea = idAsignacion;
+  }
+
+  putAsignacionArea(idArea:string){
+    this.area.idArea = idArea;
+    this._appAreaService.putCambiarArea(this.area.idAsignacionArea, this.area)
+    .subscribe((data: Area[]) => {
+      this.getAsignacionArea(idArea);
+      this.alert(1, 'Registro exitoso', 'El estudiante fue cambiado de área satisfactoriamente.');
+    }, res => {
+      this.alert(2, 'Error al cambiar', 'Se ha producido un error en el servidor al cambiar de área.');
+    });
+  }
+
+  deleteAsignacion(idArea:string, idAsignacion:string){
     this._appAreaService.deleteAsignacionArea(idAsignacion)
-    .subscribe((data :Area[]) => {console.log(data)});
-    setTimeout(() => {
-      this.getAsignacionArea(this.IdDepartamento);
-    }, 2000);
+    .subscribe((data :Area[]) => {
+      this.getAsignacionArea(idArea);
+      this.alert(1, 'Baja satisfactoriamente', 'Se dio de baja al estudiante de la area satisfactoriamente.');
+    }, res => {
+      this.alert(2, 'Error', 'Se ha producido un error en el servidor al eliminar al estudiante de la área.');
+    });
   }
 }

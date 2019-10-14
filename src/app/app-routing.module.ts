@@ -23,6 +23,8 @@ import { GestionarInformeWeekComponent } from './components/gestionar-informe-we
 import { GestionarInformeMonthComponent } from './components/gestionar-informe-month/gestionar-informe-month.component';
 import { GestionarAcreedorHistorialComponent } from './components/gestionar-acreedor-historial/gestionar-acreedor-historial.component';
 import { GestionarInfoDepartamentoComponent } from './components/gestionar-info-departamento/gestionar-info-departamento.component';
+import { GestionarInformeJefeEliminadoComponent } from './components/gestionar-informe-jefe-eliminado/gestionar-informe-jefe-eliminado.component';
+
 
 
 import { LoginComponent } from './components/login/login.component';
@@ -46,6 +48,7 @@ const routes: Routes = [
   { path: 'informeFinanzasArchivado', component: GestionarInformeFinanzasArchivadoComponent, canActivate: [AuthGuard] },
   { path: 'informeJefe', component: GestionarInformeJefeComponent, canActivate: [AuthGuard] },
   { path: 'informeJefeArchivado', component: GestionarInformeJefeArhivadoComponent, canActivate: [AuthGuard] },
+  { path: 'informeJefeEliminado', component: GestionarInformeJefeEliminadoComponent, canActivate: [AuthGuard] },
   { path: 'organizacion', component: GestionarOrganizacionComponent, canActivate: [AuthGuard] },
   { path: 'informeHoy', component: GestionarInformeHoyComponent, canActivate: [AuthGuard] },
   { path: 'informeAyer', component: GestionarInformeAyerComponent, canActivate: [AuthGuard] },

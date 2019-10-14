@@ -7,3 +7,7 @@
 li.footer-informes{
     cursor:pointer;
 }
+
+.sidebar-menu>li>a:hover{
+    background-color: #269d5b;
+}

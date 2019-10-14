@@ -1,35 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-import { InformeEstudiante } from '../../interfaces/informe-estudiante.interface';
+import { AuthService } from '../../services/auth.service';
+import { Departamento } from 'src/app/interfaces/departamento.interface';
 import { AppInformeEstudianteService } from '../../services/app-informe-estudiante.service';
+import { InformeEstudiante } from 'src/app/interfaces/informe-estudiante.interface';
 import { Persona } from '../../interfaces/persona.interface';
 import { AppTipoPersonaService } from '../../services/app-tipoPersona.service';
 import { Convenio } from 'src/app/interfaces/convenio.interface';
 import { AppAreaService } from '../../services/app-area.service';
 import { Area } from 'src/app/interfaces/area.interface';
-import { Departamento } from 'src/app/interfaces/departamento.interface';
-import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: 'app-gestionar-informe-jefe-arhivado',
-  templateUrl: './gestionar-informe-jefe-arhivado.component.html',
-  styleUrls: ['./gestionar-informe-jefe-arhivado.component.css']
+  selector: 'app-gestionar-informe-jefe-eliminado',
+  templateUrl: './gestionar-informe-jefe-eliminado.component.html',
+  styleUrls: ['./gestionar-informe-jefe-eliminado.component.css']
 })
-export class GestionarInformeJefeArhivadoComponent implements OnInit {
-
-  //Variable global para almacenar el id del departamento
-  IdDepartamento:string = "1";
-  IdUser:string = "1";
-  //Lista de los estudiantes del total horas/saldos
-  listInformeEstudiante:InformeEstudiante[];
+export class GestionarInformeJefeEliminadoComponent implements OnInit {
+  
+  IdDepartamento:string = "0";
   auxDepartamento:Departamento;
-  //ALERTS
-  titleAlert:string = null;
-  messageAlert:string = null;
-  activateAlert:boolean = false;
-  alertSuccess:Boolean = false;
-  alertError:Boolean = false;
-  alertWarning:boolean = false;
-  //Info Estudiante
+   //Lista de los estudiantes del total horas/saldos
+   listInformeEstudiante:InformeEstudiante[];
+   //Info Estudiante
   codEstudiante:string;
   nombreCompleto:string;
   nacionalidad: string;
@@ -49,47 +40,30 @@ export class GestionarInformeJefeArhivadoComponent implements OnInit {
   fechaFinal;
   observacionesRegistroHora:string;
   areas:any[] = [];
-  //
-  informeEstudiante:InformeEstudiante = {};
-
   //Lista de estudiantes del departameto
-  estudiantes:Convenio[];
+   estudiantes:Convenio[];
 
   constructor(private _appInformeEstudianteService:AppInformeEstudianteService,
+              private _authService : AuthService,
               private _appTipoPersonaService:AppTipoPersonaService,
-              private _appAreaService:AppAreaService,
-              private _authService : AuthService) { }
+              private _appAreaService:AppAreaService) { }
+
   ngOnInit() {
     this.getDepartamentoUser();
-    this.getInfomeEstudiante(this.IdDepartamento);
+    this.getInformeEliminado();
   }
 
-  alert(opcion:number, title:string, message:string):void{
-    if(opcion == 1) this.alertSuccess = true;
-    if(opcion == 2) this.alertError = true;      
-    if(opcion == 3) this.alertWarning = true;      
-    this.titleAlert = title;
-    this.messageAlert = message;
-    this.activateAlert = true;
-    setTimeout(() => {
-      this.activateAlert = false;
-      this.alertSuccess = false;
-      this.alertError = false;
-      this.alertWarning = false;
-    }, 5000);
-  }
   getDepartamentoUser(){
-    this.auxDepartamento =  this._authService.getDatosDepartamento();    
+    this.auxDepartamento =  this._authService.getDatosDepartamento();  
     this.IdDepartamento = this.auxDepartamento[0].idDepartamento;
   }
 
-  //gestionar informe estudiante
-  //informe Estudiante horas and balance
-  getInfomeEstudiante(idDepartamento:string){
-    this._appInformeEstudianteService.getInformeArchivado(idDepartamento)
-    .subscribe((informe : InformeEstudiante[]) => {this.listInformeEstudiante = informe})
+  getInformeEliminado(){
+    this._appInformeEstudianteService.getInformeEliminado(this.IdDepartamento)
+    .subscribe((data:InformeEstudiante[]) => {
+      this.listInformeEstudiante = data;
+    })
   }
-
 
   informacionEstudiante(idRegistroHora, idEstudiante){
     this.areas = [];
@@ -141,17 +115,6 @@ export class GestionarInformeJefeArhivadoComponent implements OnInit {
         this.observacionesRegistroHora = registro.observacionRegistroHora;
       }
     }
-  }
-
-  archivarInforme(idInformeEstudiante){
-    this.informeEstudiante.archivar = "NO";
-    this._appInformeEstudianteService.putInformeArchivar(idInformeEstudiante, this.informeEstudiante)
-    .subscribe((informe : InformeEstudiante[]) => {
-      this.getInfomeEstudiante(this.IdDepartamento);
-      this.alert(1, 'Registro desarchivado', 'El registro fue desarchivado satisfactoriamente.');
-    }, res => {
-      this.alert(2, 'Error al desarchivado', 'Se ha producido un error en el servidor al desarchivado.');
-    });
   }
 
 }

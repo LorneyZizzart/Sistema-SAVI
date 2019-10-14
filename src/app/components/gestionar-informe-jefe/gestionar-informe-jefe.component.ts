@@ -6,7 +6,9 @@ import { AppInformeEstudianteService } from '../../services/app-informe-estudian
 import { Persona } from '../../interfaces/persona.interface';
 import { AppTipoPersonaService } from '../../services/app-tipoPersona.service';
 import { Convenio } from 'src/app/interfaces/convenio.interface';
-import { Organizacion } from 'src/app/interfaces/organizacion.interface';
+import { AppAreaService } from '../../services/app-area.service';
+import { Area } from 'src/app/interfaces/area.interface';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-gestionar-informe-jefe',
@@ -15,14 +17,21 @@ import { Organizacion } from 'src/app/interfaces/organizacion.interface';
 })
 export class GestionarInformeJefeComponent implements OnInit {
   //Variable global para almacenar el id del departamento
-  IdDepartamento:string = "1";
-  IdUser:string = "1";
+  IdDepartamento:string = "0";
   //FOOTER
   numStudent:number = 0;
   numHour:any = '00:00';
   totalSaldo:any = 0;
+  //ALERTS
+  titleAlert:string = null;
+  messageAlert:string = null;
+  activateAlert:boolean = false;
+  alertSuccess:Boolean = false;
+  alertError:Boolean = false;
+  alertWarning:boolean = false;
   //info del departamento
   departamento:Departamento [];
+  auxDepartamento:Departamento;
   //Info del Departamento
   idRegistro:string;
   codigoDepartamento:string;
@@ -37,6 +46,7 @@ export class GestionarInformeJefeComponent implements OnInit {
   //Lista de los estudiantes del total horas/saldos
   listInformeEstudiante:InformeEstudiante[];
   //Info Estudiante
+  codEstudiante:string;
   nombreCompleto:string;
   nacionalidad: string;
   direccion: string;
@@ -56,21 +66,39 @@ export class GestionarInformeJefeComponent implements OnInit {
   areas:any[] = [];
   //
   informeEstudiante:InformeEstudiante = {};
-  //message
-  MessageSuccessArchivar:boolean = false;
   //Lista de estudiantes del departameto
   estudiantes:Convenio[];
 
   constructor(private _appDepartamentoService:AppDepartamentoService,
     private _appTipoPersonaService:AppTipoPersonaService,
-    private _appInformeEstudianteService:AppInformeEstudianteService) { }
+    private _appInformeEstudianteService:AppInformeEstudianteService,
+    private _appAreaService:AppAreaService,
+    private _authService : AuthService) { }
 
   ngOnInit() {
+    this.getDepartamentoUser();
     this.getDepartament(this.IdDepartamento);
     this.getInfomeEstudiante(this.IdDepartamento);
+  }
+
+  alert(opcion:number, title:string, message:string):void{
+    if(opcion == 1) this.alertSuccess = true;
+    if(opcion == 2) this.alertError = true;      
+    if(opcion == 3) this.alertWarning = true;      
+    this.titleAlert = title;
+    this.messageAlert = message;
+    this.activateAlert = true;
     setTimeout(() => {
-      this.getEstudiantes(this.IdDepartamento);
-    }, 1000);
+      this.activateAlert = false;
+      this.alertSuccess = false;
+      this.alertError = false;
+      this.alertWarning = false;
+    }, 5000);
+  }
+
+  getDepartamentoUser(){
+    this.auxDepartamento =  this._authService.getDatosDepartamento();    
+    this.IdDepartamento = this.auxDepartamento[0].idDepartamento;
   }
 
   sumarHoras(hora1, hora2) {
@@ -82,11 +110,22 @@ export class GestionarInformeJefeComponent implements OnInit {
     horas2[a]=(isNaN(parseInt(horas2[a])))?0:parseInt(horas2[a])
     horatotale[a]=(horas1[a]+horas2[a]); // Suma o resta 
     }
-    if(horatotale[1] > 60){
-      horatotale[1] = horatotale[1] - 60;
-      horatotale[0] = horatotale[0] + 1;
+    var horatotal=new Date()
+    horatotal.setHours(horatotale[0]);
+    horatotal.setMinutes(horatotale[1]);
+    horatotal.setSeconds(horatotale[2]);
+    var hour = horatotal.getHours();
+    var min = horatotal.getMinutes();
+    
+    if (hour < 10 && min < 10){
+      return "0"+hour+":"+"0"+min;
+    }else if (hour < 10 && min >= 10){
+      return "0"+hour+":"+min;
+    }else if (hour >= 10 && min < 10){
+      return hour+":"+"0"+min;
+    }else if (hour >= 10 && min >= 10){
+      return hour+":"+min;
     }
-    return horatotale[0]+":"+horatotale[1];
   }
 
   totalDatos(){
@@ -101,10 +140,10 @@ export class GestionarInformeJefeComponent implements OnInit {
   //PARA OBTENER LOS DATOS DEL DEPARTAMENTO LUEGO SE PARA AL METODO infoDepartamento
   getDepartament(idDepartamento:string){
     this._appDepartamentoService.getDepartamento(idDepartamento)
-    .subscribe((departamento : Departamento[]) => {this.departamento = departamento});
-    setTimeout(() => {
+    .subscribe((departamento : Departamento[]) => {
+      this.departamento = departamento;
       this.infoDepartamento(idDepartamento);
-    }, 2000);
+    });
   }
 
   infoDepartamento(idDepartamento:string){
@@ -129,42 +168,52 @@ export class GestionarInformeJefeComponent implements OnInit {
     }
   }
 
-  getEstudiantes(idDepartamento:string){
-    this._appTipoPersonaService.getInfoEstudiantes(idDepartamento)
-    .subscribe((estudiantes : Persona[]) => {this.estudiantes = estudiantes});
-  }
-
   informacionEstudiante(idRegistroHora, idEstudiante){
     this.areas = [];
-    for(let estudiante of this.estudiantes){
-      if(estudiante.idPersona == idEstudiante){
-        if (estudiante.segundoNombre == null && estudiante.segundoApellido != null ) {
-          this.nombreCompleto = estudiante.primerNombre + " " + estudiante.primerApellido + " " + estudiante.segundoApellido;
-        } else if (estudiante.segundoNombre == null && estudiante.segundoApellido == null){
-          this.nombreCompleto = estudiante.primerNombre + " " + estudiante.primerApellido; 
-        }else if (estudiante.segundoNombre != null && estudiante.segundoApellido == null){ 
-          this.nombreCompleto = estudiante.primerNombre + " " + estudiante.segundoNombre + " " + estudiante.primerApellido;   
-        }else{
-          this.nombreCompleto = estudiante.primerNombre + " " + estudiante.segundoNombre + " " + estudiante.primerApellido + " " + estudiante.segundoApellido;
+
+    this._appTipoPersonaService.getInfoEstudiantes(this.IdDepartamento, idEstudiante)
+    .subscribe((estudiantes : Persona[]) => {
+      this.estudiantes = estudiantes;
+      for(let estudiante of this.estudiantes){
+        if(estudiante.idPersona == idEstudiante){
+          if (estudiante.segundoNombre == null && estudiante.segundoApellido != null ) {
+            this.nombreCompleto = estudiante.primerNombre + " " + estudiante.primerApellido + " " + estudiante.segundoApellido;
+          } else if (estudiante.segundoNombre == null && estudiante.segundoApellido == null){
+            this.nombreCompleto = estudiante.primerNombre + " " + estudiante.primerApellido; 
+          }else if (estudiante.segundoNombre != null && estudiante.segundoApellido == null){ 
+            this.nombreCompleto = estudiante.primerNombre + " " + estudiante.segundoNombre + " " + estudiante.primerApellido;   
+          }else{
+            this.nombreCompleto = estudiante.primerNombre + " " + estudiante.segundoNombre + " " + estudiante.primerApellido + " " + estudiante.segundoApellido;
+          }
+            this.codEstudiante = estudiante.codEstudiante;
+            this.nacionalidad = estudiante.nacionalidad;
+            this.direccion = estudiante.direccion;
+            this.celular = estudiante.celular;
+            this.ci = estudiante.ci;
+            this.fechaNacimiento = estudiante.fechaNacimiento;
+            this.estadoPersona = estudiante.estadoPersona;
+            this.carrera = estudiante.carrera;
+            this.semestre = estudiante.semestre;
+            this.nombreDepartamento = estudiante.departamento;
+            this.beca = estudiante.beca;
+            this.estadoConvenio = estudiante.estadoConvenio;
+            this.fechaInicio = estudiante.fechaInicio;
+            this.fechaFinal = estudiante.fechaFinal;
+            this.fotocopiaCI = estudiante.fotocopiaCarnet;
+            this.solicitudWork = estudiante.solicitudTrabajo;
+            this._appAreaService.getAsignacionByConvenio(estudiante.idConvenio)
+              .subscribe((data: Area[]) => {
+                if(data.length > 0){
+                  for(let a of data){
+                    this.areas.push(a.nombreArea);
+                  }
+                }
+              });
         }
-          this.nacionalidad = estudiante.nacionalidad;
-          this.direccion = estudiante.direccion;
-          this.celular = estudiante.celular;
-          this.ci = estudiante.ci;
-          this.fechaNacimiento = estudiante.fechaNacimiento;
-          this.estadoPersona = estudiante.estadoPersona;
-          this.carrera = estudiante.carrera;
-          this.semestre = estudiante.semestre;
-          this.nombreDepartamento = estudiante.departamento;
-          this.beca = estudiante.beca;
-          this.estadoConvenio = estudiante.estadoConvenio;
-          this.fechaInicio = estudiante.fechaInicio;
-          this.fechaFinal = estudiante.fechaFinal;
-          this.fotocopiaCI = estudiante.fotocopiaCarnet;
-          this.solicitudWork = estudiante.solicitudTrabajo;
-          this.areas.push(estudiante.nombreArea);
       }
-    }
+    });
+
+    
     for(let registro of this.listInformeEstudiante){
       if(registro.idPersona == idEstudiante && registro.idRegistroHora == idRegistroHora){
         this.observacionesRegistroHora = registro.observacionRegistroHora;
@@ -175,27 +224,37 @@ export class GestionarInformeJefeComponent implements OnInit {
   //informe Estudiante horas and balance
   getInfomeEstudiante(idDepartamento:string){
     this._appInformeEstudianteService.getInformeEstudiante(idDepartamento)
-    .subscribe((informe : InformeEstudiante[]) => {this.listInformeEstudiante = informe})
-    setTimeout(() => {
+    .subscribe((informe : InformeEstudiante[]) => {
+      this.listInformeEstudiante = informe;
       this.numStudent = 0;
       this.numHour= '00:00';
       this.totalSaldo = 0;
       this.totalDatos();
-    }, 2000);
+    });
   }
 
   archivarInforme(idInformeEstudiante:string){
     this.informeEstudiante.archivar = "SI";
     this._appInformeEstudianteService.putInformeArchivar(idInformeEstudiante, this.informeEstudiante)
-    .subscribe((informe : InformeEstudiante[]) => {console.log(informe)});
-    this.MessageSuccessArchivar = true;
-    setTimeout(() => {
+    .subscribe((informe : InformeEstudiante[]) => {
+      this.alert(1, 'Registro archivado', 'El registro fue archivado satisfactoriamente.');
       this.getInfomeEstudiante(this.IdDepartamento);
-    }, 2000);
-
-    setTimeout(() => {
-      this.MessageSuccessArchivar = false;
-    }, 6000);
+    }, res => {
+      this.alert(2, 'Error al archivar', 'Se ha producido un error en el servidor al archivar.');
+    });
   }
 
+  eliminarInformeEstudiante(idInformeEstudiante){
+    this.informeEstudiante.idInformeEstudiante = idInformeEstudiante;
+  }
+
+  bajaInformeEstudiante(){
+    this._appInformeEstudianteService.bajaInformeEstudiante(this.informeEstudiante.idInformeEstudiante)
+    .subscribe((informe:InformeEstudiante[]) => {
+      this.alert(1, 'Registro eliminado', 'El registro fue eliminado satisfactoriamente.');
+      this.getInfomeEstudiante(this.IdDepartamento);
+    }, res => {
+      this.alert(2, 'Error al eliminar', 'Se ha producido un error en el servidor al eliminar.');
+    });
+  }
 }

@@ -28,6 +28,11 @@ export class AppInformeEstudianteService {
     return this._http.get<InformeEstudiante[]>(url).pipe(map(res => res));
   }
 
+  getInformeEliminado(idDepartamento:string):Observable<InformeEstudiante[]>{
+    let url = `${this.listaInformeEstudiante}/informesEliminados/${idDepartamento}`;
+    return this._http.get<InformeEstudiante[]>(url).pipe(map(res => res));
+  }
+
   getAcreedorHistorial(idConvenio):Observable<InformeEstudiante[]>{
     let url = `${this.listaInformeEstudiante}/acreedorHistorial/${idConvenio}`;
     return this._http.get<InformeEstudiante[]>(url).pipe(map(res => res));
@@ -60,6 +65,11 @@ export class AppInformeEstudianteService {
     let url = `${this.listaInformeEstudiante}/archivar/${idInformeEstudiante}`;
     return this._http.put<InformeEstudiante[]>(url, body, { headers })
       .pipe ();
+  }
+
+  bajaInformeEstudiante(idInformeEstudiante:string){
+    let url = `${this.listaInformeEstudiante}/${idInformeEstudiante}`;
+    return this._http.delete(url).pipe(map(res => res));
   }
   
   deleteInformeEstudiante(fecha:string, idRegistroHora:string){
