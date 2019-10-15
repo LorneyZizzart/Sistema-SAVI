@@ -101,7 +101,7 @@ export class GestionarUsuarioComponent implements OnInit {
   typePassword:boolean;
   letters="abcdefghyjklmnñopqrstuvwxyz";
   numbers="0123456789";
-  simbolos="/*-+|°!#$%&()=¿?,;. :_{}[]><";
+  simbolos="/*-+|°!#$%&()=¿?,;.:_{}[]><";
 
   imagen:string = 'Jhonny.png';
     
@@ -470,8 +470,8 @@ export class GestionarUsuarioComponent implements OnInit {
         if(persona.idPersona == idPersona){
           this.inputValUser = true;
           this.inputValPassword = true;
-          this.user.usuario = (persona.primerNombre+persona.primerApellido).toLowerCase().substr(0,6);
-          this.password = (persona.primerApellido).toLowerCase().substr(0,3)+(persona.ci).toLowerCase().substr(0,3);       
+          this.user.usuario = (persona.primerNombre+persona.primerApellido).toLowerCase().replace(/ /g,"").substr(0,6);
+          this.password = (persona.primerApellido).toLowerCase().replace(/ /g,"").substr(0,3)+(persona.ci).toLowerCase().replace(/ /g,"").substr(0,3);       
           this._appUserService.searchUser(this.user.usuario )
           .subscribe((data:User[])=>{
             if(data.length > 0){ this.inputValUser = false;

@@ -259,8 +259,8 @@
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#lista" data-toggle="tab">Lista</a></li>
                         <li (click)="activaRegister()"><a href="#registrar" data-toggle="tab">Registrar</a></li>
-                        <li><a href="#expediente" data-toggle="tab">Expediente</a></li>
-                        <li><a href="#consumir" data-toggle="tab">Agregar estudiante del sistema académico</a></li>
+                        <li (click)="getEstudiantes()"><a href="#expediente" data-toggle="tab">Expediente</a></li>
+                        
                     </ul>
                     <div class="tab-content">
                         <!-- LISTA -->
@@ -330,10 +330,8 @@
 
                                     <div class="row form">
 
-                                        <div class="col-md-6">
-
-                                            <div class="form-group">
-                                                <label for="inputName" class="col-sm-3 control-label">Estudiante</label>
+                                            <div class="form-group col-md-6">
+                                                <label for="inputName" class="col-sm-3 control-label">Estudiante * </label>
 
                                                 <div class="col-sm-9 select-student">
                                                     <select #idEst class="form-control select2" style="width: 100%;">
@@ -343,8 +341,8 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="inputName" class="col-sm-3 control-label">Departamento</label>
+                                            <div class="form-group col-md-6">
+                                                <label for="inputName" class="col-sm-3 control-label">Departamento * </label>
 
                                                 <div class="col-sm-9 select-student">
                                                     <select #idDep class="form-control select2" style="width: 100%;">
@@ -352,10 +350,8 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="inputName" class="col-sm-3 control-label">Beca</label>
+                                            <div class="form-group col-md-6">
+                                                <label for="inputName" class="col-sm-3 control-label">Beca * </label>
 
                                                 <div class="col-sm-9 select-student">
                                                     <select #idBec class="form-control select2" style="width: 100%;">
@@ -364,11 +360,9 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="col-md-6">
-                                                <div [ngClass]="{'form-group': true, 'has-error': !inputValDateStart}">
-                                                    <label class="col-md-3">Fecha inicio *</label>
+                                            <div class="col-md-12"  style="padding: 0">
+                                                <div [ngClass]="{'form-group': true, 'col-md-6' : true, 'has-error': !inputValDateStart}">
+                                                    <label class="col-md-3 control-label" >Fecha inicio * </label>
 
                                                     <div class="col-md-9">
                                                         <div class="input-group date dateInicio">
@@ -380,10 +374,9 @@
                                                         <span *ngIf="!inputValDateStart" class="help-block"><i class="icon fa fa-warning"></i> {{ messaggeDateStart }}</span>                                                           
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div [ngClass]="{'form-group': true, 'has-error': !inputValDateFinish}">
-                                                    <label class="col-sm-3">Fecha final *</label>
+
+                                                <div [ngClass]="{'form-group': true, 'col-md-6' : true, 'has-error': !inputValDateFinish}">
+                                                    <label class="col-sm-3 control-label" >Fecha final * </label>
                                                     <div class="col-md-9">
                                                         <div class="input-group date dateFinal">
                                                             <div class="input-group-addon">
@@ -395,7 +388,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                                
                                         <div class="col-md-12 text-center">
                                             <br>
                                             <div class="col-sm-6">
@@ -440,12 +433,23 @@
                             <section id="new">
                                 <div class="box-header with-border">
                                     <h4 class="page-header"><i class="fa fa-file-text"></i> Expediente</h4>
-                                    <div class="box-tools left">
-                                        <div class="input-group input-group-sm" style="width: 300px;">
-                                            <input type="text" name="table_search" class="form-control pull-right" placeholder="Buscar estudiante">
-
-                                            <div class="input-group-btn">
-                                                <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                    <div class="box-tools left" style="width: 500px">
+                                        <div class="form-group">
+                                            <label for="inputName" class="col-sm-5 control-label" style="margin-top: 3px">Seleccionar estudiante</label>    
+                                            <div class="col-sm-6 select-student" style="padding: 0">
+                                                <select #idExpedienteEst class="form-control select2" style="width: 100%;">
+                                                    <option *ngFor="let persona of estudiantes" [value]="persona.idPersona">
+                                                            {{persona.primerApellido}} {{persona.segundoApellido}} {{ persona.primerNombre }} {{ persona.segundoNombre }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-1 input-group-btn" style="padding: 0;">
+                                                <button (click)="getExpedienteEstudiante(idExpedienteEst.value)" 
+                                                style="height: 29px;
+                                                margin: 0;
+                                                padding: 0;
+                                                width: 44px;" 
+                                                type="button" class="btn btn-default"><i class="fa fa-search"></i></button>
                                             </div>
                                         </div>
                                     </div>
@@ -459,19 +463,19 @@
                                             <div class="box-body box-profile">
                                                 <img class="profile-user-img img-responsive img-circle" src="assets/img/avatar.png" alt="User profile picture">
 
-                                                <h3 class="profile-username text-center">Jhonny Gutierrez</h3>
+                                                <h3 class="profile-username text-center">{{nombreCompleto}}</h3>
 
-                                                <p class="text-muted text-center">60000789</p>
+                                                <p class="text-muted text-center">{{codEstudiante}}</p>
 
                                                 <ul class="list-group list-group-unbordered">
                                                     <li class="list-group-item">
-                                                        <b>C.I.</b> <a class="pull-right">9898313 LP</a>
+                                                        <b>C.I.</b> <a class="pull-right">{{ci}}</a>
                                                     </li>
                                                     <li class="list-group-item">
-                                                        <b>Telefono</b> <a class="pull-right">60454871</a>
+                                                        <b>Telefono</b> <a class="pull-right">{{celular}}</a>
                                                     </li>
                                                     <li class="list-group-item">
-                                                        <b>Codigo registro</b> <a class="pull-right">543</a>
+                                                        <b>Codigo registro</b> <a class="pull-right">{{IdEstudiante}}</a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -489,22 +493,22 @@
                                                 <strong><i class="fa fa-book margin-r-5"></i> Carrera</strong>
 
                                                 <p>
-                                                    Ingenieria de Sistemas
+                                                    {{carrera}}
                                                 </p>
 
 
                                                 <strong><i class="fa fa-star margin-r-5"></i> Semestre</strong>
 
-                                                <p>8</p>
+                                                <p>{{semestre}}</p>
 
 
                                                 <strong><i class="fa fa-map-marker margin-r-5"></i> Direccion</strong>
 
-                                                <p>Av. Simon I. Patiño</p>
+                                                <p>{{direccion}}</p>
 
                                                 <strong><i class="fa fa-flag-checkered margin-r-5"></i> Nacionalidad</strong>
 
-                                                <p>Bolivia</p>
+                                                <p>{{nacionalidad}}</p>
                                             </div>
                                             <!-- /.box-body -->
                                         </div>
@@ -635,19 +639,8 @@
                                             <!-- /.box-header -->
                                             <div class="box-body">
                                                 <div class="row">
-                                                    <div class="col-md-8">
-                                                        <p class="text-center">
-                                                            <strong>Fecha: 1 Enero, 2018 - 30 Diciembre, 2018</strong>
-                                                        </p>
-
-                                                        <div class="chart">
-                                                            <!-- Sales Chart Canvas -->
-                                                            <canvas id="salesChart" style="height: 180px;"></canvas>
-                                                        </div>
-                                                        <!-- /.chart-responsive -->
-                                                    </div>
                                                     <!-- /.col -->
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-12">
                                                         <p class="text-center">
                                                             <strong>Evaluación</strong>
                                                         </p>
@@ -738,138 +731,7 @@
 
                             </section>
                         </div>
-                        <div class="tab-pane" id="consumir">
-                            <section id="new">
-                                <div class="box-header with-border">
-                                    <h4 class="page-header"><i class="fa fa-file-archive-o"></i> Buscar estudiante en el sistema académico</h4>
-                                    <div class="box-tools">
-                                        <div class="input-group input-group-sm" style="width: 300px;">
-                                            <input type="text" name="table_search" class="form-control pull-right" placeholder="Buscar estudiante">
-
-                                            <div class="input-group-btn">
-                                                <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-                                            </div>
-                                        </div>
-                                        <br>
-                                    </div>
-                                </div>
-                                <div class="box box-primary">
-
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="box-body box-profile">
-                                                <img class="profile-user-img img-responsive img-circle" src="assets/img/Jhonny.png" alt="User profile picture">
-
-                                                <h3 class="profile-username text-center">Jhonny Gutierrez</h3>
-
-                                                <p class="text-muted text-center">60000789</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <div class="box-header with-border">
-                                                <h3 class="box-title">Datos personales</h3>
-                                                <div class="box-tools">
-                                                    <button type="button" class="btn btn-primary" data-widget="remove">
-                                                        <i class="fa fa-plus"></i> Agregar
-                                                      </button>
-                                                </div>
-
-                                            </div>
-
-                                            <!-- /.box-header -->
-                                            <div class="box-body">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <strong><i class="fa fa-book margin-r-5"></i> Carrera</strong>
-
-                                                        <p>
-                                                            Contaduria pública
-                                                        </p>
-                                                        <strong><i class="fa fa-star margin-r-5"></i> Semestre</strong>
-
-                                                        <p>3</p>
-                                                        <strong><i class="fa fa-phone margin-r-5"></i> Celular</strong>
-
-                                                        <p>79866532</p>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <strong><i class="fa fa-map-marker margin-r-5"></i> Direccion</strong>
-
-                                                        <p>Av. Simon I. Patiño</p>
-
-                                                        <strong><i class="fa fa-flag-checkered margin-r-5"></i> Nacionalidad</strong>
-
-                                                        <p>Bolivia</p>
-                                                        <strong><i class="fa fa-calendar margin-r-5"></i> Fecha de nacimiento</strong>
-
-                                                        <p>09-10-1994</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- /.box-body -->
-                                </div>
-                                <!-- datos del estudiante -->
-                                <div class="box box-primary">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="box-body box-profile">
-                                                <img class="profile-user-img img-responsive img-circle" src="assets/img/Luis.png" alt="User profile picture">
-
-                                                <h3 class="profile-username text-center">Luis Fernando Apaza</h3>
-
-                                                <p class="text-muted text-center">60000987</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <div class="box-header with-border">
-                                                <h3 class="box-title">Datos personales</h3>
-                                                <div class="box-tools">
-                                                    <button type="button" class="btn btn-primary">
-                                        <i class="fa fa-plus"></i> Agregar
-                                      </button>
-                                                </div>
-                                            </div>
-                                            <!-- /.box-header -->
-                                            <div class="box-body">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <strong><i class="fa fa-book margin-r-5"></i> Carrera</strong>
-
-                                                        <p>
-                                                            Ingenieria de Sistemas
-                                                        </p>
-                                                        <strong><i class="fa fa-star margin-r-5"></i> Semestre</strong>
-
-                                                        <p>8</p>
-                                                        <strong><i class="fa fa-phone margin-r-5"></i> Celular</strong>
-
-                                                        <p>79866532</p>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <strong><i class="fa fa-map-marker margin-r-5"></i> Direccion</strong>
-
-                                                        <p>Av. Simon I. Patiño</p>
-
-                                                        <strong><i class="fa fa-flag-checkered margin-r-5"></i> Nacionalidad</strong>
-
-                                                        <p>Bolivia</p>
-                                                        <strong><i class="fa fa-calendar margin-r-5"></i> Fecha de nacimiento</strong>
-
-                                                        <p>09-10-1994</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- /.box-body -->
-                                </div>
-
-                            </section>
-                        </div>
+                        
                         <!-- /#USUARIO -->
                     </div>
                     <!-- /.tab-content -->

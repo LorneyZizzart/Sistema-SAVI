@@ -301,6 +301,7 @@
                         <li class="active"><a href="#lista" data-toggle="tab">Lista</a></li>
                         <li><a href="#registrar" data-toggle="tab">Registrar datos personales</a></li>
                         <li (click)="getPersonas()"><a href="#registerUsuario" data-toggle="tab">Registrar Usuario</a></li>
+                        <li><a href="#consumir" data-toggle="tab">Agregar estudiante del sistema académico</a></li>
                     </ul>
                     <div class="tab-content">
                         <!-- LISTA -->
@@ -564,6 +565,138 @@
                             </section>
                         </div>
                         <!-- /#USUARIO -->
+                        <div class="tab-pane" id="consumir">
+                            <section id="new">
+                                <div class="box-header with-border">
+                                    <h4 class="page-header"><i class="fa fa-file-archive-o"></i> Buscar estudiante en el sistema académico</h4>
+                                    <div class="box-tools">
+                                        <div class="input-group input-group-sm" style="width: 300px;">
+                                            <input type="text" name="table_search" class="form-control pull-right" placeholder="Buscar estudiante">
+
+                                            <div class="input-group-btn">
+                                                <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                            </div>
+                                        </div>
+                                        <br>
+                                    </div>
+                                </div>
+                                <div class="box box-primary">
+
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="box-body box-profile">
+                                                <img class="profile-user-img img-responsive img-circle" src="assets/img/Jhonny.png" alt="User profile picture">
+
+                                                <h3 class="profile-username text-center">Jhonny Gutierrez</h3>
+
+                                                <p class="text-muted text-center">60000789</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="box-header with-border">
+                                                <h3 class="box-title">Datos personales</h3>
+                                                <div class="box-tools">
+                                                    <button type="button" class="btn btn-primary" data-widget="remove">
+                                                        <i class="fa fa-plus"></i> Agregar
+                                                      </button>
+                                                </div>
+
+                                            </div>
+
+                                            <!-- /.box-header -->
+                                            <div class="box-body">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <strong><i class="fa fa-book margin-r-5"></i> Carrera</strong>
+
+                                                        <p>
+                                                            Contaduria pública
+                                                        </p>
+                                                        <strong><i class="fa fa-star margin-r-5"></i> Semestre</strong>
+
+                                                        <p>3</p>
+                                                        <strong><i class="fa fa-phone margin-r-5"></i> Celular</strong>
+
+                                                        <p>79866532</p>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <strong><i class="fa fa-map-marker margin-r-5"></i> Direccion</strong>
+
+                                                        <p>Av. Simon I. Patiño</p>
+
+                                                        <strong><i class="fa fa-flag-checkered margin-r-5"></i> Nacionalidad</strong>
+
+                                                        <p>Bolivia</p>
+                                                        <strong><i class="fa fa-calendar margin-r-5"></i> Fecha de nacimiento</strong>
+
+                                                        <p>09-10-1994</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- /.box-body -->
+                                </div>
+                                <!-- datos del estudiante -->
+                                <div class="box box-primary">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="box-body box-profile">
+                                                <img class="profile-user-img img-responsive img-circle" src="assets/img/Luis.png" alt="User profile picture">
+
+                                                <h3 class="profile-username text-center">Luis Fernando Apaza</h3>
+
+                                                <p class="text-muted text-center">60000987</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="box-header with-border">
+                                                <h3 class="box-title">Datos personales</h3>
+                                                <div class="box-tools">
+                                                    <button type="button" class="btn btn-primary">
+                                        <i class="fa fa-plus"></i> Agregar
+                                      </button>
+                                                </div>
+                                            </div>
+                                            <!-- /.box-header -->
+                                            <div class="box-body">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <strong><i class="fa fa-book margin-r-5"></i> Carrera</strong>
+
+                                                        <p>
+                                                            Ingenieria de Sistemas
+                                                        </p>
+                                                        <strong><i class="fa fa-star margin-r-5"></i> Semestre</strong>
+
+                                                        <p>8</p>
+                                                        <strong><i class="fa fa-phone margin-r-5"></i> Celular</strong>
+
+                                                        <p>79866532</p>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <strong><i class="fa fa-map-marker margin-r-5"></i> Direccion</strong>
+
+                                                        <p>Av. Simon I. Patiño</p>
+
+                                                        <strong><i class="fa fa-flag-checkered margin-r-5"></i> Nacionalidad</strong>
+
+                                                        <p>Bolivia</p>
+                                                        <strong><i class="fa fa-calendar margin-r-5"></i> Fecha de nacimiento</strong>
+
+                                                        <p>09-10-1994</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- /.box-body -->
+                                </div>
+
+                            </section>
+                        </div>
                     </div>
                     <!-- /.tab-content -->
                 </div>

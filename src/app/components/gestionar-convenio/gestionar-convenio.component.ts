@@ -6,6 +6,8 @@ import { AppTipoPersonaService } from "../../services/app-tipoPersona.service";
 import { AppDepartamentoService } from "../../services/app-departamento.service";
 import { Persona } from 'src/app/interfaces/persona.interface';
 import { Departamento } from 'src/app/interfaces/departamento.interface';
+import { AppCarreraService } from '../../services/app-carrera.service';
+import { Carrera } from 'src/app/interfaces/carrera.interface';
 
 @Component({
   selector: 'app-gestionar-convenio',
@@ -21,6 +23,8 @@ export class GestionarConvenioComponent implements OnInit {
   editConvenio:Convenio = {};
   estudiantes: Persona [];
   departamentos:Departamento[];
+  //para mostrar el expediente del estudiante
+  expediente:Persona;
   becas:any = [{idBeca: 1, nombre:'Industrial'},{idBeca: 2, nombre:'Institucional'}];
   //ALERTS
   titleAlert:string = null;
@@ -29,10 +33,6 @@ export class GestionarConvenioComponent implements OnInit {
   alertSuccess:Boolean = false;
   alertError:Boolean = false;
   alertWarning:boolean = false;
-  //alert message
-  MessageSuccessConvenio:boolean = false;
-  MessageFailConvenio:boolean = false
-  estado = false;
   //Register
   idConvenio = "";
   idEstudiante = ""; 
@@ -43,7 +43,9 @@ export class GestionarConvenioComponent implements OnInit {
   aceptoTerminos:boolean = false;
   private convenio: Convenio = {};
   //Info Estudiante
+  IdEstudiante:string;
   codEstudiante:string;
+  idCarrera:string;
   nombreCompleto:string;
   nacionalidad: string;
   direccion: string;
@@ -73,7 +75,8 @@ export class GestionarConvenioComponent implements OnInit {
 
   constructor( private _appConvenioService:AppConvenioService,
               private _appTipoPersonaService:AppTipoPersonaService,
-              private _appDepartamentoService: AppDepartamentoService) {
+              private _appDepartamentoService: AppDepartamentoService,
+              private _appCarreraService:AppCarreraService) {
    }
 
   ngOnInit() {
@@ -103,9 +106,8 @@ export class GestionarConvenioComponent implements OnInit {
   
   activaRegister(){
     this.getEstudiantes();
-    setTimeout(() => {
-      this.getDepartamentos();
-    }, 2000);
+    this.getDepartamentos();
+
   }
   convertDate(opcion, value){
     let fecha = new Date(value);
@@ -334,14 +336,12 @@ export class GestionarConvenioComponent implements OnInit {
     this.convenio.estadoConvenio = estado;
     this._appConvenioService.putEstadoConvenio(this.convenio, idConvenio)
     .subscribe((data : Convenio[]) => {
+      this.getConvenios();
       if(estado == '1') this.alert(1, 'Convenio habilitado', 'El convenio fue habilitado satisfactoriamente.');
       if(estado == '0') this.alert(3, 'Convenio deshabilitado', 'El convenio fue deshabilitado satisfactoriamente.');      
     }, res => {
       this.alert(2, 'Error de cambiar de estado', 'Se ha producido un error en el servidor al cambiar estado.');
     });
-    setTimeout(() => {
-      this.getConvenios();
-    }, 2000);
   }
 
   //GESTIONAR TIPO PERSONA
@@ -352,7 +352,7 @@ export class GestionarConvenioComponent implements OnInit {
   }
 
   informacionEstudiante(idEstudiante){
-    console.log(this.convenios);
+    
     for(let estudiante of this.convenios){
       if(estudiante.idPersona == idEstudiante){
         if (estudiante.segundoNombre == null && estudiante.segundoApellido != null ) {
@@ -364,6 +364,8 @@ export class GestionarConvenioComponent implements OnInit {
         }else{
           this.nombreCompleto = estudiante.primerNombre + " " + estudiante.segundoNombre + " " + estudiante.primerApellido + " " + estudiante.segundoApellido;
         }
+          this.idCarrera = estudiante.idCarrera;
+          this.IdEstudiante = idEstudiante;
           this.codEstudiante = estudiante.codEstudiante;
           this.nacionalidad = estudiante.nacionalidad;
           this.direccion = estudiante.direccion;
@@ -371,7 +373,6 @@ export class GestionarConvenioComponent implements OnInit {
           this.ci = estudiante.ci;
           this.fechaNacimiento = estudiante.fechaNacimiento;
           this.estadoPersona = estudiante.estadoPersona;
-          this.carrera = estudiante.carrera;
           this.semestre = estudiante.semestre;
           this.departamento = estudiante.departamento;
           this.beca = estudiante.beca;
@@ -388,5 +389,22 @@ export class GestionarConvenioComponent implements OnInit {
   getDepartamentos(){
     this._appDepartamentoService.getAllDepartamento()
     .subscribe((departamento: Departamento[]) => this.departamentos = departamento);
+  }
+
+  // GESTIONAR CARRERA 
+  getCarreras(){
+    this._appCarreraService.getListCarrera()
+    .subscribe((carreras : Carrera[]) => {
+      for(let carrera of carreras){
+        if(carrera.idCarrera == this.idCarrera)
+          this.carrera = carrera.nombreCarrera;
+      }
+    })
+  }
+
+  //GESTIONAR EXPEDIENTE DEL ESTUDIANTE
+  getExpedienteEstudiante(idEstudiante){
+    this.informacionEstudiante(idEstudiante);
+    this.getCarreras();
   }
 }
