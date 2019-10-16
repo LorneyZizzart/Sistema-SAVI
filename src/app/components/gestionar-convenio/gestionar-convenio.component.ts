@@ -8,6 +8,9 @@ import { Persona } from 'src/app/interfaces/persona.interface';
 import { Departamento } from 'src/app/interfaces/departamento.interface';
 import { AppCarreraService } from '../../services/app-carrera.service';
 import { Carrera } from 'src/app/interfaces/carrera.interface';
+import { AppApiSistemaAcademicoService } from '../../services/app-api-sistema-academico.service';
+import { Notas } from 'src/app/interfaces/notas.interface';
+
 
 @Component({
   selector: 'app-gestionar-convenio',
@@ -73,10 +76,15 @@ export class GestionarConvenioComponent implements OnInit {
   numbers="0123456789";
   simbolos="/*-+|°!#$%&()=¿?,;. :_{}[]><";
 
+  // API SISTEMA ACADEMICO
+  notas:Notas[];
+  cantidadMaterias:number = 0;
+
   constructor( private _appConvenioService:AppConvenioService,
               private _appTipoPersonaService:AppTipoPersonaService,
               private _appDepartamentoService: AppDepartamentoService,
-              private _appCarreraService:AppCarreraService) {
+              private _appCarreraService:AppCarreraService,
+              private _appApiSistemaAcademicoService : AppApiSistemaAcademicoService) {
    }
 
   ngOnInit() {
@@ -406,5 +414,17 @@ export class GestionarConvenioComponent implements OnInit {
   getExpedienteEstudiante(idEstudiante){
     this.informacionEstudiante(idEstudiante);
     this.getCarreras();
+    this.getNotasSA(idEstudiante);
+  }
+
+  getNotasSA(idEstudiante){
+    this._appApiSistemaAcademicoService.getNotasSA(idEstudiante).subscribe((notas :Notas[]) => {
+      console.log(notas);      
+      this.notas = notas;
+      this.cantidadMaterias = notas.length;
+      for(let item of this.notas){
+        item.notaFinal = (parseFloat(item.primerParcial)+parseFloat(item.segundoParcial)+parseFloat(item.tercerParcial)).toString();
+      }
+    })
   }
 }

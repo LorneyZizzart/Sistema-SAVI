@@ -7,6 +7,9 @@ import { AppPersonaService } from "../../services/app-persona.service";
 import { Carrera } from '../../interfaces/carrera.interface';
 import { AppCarreraService } from '../../services/app-carrera.service';
 import { AuthService } from '../../services/auth.service';
+import { AppApiSistemaAcademicoService } from '../../services/app-api-sistema-academico.service';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+
 
 @Component({
   selector: 'app-gestionar-usuario',
@@ -102,13 +105,17 @@ export class GestionarUsuarioComponent implements OnInit {
   letters="abcdefghyjklmnñopqrstuvwxyz";
   numbers="0123456789";
   simbolos="/*-+|°!#$%&()=¿?,;.:_{}[]><";
-
   imagen:string = 'Jhonny.png';
+
+  // API SISTEMA ACADEMICO
+  listaEstudiantesSA:Persona[];
+  cantidadEstudiantes:number = 0;
     
   constructor( private _appUserService: AppUserService,
               private _appPersonaService: AppPersonaService,
               private _appCarreraService:AppCarreraService,
-              private _authService:AuthService) {
+              private _authService:AuthService,
+              private _appApiSistemaAcademicoService : AppApiSistemaAcademicoService) {
   }
 
   ngOnInit() {
@@ -821,7 +828,7 @@ export class GestionarUsuarioComponent implements OnInit {
       }else{
         this.alert(2, 'Error al registrar','Se ha producido un error al guardar el registro en el sistema.');
       }   
-  }  
+  }
 
   editarPersona(){
     if(this.editpersona.primerNombre == null){this.inputValEditFirstName = false;this.messaggeFullName = 'El campo debe ser llenado obligatoriamente.';}
@@ -852,5 +859,72 @@ export class GestionarUsuarioComponent implements OnInit {
     this._appCarreraService.getListCarrera()
     .subscribe((carrera : Carrera[]) => {this.carreras = carrera})
   }
+
+  // gestionar consumir API SISTEMA ACADEMICO
+
+  buscarEstudianteSA(codEstudiante:string){
+    if(codEstudiante.length == 9){
+      this.getEstudianteSA(parseInt(codEstudiante));
+    }
+  }
+
+  listarEstudiantesSA(){
+    this.cantidadEstudiantes += 4;
+    this.getEstudiantesSA(this.cantidadEstudiantes);
+  }
+
+  agregarEstudiante(idEstudiante:string){    
+
+    for(let estudiante of this.listaEstudiantesSA){     
+      if (estudiante.idEstudiante == idEstudiante) {
+
+          var nombres = estudiante.nombres.split(" ");
+          this.persona.primerNombre = nombres[0];
+          this.persona.segundoNombre = nombres[1];
+
+          var apellidos = estudiante.apellidos.split(" ");
+          this.persona.primerApellido = apellidos[0];
+          this.persona.segundoApellido = apellidos[1]; 
+
+        this.persona.codEstudiante = estudiante.codEstudiante;
+        this.persona.ci = estudiante.ci;
+        this.persona.semestre = estudiante.semestre;
+        this.persona.nacionalidad = estudiante.nacionalidad;
+        this.persona.direccion = estudiante.direccion;
+        this.persona.celular = estudiante.celular;
+        this.persona.fechaNacimiento = estudiante.fechaNacimiento;
+        for(let carrera of this.carreras){
+          if(carrera.nombreCarrera == estudiante.carrera)
+          this.persona.idCarrera = carrera.idCarrera; 
+        }          
+      }
+    }
+    this._appPersonaService.searchCodStudent(this.persona.codEstudiante)
+          .subscribe((data:Persona[])=>{
+            if(data.length > 0) {
+              this.alert(3, 'Error al agregar', 'El estudiante se encuentra registrado en el sistema Sabi.');              
+            }else{
+              this._appPersonaService.postPersona(this.persona)
+                .subscribe((data :Persona[]) => {
+                  this.alert(1, 'Registro exitoso', 'El registro se agregó satisfactoriamente.');
+                }, res =>{
+                  this.alert(2, 'Error al agregar','Se ha producido un error en el servidor.');
+                });
+            }
+          });
+    
+  }
+
+  getEstudiantesSA(cantidad:number){
+    this._appApiSistemaAcademicoService.getEstudiantesSA(cantidad).subscribe((estudiantes:Persona[]) => {
+      this.listaEstudiantesSA = estudiantes;
+    })
+  }
+
+  getEstudianteSA(codEstudiante:number){
+    this._appApiSistemaAcademicoService.getEstudianteSA(codEstudiante).subscribe((estudiante:Persona[]) => {
+      this.listaEstudiantesSA = estudiante;
+    })
+  }  
 
 }

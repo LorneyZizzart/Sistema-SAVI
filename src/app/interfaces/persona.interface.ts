@@ -1,6 +1,9 @@
 export interface Persona {
   idPersona?: string;
   codEstudiante?: string;
+  idEstudiante?:string;
+  nombres?:string;
+  apellidos?:string;
   primerNombre?: string;
   segundoNombre?: string;
   primerApellido?: string;

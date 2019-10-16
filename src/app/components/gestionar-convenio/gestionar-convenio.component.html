@@ -540,63 +540,14 @@
                                                                 <th class="text-center">Nota Final</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody>
+                                                        <tbody *ngFor="let item of notas; let i = index">
                                                             <tr>
-                                                                <td class="text-center">1</td>
-                                                                <td>Ingenieria de Software</td>
-                                                                <td class="text-center"><span class="label label-success">30</span></td>
-                                                                <td class="text-center"><span class="label label-danger">12</span></td>
-                                                                <td class="text-center"><span class="label label-warning">22</span></td>
-                                                                <td class="text-center"><span class="label label-warning">64</span></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="text-center">2</td>
-                                                                <td>Administración de Redes y Servidores</td>
-                                                                <td class="text-center"><span class="label label-danger">30</span></td>
-                                                                <td class="text-center"><span class="label label-success">12</span></td>
-                                                                <td class="text-center"><span class="label label-warning">22</span></td>
-                                                                <td class="text-center"><span class="label label-success">64</span></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="text-center">3</td>
-                                                                <td>Taller de Base de Datos</td>
-                                                                <td class="text-center"><span class="label label-warning">30</span></td>
-                                                                <td class="text-center"><span class="label label-danger">12</span></td>
-                                                                <td class="text-center"><span class="label label-warning">22</span></td>
-                                                                <td class="text-center"><span class="label label-warning">64</span></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="text-center">4</td>
-                                                                <td>Metodología de Investigación</td>
-                                                                <td class="text-center"><span class="label label-danger">30</span></td>
-                                                                <td class="text-center"><span class="label label-warning">12</span></td>
-                                                                <td class="text-center"><span class="label label-warning">22</span></td>
-                                                                <td class="text-center"><span class="label label-success">64</span></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="text-center">5</td>
-                                                                <td>Practica Empresarial I</td>
-                                                                <td class="text-center"><span class="label label-success">30</span></td>
-                                                                <td class="text-center"><span class="label label-success">12</span></td>
-                                                                <td class="text-center"><span class="label label-warning">22</span></td>
-                                                                <td class="text-center"><span class="label label-danger">64</span></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="text-center">6</td>
-                                                                <td>Electiva III</td>
-                                                                <td class="text-center"><span class="label label-warning">30</span></td>
-                                                                <td class="text-center"><span class="label label-danger">12</span></td>
-                                                                <td class="text-center"><span class="label label-warning">22</span></td>
-                                                                <td class="text-center"><span class="label label-warning">64</span></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="text-center">7</td>
-                                                                <td>Perspectiva Biblica de la Historia</td>
-                                                                <td class="text-center"><span class="label label-danger">30</span></td>
-                                                                <td class="text-center"><span class="label label-warning">12</span></td>
-                                                                <td class="text-center"><span class="label label-warning">22</span></td>
-                                                                <td class="text-center"><span class="label label-danger">64</span></td>
-                                                            </tr>
+                                                                <td class="text-center">{{i+1}}</td>
+                                                                <td>{{item.materia}}</td>
+                                                                <td class="text-center"><span [ngClass]="{'label': true, 'label-success' : true, 'label-danger':  false, 'label-warning' :false}">{{item.primerParcial}}</span></td>
+                                                                <td class="text-center"><span class="label label-danger">{{item.segundoParcial}}</span></td>
+                                                                <td class="text-center"><span class="label label-warning">{{item.tercerParcial}}</span></td>
+                                                                <td class="text-center"><span class="label label-warning">{{item.notaFinal}}</span></td>
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -604,7 +555,7 @@
                                             </div>
                                             <!-- /.box-body -->
                                             <div class="box-footer clearfix text-center">
-                                                <p>Cantidad: <strong>7 materias</strong></p>
+                                                <p>Cantidad: <strong>{{cantidadMaterias}} materias</strong></p>
                                             </div>
                                             <!-- /.box-footer -->
                                         </div>

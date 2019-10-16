@@ -18,7 +18,22 @@ export class FechaPipe implements PipeTransform {
     switch (args) {
       case 1: 
         returnDate =  fechaNum + " de " + meses[mes_name] + " de " + date.getFullYear();
-        break;    
+        break; 
+      case 2:   
+        var numDia;
+        var numMes;
+        if((parseInt(date.getMonth().toString())+1) < 10){
+          numMes = "0"+(parseInt(date.getMonth().toString())+1);
+        }else{
+          numMes = (parseInt(date.getMonth().toString())+1);
+        }
+        if(fechaNum < 10){
+          numDia = "0"+fechaNum;
+        }else{
+          numDia = fechaNum;
+        }
+        returnDate =  numDia + "/" + numMes + "/" + date.getFullYear();
+        break; 
       default:
         break;
     }
