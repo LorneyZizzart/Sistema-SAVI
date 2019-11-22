@@ -201,7 +201,7 @@
                 <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-danger"><i class="fa fa-close"></i> Cancelar</button>
             </div>
             <div class="col-md-6">
-                <button (click)="confirmarAprobarInformeEstudiante()" type="button" data-dismiss="modal" aria-label="Close" class="btn btn-success"><i class="fa fa-save"></i> Guardar</button>
+                <button (click)="confirmarAprobarInformeEstudiante()" type="button" data-dismiss="modal" aria-label="Close" class="btn btn-success"><i class="fa  fa-check"></i> Aprobar</button>
             </div>
         </div>
     </form>
@@ -257,11 +257,11 @@
                                     <span *ngIf="informe.aprobadoJefeDep != null" class="badge bg-green"><i class="fa fa-check"></i></span>
                                 </td>
                                 <td class="text-center">
-                                    <a (click)="aprobarInformeEstudiante(informe.idDepartamento, informe.idRegistroHora, informe.idInformeEstudiante, '1', informe.idConvenio, informe.totalSaldo); informacionEstudiante(informe.idRegistroHora, informe.idPersona)" data-toggle="modal" data-target="#modal-acreditacion" class="btn btn-success btn-margin" title="Aprobar"><i class="fa fa-check"></i></a>
-                                    <a (click)="aprobarInformeEstudiante(informe.idDepartamento, informe.idRegistroHora, informe.idInformeEstudiante, '0', informe.idConvenio, informe.totalSaldo)" class="btn btn-danger btn-margin" data-toggle="tooltip" data-placement="right" title="No aprobar"><i class="fa fa-close"></i></a>
+                                    <a (click)="aprobarInformeEstudiante(informe.idDepartamento, informe.idRegistroHora, informe.idInformeEstudiante, '1', informe.idConvenio, informe.totalSaldo, informe.codEstudiante, informe.primerApellido, informe.segundoApellido, informe.primerNombre, informe.segundoNombre)" data-toggle="modal" data-target="#modal-acreditacion" class="btn btn-success btn-margin btn-xs" title="Aprobar"><i class="fa fa-check"></i></a>
+                                    <a (click)="aprobarInformeEstudiante(informe.idDepartamento, informe.idRegistroHora, informe.idInformeEstudiante, '0', informe.idConvenio, informe.totalSaldo, informe.codEstudiante, informe.primerApellido, informe.segundoApellido, informe.primerNombre, informe.segundoNombre)" class="btn btn-danger btn-margin btn-xs" data-toggle="tooltip" data-placement="right" title="No aprobar"><i class="fa fa-close"></i></a>
                                 </td>
                                 <td class="text-center">
-                                    <a (click)="informacionEstudiante(informe.idRegistroHora, informe.idPersona)" data-toggle="modal" data-target="#modal-informacionStudiante" class="btn btn-primary btn-margin" title="Ver"><i class="fa fa-eye"></i></a>
+                                    <a (click)="informacionEstudiante(informe.idDepartamento, informe.idRegistroHora, informe.idPersona)" data-toggle="modal" data-target="#modal-informacionStudiante" class="btn btn-primary btn-margin btn-xs" title="Ver"><i class="fa fa-eye"></i></a>
                                 </td>
                             </tr>
                         </table>

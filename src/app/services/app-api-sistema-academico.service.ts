@@ -31,5 +31,10 @@ export class AppApiSistemaAcademicoService {
     return this._http.get<Notas[]>(url).pipe(map(res => res));
   }
 
+  getHorarioSA(idEstudiante:string){
+    let url = `${this.uriSistemaAcademico}/horario/${idEstudiante}`;
+    return this._http.get<any[]>(url).pipe(map(res => res));
+  }
+
 }
 

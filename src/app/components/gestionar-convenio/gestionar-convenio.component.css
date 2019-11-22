@@ -35,3 +35,11 @@
 .form-edit{
   margin: 0 5% 0 0;  
 }
+
+.table-horario>thead>tr>th, .table-horario>tbody>tr>th, .table-horario>tfoot>tr>th, .table-horario>thead>tr>td, .table-horario>tbody>tr>td, .table-horario>tfoot>tr>td {
+    border: 3px solid #efebeb;
+}
+
+.table>tbody+tbody {
+    border-top: 1px solid rgb(158, 156, 156);
+}

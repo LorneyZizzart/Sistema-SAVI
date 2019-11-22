@@ -80,6 +80,11 @@ export class GestionarConvenioComponent implements OnInit {
   notas:Notas[];
   cantidadMaterias:number = 0;
 
+  horario:any[];
+
+  evaluacionEstudiantil = { puntualidad: '60', retrasos: '30', faltasDeTrabajo: '10' , desempenoLaboral: '80' , diasTrabajo: '25', totalHoras: '216:00', SaldoAcumulado: '560', departamento: 'Limpieza'};
+  auxEvaluacionEstudiantil;
+
   constructor( private _appConvenioService:AppConvenioService,
               private _appTipoPersonaService:AppTipoPersonaService,
               private _appDepartamentoService: AppDepartamentoService,
@@ -415,16 +420,112 @@ export class GestionarConvenioComponent implements OnInit {
     this.informacionEstudiante(idEstudiante);
     this.getCarreras();
     this.getNotasSA(idEstudiante);
+    this.getHorario(idEstudiante);
   }
-
+  // PRIMER PARCIAL
+  // nota baja <= 15
+  // 15 > nota medio <= 25
+  // nota alta >= 26 
   getNotasSA(idEstudiante){
+    // var aux = idEstudiante || '';
     this._appApiSistemaAcademicoService.getNotasSA(idEstudiante).subscribe((notas :Notas[]) => {
-      console.log(notas);      
+  
       this.notas = notas;
       this.cantidadMaterias = notas.length;
       for(let item of this.notas){
         item.notaFinal = (parseFloat(item.primerParcial)+parseFloat(item.segundoParcial)+parseFloat(item.tercerParcial)).toString();
+
+        if(parseFloat(item.primerParcial) <= 15)
+          item.notaPBajo = true;
+        if(parseFloat(item.primerParcial) > 15 && 25 >= parseFloat(item.primerParcial))
+          item.notaPMedio = true;        
+        else if(parseFloat(item.primerParcial) >= 26)
+          item.notaPAlto = true;
+
+        if(parseFloat(item.segundoParcial) <= 15)
+          item.notaSBajo = true;
+        if(parseFloat(item.segundoParcial) > 15 && 25 >= parseFloat(item.segundoParcial))
+          item.notaSMedio = true;  
+        else if(parseFloat(item.segundoParcial) >= 26)
+          item.notaSAlto = true;
+
+        
+        if(parseFloat(item.tercerParcial) <= 15)
+          item.notaTBajo = true;
+        if(parseFloat(item.tercerParcial) > 15 && 25 >= parseFloat(item.tercerParcial))
+          item.notaTMedio = true;      
+        else if(parseFloat(item.tercerParcial) >= 26)
+          item.notaTAlto = true;
+
+        if(parseFloat(item.notaFinal) <= 51)
+          item.notaFBajo = true;
+        if(parseFloat(item.notaFinal) >= 52 && 75 >= parseFloat(item.notaFinal))
+          item.notaFMedio = true;      
+        else if(parseFloat(item.notaFinal) >= 76)
+          item.notaFAlto = true;
+
       }
+
+      // para ver la evaluacion del estudiante
+      const auxEvaluacion = { puntualidad: '0', retrasos: '0', faltasDeTrabajo: '0' , desempenoLaboral: '0' , diasTrabajo: '0', totalHoras: '00:00', SaldoAcumulado: '00.00', departamento: ''};
+      this.auxEvaluacionEstudiantil = this.evaluacionEstudiantil;
+    if(this.notas.length == 0){
+      this.evaluacionEstudiantil = auxEvaluacion;
+    }else{
+      this.evaluacionEstudiantil = this.auxEvaluacionEstudiantil;
+    }
+
     })
   }
+
+  getHorario(idEstudiante){
+    var periodos = [{id: 1, hora:'07:30 - 08:15', domingo:false, lunes:false, martes:false, miercoles:false, jueves:false, viernes:false, sabado:false}, 
+                    {id: 2, hora:'08:15 - 09:00', domingo:false, lunes:false, martes:false, miercoles:false, jueves:false, viernes:false, sabado:false},
+                    {id: 3, hora:'09:15 - 10:00', domingo:false, lunes:false, martes:false, miercoles:false, jueves:false, viernes:false, sabado:false},
+                    {id: 4, hora:'10:00 - 10:45', domingo:false, lunes:false, martes:false, miercoles:false, jueves:false, viernes:false, sabado:false},
+                    {id: 5, hora:'11:00 - 11:45', domingo:false, lunes:false, martes:false, miercoles:false, jueves:false, viernes:false, sabado:false},
+                    {id: 6, hora:'11:45 - 12:30', domingo:false, lunes:false, martes:false, miercoles:false, jueves:false, viernes:false, sabado:false},
+                    {id: 7, hora:'12:30 - 13:15', domingo:false, lunes:false, martes:false, miercoles:false, jueves:false, viernes:false, sabado:false},
+                    {id: 8, hora:'13:30 - 14:15', domingo:false, lunes:false, martes:false, miercoles:false, jueves:false, viernes:false, sabado:false},
+                    {id: 9, hora:'14:15 - 15:00', domingo:false, lunes:false, martes:false, miercoles:false, jueves:false, viernes:false, sabado:false},
+                    {id: 10, hora:'15:15 - 16:00', domingo:false, lunes:false, martes:false, miercoles:false, jueves:false, viernes:false, sabado:false},
+                    {id: 11, hora:'16:00 - 16:45', domingo:false, lunes:false, martes:false, miercoles:false, jueves:false, viernes:false, sabado:false},
+                    {id: 12, hora:'17:00 - 17:45', domingo:false, lunes:false, martes:false, miercoles:false, jueves:false, viernes:false, sabado:false},
+                    {id: 13, hora:'17:45 - 18:30', domingo:false, lunes:false, martes:false, miercoles:false, jueves:false, viernes:false, sabado:false},
+                    {id: 14, hora:'18:45 - 19:30', domingo:false, lunes:false, martes:false, miercoles:false, jueves:false, viernes:false, sabado:false},
+                    {id: 15, hora:'19:30 - 20:15', domingo:false, lunes:false, martes:false, miercoles:false, jueves:false, viernes:false, sabado:false},
+                    {id: 16, hora:'20:15 - 21:00', domingo:false, lunes:false, martes:false, miercoles:false, jueves:false, viernes:false, sabado:false}];
+    this._appApiSistemaAcademicoService.getHorarioSA(idEstudiante).subscribe((data:any[])=>{
+      
+      for(var i = 0; i < periodos.length; i++){
+        for(var j = 0; j < data.length; j++){
+
+          if(periodos[i].id == parseInt(data[j].idHora) && parseInt(data[j].idDia) == 1)
+            periodos[i].domingo = true;
+            
+          if(periodos[i].id == parseInt(data[j].idHora) && parseInt(data[j].idDia) == 2)
+            periodos[i].lunes = true;
+
+          if(periodos[i].id == parseInt(data[j].idHora) && parseInt(data[j].idDia) == 3)
+            periodos[i].martes = true;  
+
+          if(periodos[i].id == parseInt(data[j].idHora) && parseInt(data[j].idDia) == 4)
+            periodos[i].miercoles = true;
+
+          if(periodos[i].id == parseInt(data[j].idHora) && parseInt(data[j].idDia) == 5)
+            periodos[i].jueves = true;
+
+          if(periodos[i].id == parseInt(data[j].idHora) && parseInt(data[j].idDia) == 6)
+            periodos[i].viernes = true;      
+
+          if(periodos[i].id == parseInt(data[j].idHora) && parseInt(data[j].idDia) == 7)
+            periodos[i].sabado = true;
+                        
+        }
+      }
+
+      this.horario = periodos;
+    })
+  }
+
 }

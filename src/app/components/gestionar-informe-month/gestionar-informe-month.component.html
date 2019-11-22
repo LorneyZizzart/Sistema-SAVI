@@ -212,7 +212,7 @@
                         </div>
                         <div class="col-md-6">
                             <button *ngIf="btnConfirmacion == 'aprovacion'"  (click)="confirmarAprovacion()" data-dismiss="modal" aria-label="Close" type="button" class="btn btn-success">Guardar</button>
-                            <button *ngIf="btnConfirmacion == 'delete'" (click)="confirmacionDelete()" data-dismiss="modal" aria-label="Close" type="button" class="btn btn-success">Guardar</button>
+                            <button *ngIf="btnConfirmacion == 'delete'" (click)="confirmacionDelete()" data-dismiss="modal" aria-label="Close" type="button" class="btn btn-success">Eliminar</button>
                         </div>
                     </div>
                 </div>                    
@@ -265,7 +265,7 @@
                                   </tr>
                                   <tr *ngFor="let registro of informesRegistrosMonth; let i = index">
                                       <td>{{i+1}}.</td>
-                                      <td class="text-center">{{registro.idRegistroHora}}</td>
+                                      <td class="text-center">{{registro.codEstudiante}}</td>
                                       <td>{{registro.primerApellido}} {{registro.segundoApellido}} {{registro.primerNombre}}  {{registro.segundoNombre}}</td>
                                       <td>{{registro.fechaEntrada | nameDay }}</td>
                                       <td class="text-center">{{registro.horaEntrada | hora }}:{{registro.minutoEntrada | minuto}}</td>

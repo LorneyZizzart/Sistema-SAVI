@@ -230,6 +230,7 @@ export class GestionarInformeHoyComponent implements OnInit {
   getInformeRegisterNow(idDepartamento:string){
     this._appRegistroHoraService.getInformeRegisterNow(idDepartamento)
     .subscribe((registro : RegistroHora[]) => {
+      console.log("registro: ", registro)
       this.informesRegistrosNow = registro;      
       this.listHours = ['00:00'];
       this.listSaldo= ['0'];
@@ -307,7 +308,7 @@ export class GestionarInformeHoyComponent implements OnInit {
     this._appTipoPersonaService.getInfoEstudiantes(this.departament[0].idDepartamento, idPersona)
     .subscribe((estudiantes : Persona[]) => {
       this.estudiantes = estudiantes;
-
+     
       for(let estudiante of this.estudiantes){
         if(estudiante.idPersona == idPersona){
           

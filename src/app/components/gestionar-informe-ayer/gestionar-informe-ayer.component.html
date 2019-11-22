@@ -265,7 +265,7 @@
                                 </tr>
                                 <tr *ngFor="let registro of informesRegistrosAyer; let i = index">
                                     <td>{{i+1}}.</td>
-                                    <td class="text-center">{{registro.idRegistroHora}}</td>
+                                    <td class="text-center">{{registro.codEstudiante}}</td>
                                     <td>{{registro.primerApellido}} {{registro.segundoApellido}} {{registro.primerNombre}}  {{registro.segundoNombre}}</td>
                                     <td class="text-center">{{registro.horaEntrada | hora }}:{{registro.minutoEntrada | minuto}}</td>
                                     <td *ngIf="registro.horaSalida == null"></td>

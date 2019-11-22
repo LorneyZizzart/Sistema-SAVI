@@ -12,6 +12,8 @@ import { AppTipoPersonaService } from '../../services/app-tipoPersona.service';
 import { Departamento } from '../../interfaces/departamento.interface';
 import { AppDepartamentoService } from '../../services/app-departamento.service';
 import { Convenio } from 'src/app/interfaces/convenio.interface';
+import { AppAreaService } from '../../services/app-area.service';
+import { Area } from 'src/app/interfaces/area.interface';
 
 
 @Component({
@@ -86,7 +88,8 @@ export class GestionarInformeFinanzasComponent implements OnInit {
               private _appAcreedorService:AppAcreedorService,
               private _appTipoPersonaService:AppTipoPersonaService,
               private _appRegistroHora:AppRegistroHoraService,
-              private _appDepartamentoService:AppDepartamentoService) { }
+              private _appDepartamentoService:AppDepartamentoService,
+              private _appAreaService:AppAreaService ) { }
 
   ngOnInit() {
     this.getInfomeEstudiante();
@@ -192,7 +195,7 @@ export class GestionarInformeFinanzasComponent implements OnInit {
       this.numHour= '00:00';
       this.totalSaldo = 0;
       this.totalDatos();
-    })
+    });
   }
 
   getEstudiantes(){
@@ -207,7 +210,7 @@ export class GestionarInformeFinanzasComponent implements OnInit {
     this.listInformeEstudiante = this.listInformeEstudianteArray;
     for(let informe of this.listInformeEstudiante){
       if (informe.segundoNombre == null && informe.segundoApellido != null ) {
-        name = informe.primerApellido + " " + informe.segundoApellido+ " " + informe.primerNombre ;
+        name = informe.primerApellido + " " + informe.segundoApellido + " " + informe.primerNombre ;
       } else if (informe.segundoNombre == null && informe.segundoApellido == null){
         name = informe.primerApellido + " " + informe.primerNombre; 
       }else if (informe.segundoNombre != null && informe.segundoApellido == null){ 
@@ -223,43 +226,58 @@ export class GestionarInformeFinanzasComponent implements OnInit {
     this.listInformeEstudiante = array;   
   }
 
-  informacionEstudiante(idRegistroHora, idEstudiante){ 
+  informacionEstudiante(idDepartamento,  idRegistroHora, idPersona){ 
     this.areas = [];
-    for(let estudiante of this.estudiantes){
-      if(estudiante.idPersona == idEstudiante){
-        if (estudiante.segundoNombre == null && estudiante.segundoApellido != null ) {
-          this.nombreCompleto = estudiante.primerApellido + " " + estudiante.segundoApellido+ " " + estudiante.primerNombre ;
-        } else if (estudiante.segundoNombre == null && estudiante.segundoApellido == null){
-          this.nombreCompleto = estudiante.primerApellido + " " + estudiante.primerNombre; 
-        }else if (estudiante.segundoNombre != null && estudiante.segundoApellido == null){ 
-          this.nombreCompleto = estudiante.primerApellido + " " + estudiante.primerNombre + " " + estudiante.segundoNombre;
-        }else{
-          this.nombreCompleto = estudiante.primerApellido + " " + estudiante.segundoApellido + " " + estudiante.primerNombre + " " + estudiante.segundoNombre;
+    this._appTipoPersonaService.getInfoEstudiantes(idDepartamento, idPersona)
+    .subscribe((estudiantes : Persona[]) => {
+      this.estudiantes = estudiantes;
+
+      for(let estudiante of this.estudiantes){
+        if(estudiante.idPersona == idPersona){
+          if (estudiante.segundoNombre == null && estudiante.segundoApellido != null ) {
+            this.nombreCompleto = estudiante.primerApellido + " " + estudiante.segundoApellido + " " + estudiante.primerNombre ;
+          } else if (estudiante.segundoNombre == null && estudiante.segundoApellido == null){
+            this.nombreCompleto = estudiante.primerApellido + " " + estudiante.primerNombre; 
+          }else if (estudiante.segundoNombre != null && estudiante.segundoApellido == null){ 
+            this.nombreCompleto = estudiante.primerApellido + " " + estudiante.primerNombre + " " + estudiante.segundoNombre;
+          }else{
+            this.nombreCompleto = estudiante.primerApellido + " " + estudiante.segundoApellido + " " + estudiante.primerNombre + " " + estudiante.segundoNombre;
+          }
+            this.codEstudiante = estudiante.codEstudiante;
+            this.nacionalidad = estudiante.nacionalidad;
+            this.direccion = estudiante.direccion;
+            this.celular = estudiante.celular;
+            this.ci = estudiante.ci;
+            this.fechaNacimiento = estudiante.fechaNacimiento;
+            this.estadoPersona = estudiante.estadoPersona;
+            this.carrera = estudiante.carrera;
+            this.semestre = estudiante.semestre;
+            this.nombreDepartamento = estudiante.departamento;
+            this.beca = estudiante.beca;
+            this.estadoConvenio = estudiante.estadoConvenio;
+            this.fechaInicio = estudiante.fechaInicio;
+            this.fechaFinal = estudiante.fechaFinal;
+            this.fotocopiaCI = estudiante.fotocopiaCarnet;
+            this.solicitudWork = estudiante.solicitudTrabajo;
+
+            this._appAreaService.getAsignacionByConvenio(estudiante.idConvenio)
+              .subscribe((data: Area[]) => {
+                if(data.length > 0){
+                  for(let a of data){
+                    this.areas.push(a.nombreArea);
+                  }
+                }
+              });
         }
-          this.codEstudiante = estudiante.codEstudiante;
-          this.nacionalidad = estudiante.nacionalidad;
-          this.direccion = estudiante.direccion;
-          this.celular = estudiante.celular;
-          this.ci = estudiante.ci;
-          this.fechaNacimiento = estudiante.fechaNacimiento;
-          this.estadoPersona = estudiante.estadoPersona;
-          this.carrera = estudiante.carrera;
-          this.semestre = estudiante.semestre;
-          this.nombreDepartamento = estudiante.departamento;
-          this.beca = estudiante.beca;
-          this.estadoConvenio = estudiante.estadoConvenio;
-          this.fechaInicio = estudiante.fechaInicio;
-          this.fechaFinal = estudiante.fechaFinal;
-          this.fotocopiaCI = estudiante.fotocopiaCarnet;
-          this.solicitudWork = estudiante.solicitudTrabajo;
-          this.areas.push(estudiante.nombreArea);
       }
-    }
-    for(let registro of this.listInformeEstudiante){
-      if(registro.idPersona == idEstudiante && registro.idRegistroHora == idRegistroHora){
-        this.observacionesRegistroHora = registro.observacionRegistroHora;
+      for(let registro of this.listInformeEstudiante){
+        if(registro.idPersona == idPersona && registro.idRegistroHora == idRegistroHora){
+          this.observacionesRegistroHora = registro.observacionRegistroHora;
+        }
       }
-    }    
+    });
+
+        
   }
 
   registrarInformeFinanzas(idInformeEstudiante:string, opcion){
@@ -317,33 +335,41 @@ export class GestionarInformeFinanzasComponent implements OnInit {
     } 
   }
 
-  aprobarInformeEstudiante(idDepartamento, idRegistroHora, idInformeEstudiante:string, opcion:string, idConvenio:string, montoBs:string){
-    this.idRegistroHora = idRegistroHora;
-    this.idInformeEstudiante = idInformeEstudiante;
-    this.opcion = opcion;
-    this.idConvenio = idConvenio;
-    this.montoBs = montoBs;
+  aprobarInformeEstudiante(idDepartamento, idRegistroHora, idInformeEstudiante:string, opcion:string, idConvenio:string, montoBs:string, codEstudiante:string, primerApellido:string, segundoApellido: string, primerNombre:string, segundoNombre:string){
 
-    for(let departament of this.departamentos){
-      if(departament.idDepartamento == idDepartamento){
-        // this.departamento.costoHora = departament.costoHora;
-        this.departamento.nombreDepartamento = departament.nombreDepartamento;
+      if(segundoNombre == null){
+        segundoNombre = '';
       }
-    }
-    for(let informe of this.listInformeEstudiante){
-      if(informe.idInformeEstudiante == idInformeEstudiante){
-        this.Horas = informe.totalHoras;
-        this.informeFinanzas.totalHorasF = informe.totalHoras;
-        this.Saldo = informe.totalSaldo + ' Bs.';
-        this.informeFinanzas.totalSaldoF = informe.totalSaldo
+      if(segundoApellido == null){
+        segundoApellido = '';
       }
-    }
-    this.menosHoras = '00:00';    
-    this.masHoras = '00:00'; 
     
-    if(this.opcion == '0'){
+      this.idRegistroHora = idRegistroHora;
+      this.idInformeEstudiante = idInformeEstudiante;
+      this.opcion = opcion;
+      this.idConvenio = idConvenio;
+      this.montoBs = montoBs;
+      this.codEstudiante = codEstudiante;
+      this.nombreCompleto = primerApellido+" "+segundoApellido+" "+primerNombre+" "+segundoNombre;
+      for(let departament of this.departamentos){
+        if(departament.idDepartamento == idDepartamento){
+          this.departamento.nombreDepartamento = departament.nombreDepartamento;
+        }
+      }
+      for(let informe of this.listInformeEstudiante){
+        if(informe.idInformeEstudiante == idInformeEstudiante){
+          this.Horas = informe.totalHoras;
+          this.informeFinanzas.totalHorasF = informe.totalHoras;
+          this.Saldo = informe.totalSaldo + ' Bs.'; 
+          this.informeFinanzas.totalSaldoF = informe.totalSaldo
+        }
+      }
+      this.menosHoras = '00:00';    
+      this.masHoras = '00:00'; 
+      if(this.opcion == '0'){
       this.putInformeEstudianteAprobacion(this.idInformeEstudiante, this.opcion);
-    }       
+
+    }     
   }
 
   confirmarAprobarInformeEstudiante(){
@@ -379,6 +405,8 @@ export class GestionarInformeFinanzasComponent implements OnInit {
       .subscribe((acreedor : Acreedor[]) => {
         this.alert(1, 'Registro exitoso', 'El informe fue aprobado y registrado satisfactoriamente.');
         this.getInfomeEstudiante();
+      }, res => {
+        this.alert(2, 'Error en el registro', 'Se ha producido un error en el servidor al registrar.');
       });
     }else{
       this.acreditarSaldo(idConvenio, this.acreedor);
@@ -390,20 +418,8 @@ export class GestionarInformeFinanzasComponent implements OnInit {
     .subscribe((acreedor : Acreedor[]) => {
       this.alert(1, 'Registro exitoso', 'El informe fue aprobado y registrado satisfactoriamente.');
       this.getInfomeEstudiante();
-    });
+    }, res => {
+      this.alert(2, 'Error en el registro', 'Se ha producido un error en el servidor al aprobar el informe.');
+    });;
   }
-
-  deleteAcreedor(idInformeFinanzas:string){
-    this._appAcreedorService.deleteAcreedor(idInformeFinanzas)
-    .subscribe((acreedor : Acreedor[]) => {console.log(acreedor)});
-    // this.MessageNoAcreditado=true;
-    setTimeout(() => {
-      // this.MessageNoAcreditado=false;
-    }, 6000);
-    setTimeout(() => {
-      this.getInfomeEstudiante();
-    }, 1000);
-  }
- 
-
 }

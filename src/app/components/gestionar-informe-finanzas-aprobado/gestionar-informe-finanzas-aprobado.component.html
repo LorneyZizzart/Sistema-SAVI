@@ -13,21 +13,7 @@
           <li class="active">Informe aprobados</li>
       </ol>
   </section>
-<div *ngIf="MessageInformeNoAprobado == true" class="pad no-print">
-    <div class="callout callout-warning">
-        <h4><i class="icon fa fa-info"></i> El informe fue desaprobado</h4>
-    </div>
-</div>
-<div *ngIf="MessageInformeAprobado == true" class="pad no-print">
-    <div class="callout callout-success">
-        <h4><i class="icon fa fa-check"></i> El informe fue aprobado</h4>
-    </div>
-</div>
-<div *ngIf="MessageInformeArchivado == true" class="pad no-print">
-    <div class="callout callout-success">
-        <h4><i class="icon fa fa-check"></i> El informe fue archivado</h4>
-    </div>
-</div>
+
 <!-- Modal -->
 <div class="modal fade" id="modal-informacionStudiante">
     <div class="modal-dialog">
@@ -205,7 +191,7 @@
                 <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-danger"><i class="fa fa-close"></i> Cancelar</button>
             </div>
             <div class="col-md-6">
-                <button (click)="confirmarAprobarInformeEstudiante()" type="button" data-dismiss="modal" aria-label="Close" class="btn btn-success"><i class="fa fa-save"></i> Guardar</button>
+                <button (click)="confirmarAprobarInformeEstudiante()" type="button" data-dismiss="modal" aria-label="Close" class="btn btn-success"><i class="fa fa-check"></i> Aprobar</button>
             </div>
         </div>
     </form>
@@ -373,3 +359,19 @@
 <app-footer></app-footer> 
 </div>
 <!-- /.content-wrapper -->
+<div id="growls-default">
+    <div [ngClass]="{'growl': true, 'growl-notice':alertSuccess, 
+                    'growl-error':alertError, 
+                    'growl-warning':alertWarning, 
+                    'growl-large':true, 
+                    'growl-outgoing':!activateAlert}">
+        <div [ngClass]="{'growl-close': true, 'growl-outgoing':!activateAlert}">×</div>
+        <div [ngClass]="{'growl-title': true, 'growl-outgoing':!activateAlert}">
+            <i [ngClass]="{'icon': true, 'fa': true, 
+            'fa-check': alertSuccess, 
+            'fa-close': alertError, 
+            'fa-warning': alertWarning}"></i>
+            {{titleAlert}} </div>
+        <div [ngClass]="{'growl-message': true,'growl-outgoing':!activateAlert}">{{messageAlert}}</div>
+    </div>
+</div>

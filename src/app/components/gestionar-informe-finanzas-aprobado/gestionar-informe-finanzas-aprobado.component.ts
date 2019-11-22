@@ -50,13 +50,8 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
   areas:any[] = [];
   // aprobar informe estudiante x finanzas
   informeEstudiante:InformeEstudiante = {};
-  //messagge aprobacion and not 
-  MessageInformeNoAprobado:boolean=false;
-  MessageInformeAprobado:boolean=false;
   //para archivar
   informesFinanzas:InformeFinanzas = {};
-  //messsage de archivar
-  MessageInformeArchivado:boolean = false;
   //Lista de estudiantes del departameto
   estudiantes:Convenio[];
   //acreditacion
@@ -80,6 +75,13 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
   procesoAcreditacion:boolean = false;
   //InfoInforme Finanzas
   idInformeFinanzas:string; fechaAprobada:string; usuario:string = "Jhonny San"; totalHorasF:string; totalSaldoF:string; obsrevacionFinanzas:string;
+  //ALERTS
+  titleAlert:string = null;
+  messageAlert:string = null;
+  activateAlert:boolean = false;
+  alertSuccess:Boolean = false;
+  alertError:Boolean = false;
+  alertWarning:boolean = false;
 
   constructor( private _appInformeEstudianteService:AppInformeEstudianteService,
               private _appTipoPersonaService:AppTipoPersonaService,
@@ -94,6 +96,22 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
     this.getEstudiantes();
     this.getDepartamentos();    
   }
+
+  alert(opcion:number, title:string, message:string):void{
+    if(opcion == 1) this.alertSuccess = true;
+    if(opcion == 2) this.alertError = true;      
+    if(opcion == 3) this.alertWarning = true;      
+    this.titleAlert = title;
+    this.messageAlert = message;
+    this.activateAlert = true;
+    setTimeout(() => {
+      this.activateAlert = false;
+      this.alertSuccess = false;
+      this.alertError = false;
+      this.alertWarning = false;
+    }, 5000);
+  }
+
   calculadoraSaldo(hora, saldo){
     var hour = hora.split(":");
     var auxSaldo = parseFloat(saldo);
@@ -211,14 +229,22 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
 
   eliminarInformeFinanzas(idInformeEstudiante:string){
     this._appInformeFinanzasService.deleteInformeFinanzas(idInformeEstudiante)
-    .subscribe((data: InformeFinanzas[]) => {console.log(data)});
+    .subscribe((data: InformeFinanzas[]) => {});
     
   }
 
   putInformeEstudianteAprobacion(idEstudiante, opcion){
     this.informeEstudiante.aprobadoFinanzas = opcion;
     this._appInformeEstudianteService.putInformeEstudianteAprobarFinanzas(idEstudiante, this.informeEstudiante)
-    .subscribe((informe : InformeEstudiante[]) => {console.log(informe)});
+    .subscribe((informe : InformeEstudiante[]) => {
+      
+      if(this.opcion == '0'){
+        this.alert(1, 'Registro exitoso', 'El informe fue desaprobado.');
+      }else{
+        this.alert(1, 'Registro exitoso', 'El informe fue aprobado.');
+      }
+      this.getInformFinanzas();
+    });
   }
 
   inputReducir(){
@@ -264,19 +290,12 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
       }
     }  
     this.menosHoras = '00:00';    
-    this.masHoras = '00:00';    
+    this.masHoras = '00:00'; 
+    
     if(this.opcion == '0'){
-      console.log("Entro aqui 0");
       this.putInformeEstudianteAprobacion(this.idInformeEstudiante, this.opcion);
-      // this.restarSaldo(idInformeFinanzas, idInformeEstudiante, idConvenio, totalSaldoF)
-        this.MessageInformeNoAprobado=true;
-        setTimeout(() => {
-          this.MessageInformeNoAprobado=false;
-        }, 6000);
-        setTimeout(() => {
-          this.getInformFinanzas();
-        }, 2000);
-      }
+    }
+
   }
 
   confirmarAprobarInformeEstudiante(){
@@ -288,9 +307,6 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
       this.saveAcreedor(this.idInformeEstudiante, this.idConvenio, this.informesFinanzas.totalSaldoF);
     }
 
-    setTimeout(() => {
-      this.getInformFinanzas();
-    }, 2000);
   }
   //Registro hORA
   aprobarRegistroHora(idRegistroHora:string, opcion:string){
@@ -321,13 +337,7 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
       }  
     }
     this.informeFinanzas = array;
-    setTimeout(() => {
-      console.log(this.informeFinanzas);
-      this.numStudent = 0;
-      this.numHour= '00:00';
-      this.totalSaldo = 0;
-      this.totalDatos();
-    }, 1000);      
+  
   }
 
   getInformFinanzas(){
@@ -335,44 +345,40 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
     .subscribe((informe : InformeFinanzas[]) => {
       this.informeFinanzas = informe;
       this.informeArray = this.informeFinanzas;
-    })
-    setTimeout(() => {
-      console.log(this.informeFinanzas);
       this.numStudent = 0;
       this.numHour= '00:00';
       this.totalSaldo = 0;
       this.totalDatos();
-    }, 2000);
+    });
   }
 
   editarInformeFinanzas(idInformeFinanzas:string, informe:InformeFinanzas){
     informe.idUsuario = this.IdUsuario;
-    console.log('informe: ',this.informesFinanzas);
     this._appInformeFinanzasService.putInformeFinanzas(idInformeFinanzas, this.informesFinanzas)
-    .subscribe((informe : InformeFinanzas[]) => {console.log(informe)});
-    this.MessageInformeAprobado=true;
-    setTimeout(() => {
-      this.MessageInformeAprobado=false;
-    }, 6000);
+    .subscribe((informe : InformeFinanzas[]) => {
+      // if(this.opcion == '1'){
+      //   this.alert(1, 'Registro exitoso', 'El informe fue aprobado.');
+      // }
+    }, res => {
+      this.alert(2, 'Error en el registro', 'Se ha producido un error en el servidor.');
+    });
   }
 
   archivarInformeFinanzas(idInformeFinanzas:string){
     this.informesFinanzas.archivar = "SI";
     this._appInformeFinanzasService.putInformeFinanzasArchivar(idInformeFinanzas, this.informesFinanzas)
-    .subscribe((informe : InformeFinanzas[]) => {console.log(informe)});
-    this.MessageInformeArchivado = true;
-    setTimeout(() => {
-    this.MessageInformeArchivado = false;      
-    }, 6000);
-    setTimeout(() => {
+    .subscribe((informe : InformeFinanzas[]) => {
+      this.alert(1, 'Registro exitoso', 'El informe fue archivado satistactoriamente.');
       this.getInformFinanzas();
-    }, 2000);
+
+    }, res => {
+      this.alert(2, 'Error al archivar', 'Se ha producido un error en el servidor.');
+    });
   }
 
   infoInformeFinanzas(idInformeFinanzas, fechaAprobada, totalHorasF, totalSaldoF, obsrevacionFinanzas){
     this.idInformeFinanzas = idInformeFinanzas;
     this.fechaAprobada =  fechaAprobada;
-    // this.idUsuario = informe.idUsuario; 
     this.totalHorasF = totalHorasF; 
     this.totalSaldoF = totalSaldoF; 
     this.obsrevacionFinanzas = obsrevacionFinanzas;
@@ -402,10 +408,9 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
     if(this.procesoAcreditacion == false){      
       this.acreedor.montoBs = montoBs;
       this._appAcreedorService.postAcreedor(this.acreedor)
-      .subscribe((acreedor : Acreedor[]) => {console.log(acreedor)});
-      setTimeout(() => {
-        this.getInformFinanzas();
-      }, 1000);
+      .subscribe((acreedor : Acreedor[]) => {
+        this.getInformFinanzas();        
+      });
     }else{
       this.acreditarSaldo(idConvenio, this.acreedor);
     }  
@@ -413,7 +418,7 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
   
   acreditarSaldo(idConvenio:string, acreedor:Acreedor){
     this._appAcreedorService.putSaldoAcreedor(idConvenio, acreedor)
-    .subscribe((acreedor : Acreedor[]) => {console.log(acreedor)});
+    .subscribe((acreedor : Acreedor[]) => {});
   }
   
   restarSaldo(idInformeFinanzas, idInformeEstudiante:string, idConvenio:string, montoBs:string){

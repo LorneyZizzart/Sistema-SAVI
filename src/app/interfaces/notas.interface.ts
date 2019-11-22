@@ -7,5 +7,17 @@ export interface Notas {
     segundoParcial?:string
     tercerParcial?:string
     notaFinal?:string
+    notaPBajo?:boolean
+    notaPMedio?:boolean
+    notaPAlto?:boolean
+    notaSBajo?:boolean
+    notaSMedio?:boolean
+    notaSAlto?:boolean
+    notaTBajo?:boolean
+    notaTMedio?:boolean
+    notaTAlto?:boolean
+    notaFBajo?:boolean
+    notaFMedio?:boolean
+    notaFAlto?:boolean
   }
   
