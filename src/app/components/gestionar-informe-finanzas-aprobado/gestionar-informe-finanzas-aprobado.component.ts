@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SystemJsNgModuleLoader } from '@angular/core';
 import { InformeFinanzas } from '../../interfaces/informe-finanzas.interface';
 import { AppInformeFinanzasService } from '../../services/app-informe-finanzas.service';
 import { InformeEstudiante } from '../../interfaces/informe-estudiante.interface';
@@ -12,6 +12,8 @@ import { Acreedor } from '../../interfaces/acreedor.interface';
 import { AppRegistroHoraService } from '../../services/app-registroHora.service';
 import { RegistroHora } from '../../interfaces/registroHora.interface';
 import { Convenio } from 'src/app/interfaces/convenio.interface';
+import { AppAreaService } from '../../services/app-area.service';
+import { Area } from 'src/app/interfaces/area.interface';
 
 @Component({
   selector: 'app-gestionar-informe-finanzas-aprobado',
@@ -88,7 +90,8 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
               private _appAcreedorService:AppAcreedorService,
               private _appInformeFinanzasService:AppInformeFinanzasService,
               private _appRegistroHora:AppRegistroHoraService,
-              private _appDepartamentoService:AppDepartamentoService) { }
+              private _appDepartamentoService:AppDepartamentoService,
+              private _appAreaService:AppAreaService ) { }
 
   ngOnInit() {
     this.getInformFinanzas();
@@ -189,42 +192,59 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
     .subscribe((departamentos : Departamento[]) => {this.departamentos = departamentos})
   }
 
-  informacionEstudiante(idRegistroHora, idEstudiante){
+  informacionEstudiante(idRegistroHora, idEstudiante, idDepartamento){
     this.areas = [];
-    for(let estudiante of this.estudiantes){
-      if(estudiante.idPersona == idEstudiante){
-        if (estudiante.segundoNombre == null && estudiante.segundoApellido != null ) {
-          this.nombreCompleto = estudiante.primerApellido + " " + estudiante.segundoApellido+ " " + estudiante.primerNombre ;
-        } else if (estudiante.segundoNombre == null && estudiante.segundoApellido == null){
-          this.nombreCompleto = estudiante.primerApellido + " " + estudiante.primerNombre; 
-        }else if (estudiante.segundoNombre != null && estudiante.segundoApellido == null){ 
-          this.nombreCompleto = estudiante.primerApellido + " " + estudiante.primerNombre + " " + estudiante.segundoNombre;
-        }else{
-          this.nombreCompleto = estudiante.primerApellido + " " + estudiante.segundoApellido + " " + estudiante.primerNombre + " " + estudiante.segundoNombre;
+
+    this._appTipoPersonaService.getInfoEstudiantes(idDepartamento, idEstudiante)
+    .subscribe((estudiantes : Persona[]) => {
+      this.estudiantes = estudiantes;
+
+      for(let estudiante of this.estudiantes){
+        if(estudiante.idPersona == idEstudiante){
+          if (estudiante.segundoNombre == null && estudiante.segundoApellido != null ) {
+            this.nombreCompleto = estudiante.primerApellido + " " + estudiante.segundoApellido+ " " + estudiante.primerNombre ;
+          } else if (estudiante.segundoNombre == null && estudiante.segundoApellido == null){
+            this.nombreCompleto = estudiante.primerApellido + " " + estudiante.primerNombre; 
+          }else if (estudiante.segundoNombre != null && estudiante.segundoApellido == null){ 
+            this.nombreCompleto = estudiante.primerApellido + " " + estudiante.primerNombre + " " + estudiante.segundoNombre;
+          }else{
+            this.nombreCompleto = estudiante.primerApellido + " " + estudiante.segundoApellido + " " + estudiante.primerNombre + " " + estudiante.segundoNombre;
+          }
+            this.nacionalidad = estudiante.nacionalidad;
+            this.direccion = estudiante.direccion;
+            this.celular = estudiante.celular;
+            this.ci = estudiante.ci;
+            this.fechaNacimiento = estudiante.fechaNacimiento;
+            this.estadoPersona = estudiante.estadoPersona;
+            this.carrera = estudiante.carrera;
+            this.semestre = estudiante.semestre;
+            this.nombreDepartamento = estudiante.departamento;
+            this.beca = estudiante.beca;
+            this.estadoConvenio = estudiante.estadoConvenio;
+            this.fechaInicio = estudiante.fechaInicio;
+            this.fechaFinal = estudiante.fechaFinal;
+            this.fotocopiaCI = estudiante.fotocopiaCarnet;
+            this.solicitudWork = estudiante.solicitudTrabajo;
+            
+            this._appAreaService.getAsignacionByConvenio(estudiante.idConvenio)
+              .subscribe((data: Area[]) => {
+                if(data.length > 0){
+                  for(let a of data){
+                    this.areas.push(a.nombreArea);
+                  }
+                }
+              });
         }
-          this.nacionalidad = estudiante.nacionalidad;
-          this.direccion = estudiante.direccion;
-          this.celular = estudiante.celular;
-          this.ci = estudiante.ci;
-          this.fechaNacimiento = estudiante.fechaNacimiento;
-          this.estadoPersona = estudiante.estadoPersona;
-          this.carrera = estudiante.carrera;
-          this.semestre = estudiante.semestre;
-          this.nombreDepartamento = estudiante.departamento;
-          this.beca = estudiante.beca;
-          this.estadoConvenio = estudiante.estadoConvenio;
-          this.fechaInicio = estudiante.fechaInicio;
-          this.fechaFinal = estudiante.fechaFinal;
-          this.fotocopiaCI = estudiante.fotocopiaCarnet;
-          this.solicitudWork = estudiante.solicitudTrabajo;
-          this.areas.push(estudiante.nombreArea);
       }
-    }
-    for(let registro of this.informeFinanzas){
-      if(registro.idPersona == idEstudiante && registro.idRegistroHora == idRegistroHora){
-        this.observacionesRegistroHora = registro.observacionRegistroHora;
-      }
-    }
+
+    });
+
+    
+    // for(let registro of this.informeFinanzas){
+    //   if(registro.idPersona == idEstudiante && registro.idRegistroHora == idRegistroHora){
+    //     this.observacionesRegistroHora = registro.observacionRegistroHora;
+    //   }
+    // }
   }
 
   eliminarInformeFinanzas(idInformeEstudiante:string){
@@ -267,7 +287,9 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
     } 
   }
 
-  aprobarInformeEstudiante(idInformeFinanzas, idConvenio:string, totalSaldoF, montoBs, idDepartamento, idRegistroHora, idInformeEstudiante:string, opcion:string){
+  aprobarInformeEstudiante(idPersona, idInformeFinanzas, idConvenio:string, totalSaldoF, montoBs, idDepartamento, idRegistroHora, idInformeEstudiante:string, opcion:string){
+    console.log("entro");
+    this.informacionEstudiante(idRegistroHora, idPersona, idDepartamento);
     this.idRegistroHora = idRegistroHora;
     this.idInformeEstudiante = idInformeEstudiante;
     this.opcion = opcion;

@@ -120,7 +120,7 @@ export class GestionarInformeFinanzasComponent implements OnInit {
     
     for (let i = 0; i <= 60; i++) {
       if(hour[1] == i){
-        auxSaldo = auxSaldo/60 * i
+        auxSaldo = auxSaldo/60 * i;
         break;
       }
     }
@@ -247,7 +247,7 @@ export class GestionarInformeFinanzasComponent implements OnInit {
             this.nacionalidad = estudiante.nacionalidad;
             this.direccion = estudiante.direccion;
             this.celular = estudiante.celular;
-            this.ci = estudiante.ci;
+            this.ci = estudiante.ci; 
             this.fechaNacimiento = estudiante.fechaNacimiento;
             this.estadoPersona = estudiante.estadoPersona;
             this.carrera = estudiante.carrera;
