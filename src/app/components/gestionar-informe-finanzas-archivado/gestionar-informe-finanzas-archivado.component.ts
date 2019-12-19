@@ -17,6 +17,7 @@ export class GestionarInformeFinanzasArchivadoComponent implements OnInit {
   //para archivar
   informesFinanzas:InformeFinanzas = {};
   //Info Estudiante
+  codEstudiante:string;
   nombreCompleto:string;
   nacionalidad: string;
   direccion: string;
@@ -35,10 +36,15 @@ export class GestionarInformeFinanzasArchivadoComponent implements OnInit {
   fechaFinal;
   observacionesRegistroHora:string;
   areas:any[] = [];
-  //message de desarchivado
-  MessageInformeDesarchivado:boolean = false;
   //Lista de estudiantes del departameto
   estudiantes:Convenio[];
+   //ALERTS
+   titleAlert:string = null;
+   messageAlert:string = null;
+   activateAlert:boolean = false;
+   alertSuccess:Boolean = false;
+   alertError:Boolean = false;
+   alertWarning:boolean = false;
 
   constructor(private _appInformeFinanzasService:AppInformeFinanzasService,
               private _appTipoPersonaService:AppTipoPersonaService) { }
@@ -48,22 +54,38 @@ export class GestionarInformeFinanzasArchivadoComponent implements OnInit {
     this.getEstudiantes();
   }
 
+  alert(opcion:number, title:string, message:string):void{
+    if(opcion == 1) this.alertSuccess = true;
+    if(opcion == 2) this.alertError = true;      
+    if(opcion == 3) this.alertWarning = true;      
+    this.titleAlert = title;
+    this.messageAlert = message;
+    this.activateAlert = true;
+    setTimeout(() => {
+      this.activateAlert = false;
+      this.alertSuccess = false;
+      this.alertError = false;
+      this.alertWarning = false;
+    }, 5000);
+  }
+
   getInformFinanzas(){
     this._appInformeFinanzasService.getInformesFinanzasArchivadas()
-    .subscribe((informe : InformeFinanzas[]) => {this.informeFinanzas = informe})
+    .subscribe((informe : InformeFinanzas[]) => {
+      this.informeFinanzas = informe
+      console.log(this.informeFinanzas);
+    })
   }
 
   archivarInformeFinanzas(idInformeFinanzas:string){
     this.informesFinanzas.archivar = "NO";
     this._appInformeFinanzasService.putInformeFinanzasArchivar(idInformeFinanzas, this.informesFinanzas)
-    .subscribe((informe : InformeFinanzas[]) => {console.log(informe)});
-    this.MessageInformeDesarchivado = true;
-    setTimeout(() => {
-      this.MessageInformeDesarchivado = false;
-    }, 6000);
-    setTimeout(() => {
+    .subscribe((informe : InformeFinanzas[]) => {
+      this.alert(1, 'Registro exitoso', 'El informe fue desarchivado.');
       this.getInformFinanzas();
-    }, 2000);
+    }, res => {
+      this.alert(2, 'Error al archivar', 'Se ha producido un error en el servidor.');
+    });
   }
 
   getEstudiantes(){
@@ -84,6 +106,7 @@ export class GestionarInformeFinanzasArchivadoComponent implements OnInit {
         }else{
           this.nombreCompleto = estudiante.primerNombre + " " + estudiante.segundoNombre + " " + estudiante.primerApellido + " " + estudiante.segundoApellido;
         }
+        this.codEstudiante = estudiante.codEstudiante;
           this.nacionalidad = estudiante.nacionalidad;
           this.direccion = estudiante.direccion;
           this.celular = estudiante.celular;

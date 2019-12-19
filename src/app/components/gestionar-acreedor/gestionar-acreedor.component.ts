@@ -9,7 +9,10 @@ import { AuthService } from '../../services/auth.service';
 import { User } from '../../interfaces/user.interface';
 import { Router } from '@angular/router';
 import { Convenio } from 'src/app/interfaces/convenio.interface';
-
+import { AppAreaService } from '../../services/app-area.service';
+import { Area } from 'src/app/interfaces/area.interface';
+import { AppCarreraService } from '../../services/app-carrera.service';
+import { Carrera } from '../../interfaces/carrera.interface';
 
 
 @Component({
@@ -25,6 +28,7 @@ export class GestionarAcreedorComponent implements OnInit {
   //Lista de estudiantes del departameto
   estudiantes:Convenio[];
   //Info Estudiante
+  codEstudiante:string;
   nombreCompleto:string;
   nacionalidad: string;
   direccion: string;
@@ -49,19 +53,40 @@ export class GestionarAcreedorComponent implements OnInit {
   acreedor:Acreedor = {};
   //Para el descuento
   Saldo:string;inputSaldo:string;inputDescontar:string='00.00';
-  //message de descuento
-  MessageDescuento:boolean = false;
+  //ALERTS
+  titleAlert:string = null;
+  messageAlert:string = null;
+  activateAlert:boolean = false;
+  alertSuccess:Boolean = false;
+  alertError:Boolean = false;
+  alertWarning:boolean = false;
 
   constructor(private _appAcreedorService:AppAcreedorService,
               private _appTipoPersonaService:AppTipoPersonaService,
               private _appDescuentoService:AppDescuentoService,
               private _authService:AuthService,
-              private _router:Router) { }
+              private _router:Router,
+              private _appAreaService:AppAreaService,
+              private _appCarreraService : AppCarreraService) { }
 
   ngOnInit() {
     this.listaAcreedores();
-    this.getEstudiantes();
     this.getUsuario();
+  }
+
+  alert(opcion:number, title:string, message:string):void{
+    if(opcion == 1) this.alertSuccess = true;
+    if(opcion == 2) this.alertError = true;      
+    if(opcion == 3) this.alertWarning = true;      
+    this.titleAlert = title;
+    this.messageAlert = message;
+    this.activateAlert = true;
+    setTimeout(() => {
+      this.activateAlert = false;
+      this.alertSuccess = false;
+      this.alertError = false;
+      this.alertWarning = false;
+    }, 5000);
   }
 
   getUsuario(){
@@ -70,55 +95,81 @@ export class GestionarAcreedorComponent implements OnInit {
   }
 
   listaAcreedores(){
-    this._appAcreedorService.getAcreedor().subscribe((acreedores : Acreedor[]) => {this.acreedores = acreedores})
+    this._appAcreedorService.getAcreedor().subscribe((acreedores : Acreedor[]) => {
+      this.acreedores = acreedores;
+    })
   }
 
-  getEstudiantes(){
-    this._appTipoPersonaService.getInfoStudentFinanzas()
-    .subscribe((estudiantes : Persona[]) => {this.estudiantes = estudiantes});
-  }
+  infoFullName(idEstudiante, idDepartamento){
 
-  infoFullName(idEstudiante){
-    for(let estudiante of this.estudiantes){
-      if(estudiante.idPersona == idEstudiante){
-        if (estudiante.segundoNombre == null && estudiante.segundoApellido != null ) {
-          this.nombreCompleto = estudiante.primerApellido + " " + estudiante.segundoApellido+ " " + estudiante.primerNombre ;
-        } else if (estudiante.segundoNombre == null && estudiante.segundoApellido == null){
-          this.nombreCompleto = estudiante.primerApellido + " " + estudiante.primerNombre; 
-        }else if (estudiante.segundoNombre != null && estudiante.segundoApellido == null){ 
-          this.nombreCompleto = estudiante.primerApellido + " " + estudiante.primerNombre + " " + estudiante.segundoNombre;
-        }else{
-          this.nombreCompleto = estudiante.primerApellido + " " + estudiante.segundoApellido + " " + estudiante.primerNombre + " " + estudiante.segundoNombre;
+    this._appTipoPersonaService.getInfoEstudiantes(idDepartamento, idEstudiante)
+    .subscribe((estudiantes : Persona[]) => {
+      for(let estudiante of estudiantes){
+        if(estudiante.idPersona == idEstudiante){
+          if (estudiante.segundoNombre == null && estudiante.segundoApellido != null ) {
+            this.nombreCompleto = estudiante.primerApellido + " " + estudiante.segundoApellido+ " " + estudiante.primerNombre ;
+          } else if (estudiante.segundoNombre == null && estudiante.segundoApellido == null){
+            this.nombreCompleto = estudiante.primerApellido + " " + estudiante.primerNombre; 
+          }else if (estudiante.segundoNombre != null && estudiante.segundoApellido == null){ 
+            this.nombreCompleto = estudiante.primerApellido + " " + estudiante.primerNombre + " " + estudiante.segundoNombre;
+          }else{
+            this.nombreCompleto = estudiante.primerApellido + " " + estudiante.segundoApellido + " " + estudiante.primerNombre + " " + estudiante.segundoNombre;
+          }
+          this.codEstudiante = estudiante.codEstudiante;
         }
       }
-    }
+    })    
   }
 
-  informacionEstudiante(idEstudiante){
+  informacionEstudiante(idEstudiante, idDepartamento){
     this.areas = [];
-    this.infoFullName(idEstudiante);
-    for(let estudiante of this.estudiantes){
-      if(estudiante.idPersona == idEstudiante){        
-          this.nacionalidad = estudiante.nacionalidad;
-          this.direccion = estudiante.direccion;
-          this.celular = estudiante.celular;
-          this.ci = estudiante.ci;
-          this.fechaNacimiento = estudiante.fechaNacimiento;
-          this.estadoPersona = estudiante.estadoPersona;
-          this.carrera = estudiante.carrera;
-          this.semestre = estudiante.semestre;
-          this.nombreDepartamento = estudiante.departamento;
-          this.beca = estudiante.beca;
-          this.estadoConvenio = estudiante.estadoConvenio;
-          this.fechaInicio = estudiante.fechaInicio;
-          this.fechaFinal = estudiante.fechaFinal;
-          this.fotocopiaCI = estudiante.fotocopiaCarnet;
-          this.solicitudWork = estudiante.solicitudTrabajo;
-          if (this.areas.indexOf(estudiante.nombreArea) < 0) {
-            this.areas.push(estudiante.nombreArea);            
+    this._appTipoPersonaService.getInfoEstudiantes(idDepartamento, idEstudiante)
+    .subscribe((estudiantes : Persona[]) => {
+
+      this.estudiantes = estudiantes;
+
+      for(let estudiante of this.estudiantes){
+        if(estudiante.idPersona == idEstudiante){
+          if (estudiante.segundoNombre == null && estudiante.segundoApellido != null ) {
+            this.nombreCompleto = estudiante.primerApellido + " " + estudiante.segundoApellido+ " " + estudiante.primerNombre ;
+          } else if (estudiante.segundoNombre == null && estudiante.segundoApellido == null){
+            this.nombreCompleto = estudiante.primerApellido + " " + estudiante.primerNombre; 
+          }else if (estudiante.segundoNombre != null && estudiante.segundoApellido == null){ 
+            this.nombreCompleto = estudiante.primerApellido + " " + estudiante.primerNombre + " " + estudiante.segundoNombre;
+          }else{
+            this.nombreCompleto = estudiante.primerApellido + " " + estudiante.segundoApellido + " " + estudiante.primerNombre + " " + estudiante.segundoNombre;
           }
+          this._appCarreraService.getCarrera(Number(estudiante.idCarrera)).subscribe((carrera:Carrera)=>{
+            this.carrera = carrera[0].nombreCarrera;
+          })
+          this.codEstudiante = estudiante.codEstudiante;
+            this.nacionalidad = estudiante.nacionalidad;
+            this.direccion = estudiante.direccion;
+            this.celular = estudiante.celular;
+            this.ci = estudiante.ci;
+            this.fechaNacimiento = estudiante.fechaNacimiento;
+            this.estadoPersona = estudiante.estadoPersona;
+            this.semestre = estudiante.semestre;
+            this.nombreDepartamento = estudiante.departamento;
+            this.beca = estudiante.beca;
+            this.estadoConvenio = estudiante.estadoConvenio;
+            this.fechaInicio = estudiante.fechaInicio;
+            this.fechaFinal = estudiante.fechaFinal;
+            this.fotocopiaCI = estudiante.fotocopiaCarnet;
+            this.solicitudWork = estudiante.solicitudTrabajo;
+            
+            this._appAreaService.getAsignacionByConvenio(estudiante.idConvenio)
+              .subscribe((data: Area[]) => {
+                if(data.length > 0){
+                  for(let a of data){
+                    this.areas.push(a.nombreArea);
+                  }
+                }
+              });
+        }
       }
-    }
+
+    });
   }
 
   descontarSaldo(){
@@ -144,24 +195,21 @@ export class GestionarAcreedorComponent implements OnInit {
   confirmarDescuento(){
     this.acreedor.idUsuario = this.IdUsuario;
     this.acreedor.estadoAcreedor = '0';
-    this.descuento.idUsuario = this.IdUsuario;
-    this.editAcreedor(this.acreedor);
+    this.descuento.idUsuario = this.IdUsuario;    
     this.saveDescuento(this.descuento);
-    setTimeout(() => {
-      this.listaAcreedores();
-    }, 2000);
   }
   //Gestionar Acreditacion
   editAcreedor(acreedor:Acreedor){
-    this._appAcreedorService.putAcreedor(acreedor).subscribe((acreedor:Acreedor[])=>{console.log(acreedor)});
+    this._appAcreedorService.putAcreedor(acreedor).subscribe((acreedor:Acreedor[])=>{
+      this.listaAcreedores();
+      this.alert(1, 'Registro exitoso', 'El descuento se realizo satisfactoriamente.');
+    });
   }
   //Gestionar Descuentos
   saveDescuento(descuento:Descuento){    
-    this._appDescuentoService.postDescuentos(descuento).subscribe((descuento:Descuento[]) => {});
-    this.MessageDescuento = true;
-    setTimeout(() => {
-      this.MessageDescuento = false;
-    }, 6000);
+    this._appDescuentoService.postDescuentos(descuento).subscribe((descuento:Descuento[]) => {
+      this.editAcreedor(this.acreedor);
+    });
   }
 
   verAcreedorHistorial(idConvenio){

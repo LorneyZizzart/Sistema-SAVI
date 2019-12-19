@@ -6,6 +6,10 @@ import { AppConvenioService } from '../../services/app-convenio.service';
 import { Convenio } from 'src/app/interfaces/convenio.interface';
 import { AppInformeEstudianteService } from '../../services/app-informe-estudiante.service';
 import { InformeEstudiante } from '../../interfaces/informe-estudiante.interface';
+import { AppAreaService } from '../../services/app-area.service';
+import { Area } from 'src/app/interfaces/area.interface';
+import { AppCarreraService } from '../../services/app-carrera.service';
+import { Carrera } from '../../interfaces/carrera.interface';
 
 @Component({
   selector: 'app-gestionar-acreedor-historial',
@@ -40,12 +44,14 @@ export class GestionarAcreedorHistorialComponent implements OnInit {
   constructor( private _activatedRoute:ActivatedRoute,
                private _router:Router,
                private _appConvenioService:AppConvenioService,
-               private _appInformeEstudianteService:AppInformeEstudianteService) { }
+               private _appInformeEstudianteService:AppInformeEstudianteService,
+               private _appAreaService:AppAreaService,
+               private _appCarreraService : AppCarreraService) { }
 
   ngOnInit() {
     this._activatedRoute.params.subscribe(params => {
       this.idConvenio = params['idConvenio'];
-      this.getHistorialConvenio(this.idConvenio);
+      this.getConvenio(this.idConvenio);
       this.getAcreedorHistorial(this.idConvenio);
     });
   }
@@ -54,6 +60,55 @@ export class GestionarAcreedorHistorialComponent implements OnInit {
   resetForm(formulario: NgForm) {
     formulario.reset({
     });
+  }
+
+  getConvenio(idConvenio){
+    this.areas = [];
+    this._appConvenioService.getConvenio(idConvenio).subscribe((convenio : Convenio[])=>{
+      console.log("convenio")
+      console.log(convenio)
+
+      for(let data of convenio){
+        if(data.idConvenio == idConvenio){
+          if (data.segundoNombre == null && data.segundoApellido != null ) {
+            this.nombreCompleto = data.primerApellido + " " + data.segundoApellido+ " " + data.primerNombre ;
+          } else if (data.segundoNombre == null && data.segundoApellido == null){
+            this.nombreCompleto = data.primerApellido + " " + data.primerNombre; 
+          }else if (data.segundoNombre != null && data.segundoApellido == null){ 
+            this.nombreCompleto = data.primerApellido + " " + data.primerNombre + " " + data.segundoNombre;
+          }else{
+            this.nombreCompleto = data.primerApellido + " " + data.segundoApellido + " " + data.primerNombre + " " + data.segundoNombre;
+          }
+          this._appCarreraService.getCarrera(Number(data.idCarrera)).subscribe((carrera:Carrera)=>{
+            this.convenioData.carrera = carrera[0].nombreCarrera;
+          })
+          this.convenioData.codEstudiante = data.codEstudiante;
+          this.convenioData.nacionalidad = data.nacionalidad;
+          this.convenioData.direccion = data.direccion;
+          this.convenioData.celular = data.celular;
+          this.convenioData.ci = data.ci;
+          this.convenioData.fechaNacimiento = data.fechaNacimiento;
+          this.convenioData.estadoPersona = data.estadoPersona;
+          this.convenioData.semestre = data.semestre;
+          this.convenioData.departamento = data.departamento;
+          this.convenioData.beca = data.beca;
+          this.convenioData.estadoConvenio = data.estadoConvenio;
+          this.convenioData.fechaInicio = data.fechaInicio;
+          this.convenioData.fechaFinal = data.fechaFinal;
+          this.convenioData.fotocopiaCarnet = data.fotocopiaCarnet;
+          this.convenioData.solicitudTrabajo = data.solicitudTrabajo;
+          this._appAreaService.getAsignacionByConvenio(idConvenio)
+                .subscribe((data: Area[]) => {
+                  if(data.length > 0){
+                    for(let a of data){
+                      this.areas.push(a.nombreArea);
+                    }
+                  }
+                });
+        }
+
+      }
+    })
   }
 
   irHome(){
@@ -116,47 +171,14 @@ export class GestionarAcreedorHistorialComponent implements OnInit {
     return fecha[1]+"/"+fecha[0]+"/"+fecha[2];
   }
 
-  getHistorialConvenio(idConvenio){
-    this._appConvenioService.getHistorialConvenio(idConvenio)
-    .subscribe((data:User[]) => {
-      this.convenio = data
-      this.areas = [];
-      for(let data of this.convenio){
-        if (data.segundoNombre == null && data.segundoApellido != null ) {
-          this.nombreCompleto = data.primerApellido + " " + data.segundoApellido+ " " + data.primerNombre ;
-        } else if (data.segundoNombre == null && data.segundoApellido == null){
-          this.nombreCompleto = data.primerApellido + " " + data.primerNombre; 
-        }else if (data.segundoNombre != null && data.segundoApellido == null){ 
-          this.nombreCompleto = data.primerApellido + " " + data.primerNombre + " " + data.segundoNombre;
-        }else{
-          this.nombreCompleto = data.primerApellido + " " + data.segundoApellido + " " + data.primerNombre + " " + data.segundoNombre;
-        }
-        this.convenioData.codEstudiante = data.codEstudiante;
-        this.convenioData.nacionalidad = data.nacionalidad;
-        this.convenioData.direccion = data.direccion;
-        this.convenioData.celular = data.celular;
-        this.convenioData.ci = data.ci;
-        this.convenioData.fechaNacimiento = data.fechaNacimiento;
-        this.convenioData.estadoPersona = data.estadoPersona;
-        this.convenioData.carrera = data.carrera;
-        this.convenioData.semestre = data.semestre;
-        this.convenioData.departamento = data.departamento;
-        this.convenioData.beca = data.beca;
-        this.convenioData.estadoConvenio = data.estadoConvenio;
-        this.convenioData.fechaInicio = this.convertDate(data.fechaInicio, 1);
-        this.convenioData.fechaFinal = this.convertDate(data.fechaFinal, 1);
-        this.convenioData.fotocopiaCarnet = data.fotocopiaCarnet;
-        this.convenioData.solicitudTrabajo = data.solicitudTrabajo;
-        if (this.areas.indexOf(data.nombreArea) < 0) {
-          this.areas.push(data.nombreArea);            
-        }
-      }
-    });
-  }
+  
 
   getAcreedorHistorial(idConvenio){
     this._appInformeEstudianteService.getAcreedorHistorial(idConvenio)
     .subscribe((data : InformeEstudiante[]) => {
+      console.log("data")
+
+      console.log(data)
       this.informeEstudiante = data;
       this.informeEstudianteArray = data;
     });

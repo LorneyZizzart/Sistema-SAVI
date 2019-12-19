@@ -14,6 +14,10 @@ import { RegistroHora } from '../../interfaces/registroHora.interface';
 import { Convenio } from 'src/app/interfaces/convenio.interface';
 import { AppAreaService } from '../../services/app-area.service';
 import { Area } from 'src/app/interfaces/area.interface';
+import { AuthService } from '../../services/auth.service';
+import { User } from '../../interfaces/user.interface';
+import { AppUserService } from '../../services/app-user.service';
+
 
 @Component({
   selector: 'app-gestionar-informe-finanzas-aprobado',
@@ -23,7 +27,7 @@ import { Area } from 'src/app/interfaces/area.interface';
 export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
 
   //iDUSUARIO
-  IdUsuario:string = "4";
+  IdUsuario:string = "0";
   informeFinanzas:InformeFinanzas[];
   //se utiliza para el buscador
   informeArray:InformeFinanzas[];
@@ -84,6 +88,7 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
   alertSuccess:Boolean = false;
   alertError:Boolean = false;
   alertWarning:boolean = false;
+  Usuario:User;
 
   constructor( private _appInformeEstudianteService:AppInformeEstudianteService,
               private _appTipoPersonaService:AppTipoPersonaService,
@@ -91,13 +96,18 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
               private _appInformeFinanzasService:AppInformeFinanzasService,
               private _appRegistroHora:AppRegistroHoraService,
               private _appDepartamentoService:AppDepartamentoService,
-              private _appAreaService:AppAreaService ) { }
+              private _appAreaService:AppAreaService,
+              private _authService : AuthService,
+              private _appUserService : AppUserService ) { }
 
   ngOnInit() {
+    this.getUser();
     this.getInformFinanzas();
-    this.getlistaAcreedores();
-    this.getEstudiantes();
-    this.getDepartamentos();    
+  }
+
+  getUser(){
+    this.Usuario =  this._authService.getDatosPersonales();    
+    this.IdUsuario = this.Usuario.idUsuario;
   }
 
   alert(opcion:number, title:string, message:string):void{
@@ -122,10 +132,11 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
     
     for (let i = 0; i <= 60; i++) {
       if(hour[1] == i){
-        auxSaldo = auxSaldo/60 * i
+        auxSaldo = auxSaldo/60 * i;
         break;
       }
     }
+
     var balance = hour[0] * saldo;
     var saldo1 = parseFloat(balance.toString());
     var saldo2 = parseFloat((auxSaldo.toFixed(2)).toString());
@@ -146,7 +157,17 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
       horatotale[1] = horatotale[1] - 60;
       horatotale[0] = horatotale[0] + 1;
     }
-    return horatotale[0]+":"+horatotale[1];
+    var minutos;
+    if(horatotale[1]<10){
+      minutos = "0"+horatotale[1];
+    }else{minutos = horatotale[1]}
+    var horas; 
+    if(horatotale[0]<10){
+      horas = "0"+horatotale[0];
+    }else{
+      horas = horatotale[0];
+    }
+    return horas+":"+minutos;
   }
 
   restarHoras(hora1, hora2){
@@ -182,15 +203,7 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
     }
   }  
 
-  getEstudiantes(){
-    this._appTipoPersonaService.getInfoStudentFinanzas()
-    .subscribe((estudiantes : Persona[]) => {this.estudiantes = estudiantes});
-  }
-  //Departamentos get
-  getDepartamentos(){
-    this._appDepartamentoService.getDepartamentos()
-    .subscribe((departamentos : Departamento[]) => {this.departamentos = departamentos})
-  }
+
 
   informacionEstudiante(idRegistroHora, idEstudiante, idDepartamento){
     this.areas = [];
@@ -253,9 +266,10 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
     
   }
 
-  putInformeEstudianteAprobacion(idEstudiante, opcion){
+  putInformeEstudianteAprobacion(idInformeEstudiante, opcion){
+    
     this.informeEstudiante.aprobadoFinanzas = opcion;
-    this._appInformeEstudianteService.putInformeEstudianteAprobarFinanzas(idEstudiante, this.informeEstudiante)
+    this._appInformeEstudianteService.putInformeEstudianteAprobarFinanzas(idInformeEstudiante, this.informeEstudiante)
     .subscribe((informe : InformeEstudiante[]) => {
       
       if(this.opcion == '0'){
@@ -279,7 +293,7 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
 
   inputIncrementar(){
     this.menosHoras = '00:00';
-    if(this.informesFinanzas.totalHorasF.length > 3){
+    if(this.masHoras.length > 3 && this.masHoras.length < 6){
       this.informesFinanzas.totalHorasF = this.sumarHoras(this.Horas, this.masHoras);
       this.informesFinanzas.totalSaldoF = this.calculadoraSaldo(this.informesFinanzas.totalHorasF, this.departamento.costoHora);
     }else{
@@ -288,53 +302,70 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
   }
 
   aprobarInformeEstudiante(idPersona, idInformeFinanzas, idConvenio:string, totalSaldoF, montoBs, idDepartamento, idRegistroHora, idInformeEstudiante:string, opcion:string){
-    console.log("entro");
-    this.informacionEstudiante(idRegistroHora, idPersona, idDepartamento);
+
+    if(opcion == '1'){
+      this.informacionEstudiante(idRegistroHora, idPersona, idDepartamento);
+      this._appDepartamentoService.getDepartamento(idDepartamento).subscribe((departamento : Departamento[]) => {
+        this.departamento.costoHora = departamento[0].costoHora;
+        this.departamento.nombreDepartamento = departamento[0].nombreDepartamento;
+      })
+    }
+    this.idInformeFinanzas = idInformeFinanzas;
     this.idRegistroHora = idRegistroHora;
     this.idInformeEstudiante = idInformeEstudiante;
     this.opcion = opcion;
     this.idConvenio = idConvenio;
     this.montoBs = montoBs;
 
-    for(let departament of this.departamentos){
-      if(departament.idDepartamento == idDepartamento){
-        this.departamento.costoHora = departament.costoHora;
-        this.departamento.nombreDepartamento = departament.nombreDepartamento;
-      }
-    }
-
     for(let informe of this.informeFinanzas){
       if(informe.idInformeEstudiante == idInformeEstudiante){
-        this.Horas = informe.totalHoras;
-        this.informesFinanzas.totalHorasF = informe.totalHoras;
-        this.Saldo = informe.totalSaldo + ' Bs.';
-        this.informesFinanzas.totalSaldoF = informe.totalSaldo
+        this.Horas = informe.totalHorasF;
+        this.informesFinanzas.totalHorasF = informe.totalHorasF;
+        this.Saldo = informe.totalSaldoF + ' Bs.';
+        this.informesFinanzas.totalSaldoF = informe.totalSaldoF;
       }
     }  
     this.menosHoras = '00:00';    
     this.masHoras = '00:00'; 
     
     if(this.opcion == '0'){
-      this.putInformeEstudianteAprobacion(this.idInformeEstudiante, this.opcion);
+      this.acreedor.idInformeEstudiante = idInformeEstudiante;
+
+      this._appAcreedorService.getAcreedorByIdConvenio(idConvenio).subscribe((infoAcreedor) => {
+
+        this.acreedor.montoBs = (parseFloat(infoAcreedor[0].montoBs) - parseFloat(totalSaldoF)).toString();
+
+        this._appAcreedorService.putSaldoAcreedor(idConvenio, this.acreedor).subscribe((infoAcreedor2 : Acreedor[]) => {
+          this.putInformeEstudianteAprobacion(this.idInformeEstudiante, this.opcion);
+        });
+      })
+      
     }
 
   }
 
   confirmarAprobarInformeEstudiante(){
+    this.informesFinanzas.idUsuario = this.IdUsuario;
+    this.informesFinanzas.idInformeEstudiante = this.idInformeEstudiante;
+    this.informesFinanzas.observacionFinanzas = this.observacionesRegistroHora;
+    if(this.informesFinanzas.observacionFinanzas == undefined || this.informesFinanzas.observacionFinanzas == null){
+      this.informesFinanzas.observacionFinanzas = null;
+    }  
     this.putInformeEstudianteAprobacion(this.idInformeEstudiante, this.opcion);
 
     if(this.opcion == '1'){
       this.aprobarRegistroHora(this.idRegistroHora, this.opcion);
-      this.editarInformeFinanzas(this.idInformeEstudiante, this.informesFinanzas);
+      this.editarInformeFinanzas(this.idInformeFinanzas, this.informesFinanzas);
       this.saveAcreedor(this.idInformeEstudiante, this.idConvenio, this.informesFinanzas.totalSaldoF);
     }
+    this.informesFinanzas.observacionFinanzas = null;
 
   }
   //Registro hORA
   aprobarRegistroHora(idRegistroHora:string, opcion:string){
     this.registroHora.aprobadoFinanzas = opcion;
     this._appRegistroHora.putRegsitroAprobarFinanzas(idRegistroHora, this.registroHora)
-    .subscribe((registro : RegistroHora[]) => {console.log(registro)});
+    .subscribe((registro : RegistroHora[]) => {});
   }
   //crud INFORME FINANZAS
 
@@ -362,6 +393,15 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
   
   }
 
+  getInformeFinanzas(idInformeFinanzas, informe:InformeFinanzas){
+        this._appInformeFinanzasService.putInformeFinanzas(idInformeFinanzas, informe)
+        .subscribe((informe : InformeFinanzas[]) => {
+          this.observacionesRegistroHora = null;
+        }, res => {
+          this.alert(2, 'Error en el registro', 'Se ha producido un error en el servidor.');
+        });
+  }
+
   getInformFinanzas(){
     this._appInformeFinanzasService.getInformesFinanzas()
     .subscribe((informe : InformeFinanzas[]) => {
@@ -375,15 +415,7 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
   }
 
   editarInformeFinanzas(idInformeFinanzas:string, informe:InformeFinanzas){
-    informe.idUsuario = this.IdUsuario;
-    this._appInformeFinanzasService.putInformeFinanzas(idInformeFinanzas, this.informesFinanzas)
-    .subscribe((informe : InformeFinanzas[]) => {
-      // if(this.opcion == '1'){
-      //   this.alert(1, 'Registro exitoso', 'El informe fue aprobado.');
-      // }
-    }, res => {
-      this.alert(2, 'Error en el registro', 'Se ha producido un error en el servidor.');
-    });
+    this.getInformeFinanzas(idInformeFinanzas, informe);
   }
 
   archivarInformeFinanzas(idInformeFinanzas:string){
@@ -398,7 +430,18 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
     });
   }
 
-  infoInformeFinanzas(idInformeFinanzas, fechaAprobada, totalHorasF, totalSaldoF, obsrevacionFinanzas){
+  infoInformeFinanzas(idInformeFinanzas, fechaAprobada, totalHorasF, totalSaldoF, obsrevacionFinanzas, idUsuario){
+    this._appUserService.getUser(idUsuario).subscribe((data : User[]) => {
+      if (data[0].segundoNombre == null && data[0].segundoApellido != null ) {
+        this.usuario  = data[0].primerApellido + " " + data[0].segundoApellido+ " " + data[0].primerNombre ;
+      } else if (data[0].segundoNombre == null && data[0].segundoApellido == null){
+        this.usuario  = data[0].primerApellido + " " + data[0].primerNombre; 
+      }else if (data[0].segundoNombre != null && data[0].segundoApellido == null){ 
+        this.usuario  = data[0].primerApellido + " " + data[0].primerNombre + " " + data[0].segundoNombre;
+      }else{
+        this.usuario  = data[0].primerApellido + " " + data[0].segundoApellido + " " + data[0].primerNombre + " " + data[0].segundoNombre;
+      }
+    })
     this.idInformeFinanzas = idInformeFinanzas;
     this.fechaAprobada =  fechaAprobada;
     this.totalHorasF = totalHorasF; 
@@ -407,35 +450,33 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
   }
 
   //crud ACREEDOR
-  getlistaAcreedores(){
-    this._appAcreedorService.getListAcredor().subscribe((acreedores : Acreedor[]) => {this.listAcreedores =  acreedores});
-  }
 
   saveAcreedor(idInformeEstudiante:string, idConvenio:string, montoBs:string){
     this.acreedor.idUsuario = this.IdUsuario;
     this.acreedor.idInformeEstudiante = idInformeEstudiante;
     this.acreedor.idConvenio = idConvenio;
     var saldoTotal;
-    //verificamos si existe el registro
-    for(let acreedor of this.listAcreedores){
-      if(acreedor.idConvenio == idConvenio){
-        this.procesoAcreditacion = true;
-        saldoTotal = parseFloat(acreedor.montoBs) + parseFloat(montoBs);
-        this.acreedor.montoBs = saldoTotal.toFixed(2);
-        break;
-      }else{
-        this.procesoAcreditacion = false;
-      }
-    }
-    if(this.procesoAcreditacion == false){      
-      this.acreedor.montoBs = montoBs;
-      this._appAcreedorService.postAcreedor(this.acreedor)
-      .subscribe((acreedor : Acreedor[]) => {
-        this.getInformFinanzas();        
-      });
-    }else{
-      this.acreditarSaldo(idConvenio, this.acreedor);
-    }  
+
+    this._appAcreedorService.getAcreedorByIdConvenio(idConvenio).subscribe((infoAcreedor:Acreedor[])=>{
+        if(infoAcreedor.length > 0){
+          this.procesoAcreditacion = true;
+          saldoTotal = parseFloat(infoAcreedor[0].montoBs) + parseFloat(montoBs);
+          this.acreedor.montoBs = saldoTotal.toFixed(2);
+        }else{
+          this.procesoAcreditacion = false;
+        }
+
+        if(this.procesoAcreditacion == false){
+          this.acreedor.montoBs = montoBs;
+          this._appAcreedorService.postAcreedor(this.acreedor)
+          .subscribe((acreedor : Acreedor[]) => {
+            this.getInformFinanzas();
+          });
+        }else{
+          this.acreditarSaldo(idConvenio, this.acreedor);
+        } 
+        
+    })    
   }
   
   acreditarSaldo(idConvenio:string, acreedor:Acreedor){
@@ -447,7 +488,7 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
     this.acreedor.idInformeEstudiante = idInformeEstudiante;
     this.informesFinanzas.totalHorasF = '00:00';
     this.informesFinanzas.totalSaldoF = '0';
-    this.informesFinanzas.obsrevacionFinanzas = null;
+    
     var saldo;
     for(let acreedor of this.listAcreedores){
       if(acreedor.idConvenio == idConvenio){

@@ -13,6 +13,11 @@ export class AppInformeFinanzasService {
 
   constructor(private _http: HttpClient) { }
 
+  getInformeFinanzas(idInformeFinanzas:number){
+    let url = `${this.listaInformeFinanzas}/${idInformeFinanzas}`;
+    return this._http.get<InformeFinanzas[]>(url).pipe(map(res => res));
+  }
+
   getInformesFinanzas(){
     return this._http.get<InformeFinanzas[]>(this.listaInformeFinanzas).pipe(map(res => res));
   }

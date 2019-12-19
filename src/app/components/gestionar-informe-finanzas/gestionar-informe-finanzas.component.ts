@@ -14,6 +14,9 @@ import { AppDepartamentoService } from '../../services/app-departamento.service'
 import { Convenio } from 'src/app/interfaces/convenio.interface';
 import { AppAreaService } from '../../services/app-area.service';
 import { Area } from 'src/app/interfaces/area.interface';
+import { AuthService } from '../../services/auth.service';
+import { User } from '../../interfaces/user.interface';
+
 
 
 @Component({
@@ -23,7 +26,7 @@ import { Area } from 'src/app/interfaces/area.interface';
 })
 export class GestionarInformeFinanzasComponent implements OnInit {
   //iDUSUARIO
-  IdUsuario:string = "4";
+  IdUsuario:string = "0";
   //FOOTER
   numStudent:number = 0;
   numHour:any = '00:00';
@@ -82,6 +85,7 @@ export class GestionarInformeFinanzasComponent implements OnInit {
   //List departament
   departamentos:Departamento[];
   departamento:Departamento = {};
+  Usuario:User;
  
   constructor( private _appInformeEstudianteService:AppInformeEstudianteService,
               private _appInformeFinanzasService:AppInformeFinanzasService,
@@ -89,13 +93,20 @@ export class GestionarInformeFinanzasComponent implements OnInit {
               private _appTipoPersonaService:AppTipoPersonaService,
               private _appRegistroHora:AppRegistroHoraService,
               private _appDepartamentoService:AppDepartamentoService,
-              private _appAreaService:AppAreaService ) { }
+              private _appAreaService:AppAreaService,
+              private _authService : AuthService ) { }
 
   ngOnInit() {
+    this.getDepartamentoUser();
     this.getInfomeEstudiante();
     this.getlistaAcreedores();
     this.getEstudiantes();
     this.getDepartamentos();
+  }
+
+  getDepartamentoUser(){
+    this.Usuario =  this._authService.getDatosPersonales();    
+    this.IdUsuario = this.Usuario.idUsuario;
   }
 
   alert(opcion:number, title:string, message:string):void{
@@ -278,11 +289,12 @@ export class GestionarInformeFinanzasComponent implements OnInit {
     });
 
         
-  }
+  }  
 
   registrarInformeFinanzas(idInformeEstudiante:string, opcion){
     this.informeFinanzas.idUsuario = this.IdUsuario;
     this.informeFinanzas.idInformeEstudiante = idInformeEstudiante;
+    
     this._appInformeFinanzasService.postInformeFinanzas(this.informeFinanzas)
     .subscribe((informe : InformeFinanzas []) => {
       if(opcion == '0') {
@@ -293,7 +305,7 @@ export class GestionarInformeFinanzasComponent implements OnInit {
   }
 
   putInformeEstudianteAprobacion(idEstudiante, opcion){
-    this.informeEstudiante.aprobadoFinanzas = opcion;
+    this.informeEstudiante.aprobadoFinanzas = opcion;   
     this._appInformeEstudianteService.putInformeEstudianteAprobarFinanzas(idEstudiante, this.informeEstudiante)
     .subscribe((informe : InformeEstudiante[]) => {
       //
@@ -414,6 +426,7 @@ export class GestionarInformeFinanzasComponent implements OnInit {
   }
 
   acreditarSaldo(idConvenio:string, acreedor:Acreedor){
+    
     this._appAcreedorService.putSaldoAcreedor(idConvenio, acreedor)
     .subscribe((acreedor : Acreedor[]) => {
       this.alert(1, 'Registro exitoso', 'El informe fue aprobado y registrado satisfactoriamente.');

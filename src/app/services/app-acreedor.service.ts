@@ -22,6 +22,11 @@ export class AppAcreedorService {
     return this._http.get<Acreedor[]>(this.uriAcreedor).pipe(map(res => res));
   }
 
+  getAcreedorByIdConvenio(idConvenio){
+    let url = `${this.uriAcreedor}/buscarConvenio/${idConvenio}`;
+    return this._http.get<Acreedor[]>(url).pipe(map(res => res));
+  }
+
   postAcreedor(acreedor:Acreedor):Observable<Acreedor[]>{
     let body = JSON.stringify(acreedor);
     let headers = new HttpHeaders({

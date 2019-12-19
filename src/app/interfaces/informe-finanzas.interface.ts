@@ -4,7 +4,7 @@ export interface InformeFinanzas {
   idInformeEstudiante?:string
   totalHorasF?:string
   totalSaldoF?:string
-  obsrevacionFinanzas?:string
+  observacionFinanzas?:string
   fechaAprobada?:string
   acreditado?:string
   archivar?:string

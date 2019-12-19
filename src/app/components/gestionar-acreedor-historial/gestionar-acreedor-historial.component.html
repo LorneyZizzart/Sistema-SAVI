@@ -54,39 +54,39 @@
 
             <hr>
 
-            <strong><i class="fa fa-map-marker margin-r-5"></i> Departamento</strong>
+            <strong><i class="fa fa-building margin-r-5"></i> Departamento</strong>
 
             <p class="pull-right">{{convenioData.departamento}}</p>
             <hr>
 
-            <strong><i class="fa fa-map-marker margin-r-5"></i> Area de trabajo</strong>
+            <strong><i class="fa fa-home margin-r-5"></i> Area de trabajo</strong>
 
+            <p *ngIf="areas.length == 0" class="pull-right">Sin asignación de área</p>
             <p *ngFor="let area of areas" class="pull-right">{{ area }} &nbsp;-&nbsp;</p>
+            <hr>
+
+            <strong><i class="fa fa-calendar margin-r-5"></i> Fecha inicio</strong>
+
+            <p class="pull-right">{{convenioData.fechaInicio | fecha : 1 }}</p>
 
             <hr>
 
-            <strong><i class="fa fa-pencil margin-r-5"></i> Fecha inicio</strong>
+            <strong><i class="fa fa-calendar margin-r-5"></i> Fecha final</strong>
 
-            <p class="pull-right">{{convenioData.fechaInicio}}</p>
-
+            <p class="pull-right">{{convenioData.fechaFinal | fecha : 1 }}</p>
             <hr>
 
-            <strong><i class="fa fa-file-text-o margin-r-5"></i> Fecha final</strong>
-
-            <p class="pull-right">{{convenioData.fechaFinal}}</p>
-            <hr>
-
-            <strong><i class="fa fa-pencil margin-r-5"></i> Fotocopia de carnet</strong>
+            <strong><i class="fa fa-file margin-r-5"></i> Fotocopia de carnet</strong>
 
             <p class="pull-right">{{convenioData.fotocopiaCarnet | boleano}}</p>
             <hr>
 
-            <strong><i class="fa fa-pencil margin-r-5"></i> Solicitud de trabajo</strong>
+            <strong><i class="fa fa-file-o margin-r-5"></i> Solicitud de trabajo</strong>
 
             <p class="pull-right">{{convenioData.solicitudTrabajo | boleano}}</p>
             <hr>
 
-            <strong><i class="fa fa-pencil margin-r-5"></i> Estado del convenio</strong>
+            <strong><i class="fa fa-circle-thin margin-r-5"></i> Estado del convenio</strong>
 
             <p class="pull-right">{{convenioData.estadoConvenio | estado }}</p>
           </div>

@@ -13,11 +13,6 @@
           <li class="active">Informe archivados</li>
       </ol>
   </section>
-<div *ngIf="MessageInformeDesarchivado== true" class="pad no-print">
-    <div class="callout callout-warning">
-        <h4><i class="icon fa fa-info"></i> El informe fue desarchivado</h4>
-    </div>
-</div>
 <!-- Modal -->
 <div class="modal fade" id="modal-informacionStudiante">
     <div class="modal-dialog">
@@ -32,7 +27,7 @@
                 <div class="col-md-3">
                     <div class="box-profile">
                         <img class="profile-user-img img-responsive img-circle" src="assets/img/avatar.png" alt="User profile picture">
-                        <p class="text-muted text-center">650004813</p>
+                        <p class="text-muted text-center">{{codEstudiante}}</p>
                     </div>
                 </div>
                 <div class="col-md-9">
@@ -155,8 +150,8 @@
                                           <span *ngIf="informe.aprobadoFinanzas == false" class="badge bg-red"><i class="fa fa-close"></i></span>
                                     </td>
                                       <td class="text-center">
-                                          <a (click)="informacionEstudiante(informe.idRegistroHora, informe.idPersona)" data-toggle="modal" data-target="#modal-informacionStudiante"  class="btn btn-primary btn-margin" title="Ver"><i class="fa fa-eye"></i></a>
-                                          <a *ngIf="informe.aprobadoJefeDep != NULL" (click)="archivarInformeFinanzas(informe.idInformeFinanzas)" class="btn btn-success btn-margin" title="Desarchivar"><i class="fa fa-folder-open"></i></a>
+                                          <a (click)="informacionEstudiante(informe.idRegistroHora, informe.idPersona)" data-toggle="modal" data-target="#modal-informacionStudiante"  class="btn btn-primary btn-xs" title="Ver"><i class="fa fa-eye"></i></a>
+                                          <a *ngIf="informe.aprobadoJefeDep != NULL" (click)="archivarInformeFinanzas(informe.idInformeFinanzas)" class="btn btn-success btn-xs" title="Desarchivar"><i class="fa fa-folder-open"></i></a>
                                       </td>
                                   </tr>
                               </table>
@@ -176,3 +171,19 @@
 <app-footer></app-footer> 
 </div>
 <!-- /.content-wrapper -->
+<div id="growls-default">
+    <div [ngClass]="{'growl': true, 'growl-notice':alertSuccess, 
+                    'growl-error':alertError, 
+                    'growl-warning':alertWarning, 
+                    'growl-large':true, 
+                    'growl-outgoing':!activateAlert}">
+        <div [ngClass]="{'growl-close': true, 'growl-outgoing':!activateAlert}">×</div>
+        <div [ngClass]="{'growl-title': true, 'growl-outgoing':!activateAlert}">
+            <i [ngClass]="{'icon': true, 'fa': true, 
+            'fa-check': alertSuccess, 
+            'fa-close': alertError, 
+            'fa-warning': alertWarning}"></i>
+            {{titleAlert}} </div>
+        <div [ngClass]="{'growl-message': true,'growl-outgoing':!activateAlert}">{{messageAlert}}</div>
+    </div>
+</div>

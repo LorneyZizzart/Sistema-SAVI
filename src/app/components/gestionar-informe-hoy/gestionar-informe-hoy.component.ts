@@ -415,6 +415,7 @@ export class GestionarInformeHoyComponent implements OnInit {
     this.idRegistroHora = idRegistroHora;
     this.registro.aprobadoRegistroHora = aprobado;
     this.btnConfirmacion = 'aprovacion';
+    this.registro.observacionRegistroHora = null;
     if(aprobado == '1'){
       this.titleObservation = 'Argumentos de aprobación';
     }else{

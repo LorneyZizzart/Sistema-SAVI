@@ -124,7 +124,8 @@
                 </div>
                 <div class="col-md-9">
                     <div class="box-header">
-                        <h3 class="modal-name"><strong>{{ nombreCompleto }}</strong> </h3>                         
+                        <h3 class="modal-name"><strong>{{ nombreCompleto }}</strong> </h3>  
+                        <p>{{departamento.nombreDepartamento}}</p>                       
                     </div>
                 </div>                
             </div>
@@ -181,7 +182,7 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label>Observación</label>
-                    <textarea [(ngModel)]="informesFinanzas.obsrevacionFinanzas" name="informeFinanzas.obsrevacionFinanzas" class="form-control" rows="3" placeholder="obsevaciones ..."></textarea>
+                    <textarea [(ngModel)]="observacionesRegistroHora" name="observacionesRegistroHora" class="form-control" rows="3" placeholder="obsevaciones ..."></textarea>
                     </div>
                 </div>
             </div>
@@ -204,14 +205,14 @@
             <div class="modal-header text-center">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Detalles</h4>
+                <h4 class="modal-title">Detalles del saldo inicial</h4>
             </div>
             <div class="box box-info-finanzas">                
                 <div class="table-responsive pad">
                         <table class="table table-bordered table-hover ">
                             <tr class="fila-tabla">
                                 <th style="width: 10px">Código</th>
-                                <th>Usuario</th>
+                                <th>Aprobado por </th>
                                 <th>Fecha aprobada</th>                                
                                 <th class="text-center" style="width: 12%">Horas</th>
                                 <th class="text-center" style="width: 15%">Saldo</th>
@@ -285,8 +286,8 @@
                                       </td>
                                       <td>{{informe.departamento}}</td>
                                       <td>{{informe.fecha | nameDay }}</td>
-                                      <td class="text-center">{{informe.totalHoras}}</td>
-                                      <td class="text-center">{{informe.totalSaldo}} Bs.</td>
+                                      <td class="text-center">{{informe.totalHorasF}}</td>
+                                      <td class="text-center">{{informe.totalSaldoF}} Bs.</td>
                                       <td class="text-center">
                                           <span *ngIf="informe.aprobadoJefeDep != null" class="badge bg-green"><i class="fa fa-check"></i></span>
                                       </td>
@@ -295,11 +296,11 @@
                                         <span *ngIf="informe.aprobadoFinanzas == false" class="badge bg-red"><i class="fa fa-close"></i></span>
                                       </td>
                                       <td class="text-center">
-                                          <a *ngIf="informe.aprobadoFinanzas == false" (click)="aprobarInformeEstudiante(informe.idPersona, informe.idInformeFinanzas, informe.idConvenio, informe.totalSaldoF, informe.totalSaldo, informe.idDepartamento, informe.idRegistroHora, informe.idInformeEstudiante, '1') data-toggle="modal" data-target="#modal-acreditacion" class="btn btn-success btn-xs" title="Aprobar"><i class="fa fa-check"></i></a>
+                                          <a *ngIf="informe.aprobadoFinanzas == false" (click)="aprobarInformeEstudiante(informe.idPersona, informe.idInformeFinanzas, informe.idConvenio, informe.totalSaldoF, informe.totalSaldo, informe.idDepartamento, informe.idRegistroHora, informe.idInformeEstudiante, '1')" data-toggle="modal" data-target="#modal-acreditacion" class="btn btn-success btn-xs" title="Aprobar"><i class="fa fa-check"></i></a>
                                           <a *ngIf="informe.aprobadoFinanzas == true" class="btn btn-success btn-xs disabled" ><i class="fa fa-check"></i></a>
-                                          <a *ngIf="informe.aprobadoFinanzas == true" (click)="aprobarInformeEstudiante(informe.idInformeFinanzas, informe.idConvenio, informe.totalSaldoF, informe.totalSaldo, informe.idDepartamento, informe.idRegistroHora, informe.idInformeEstudiante, '0')" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="right" title="No Aprobar"><i class="fa fa-close"></i></a>
+                                          <a *ngIf="informe.aprobadoFinanzas == true" (click)="aprobarInformeEstudiante(informe.idPersona, informe.idInformeFinanzas, informe.idConvenio, informe.totalSaldoF, informe.totalSaldo, informe.idDepartamento, informe.idRegistroHora, informe.idInformeEstudiante, '0')" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="right" title="No Aprobar"><i class="fa fa-close"></i></a>
                                           <a *ngIf="informe.aprobadoFinanzas == false" class="btn btn-danger btn-xs disabled" ><i class="fa fa-close"></i></a>
-                                          <a (click)="infoInformeFinanzas(informe.idInformeFinanzas, informe.fechaAprobada, informe.totalHorasF, informe.totalSaldoF, informe.obsrevacionFinanzas)" data-toggle="modal" data-target="#modal-detalleInforme" class="btn btn-primary btn-xs" title="Ver"><i class="fa fa-eye"></i></a>
+                                          <a (click)="infoInformeFinanzas(informe.idInformeFinanzas, informe.fechaAprobada, informe.totalHoras, informe.totalSaldo, informe.obsrevacionFinanzas, informe.idUsuario)" data-toggle="modal" data-target="#modal-detalleInforme" class="btn btn-primary btn-xs" title="Ver"><i class="fa fa-eye"></i></a>
                                           <a *ngIf="informe.aprobadoJefeDep != NULL" (click)="archivarInformeFinanzas(informe.idInformeFinanzas)" class="btn btn-success btn-xs" title="Archivar"><i class="fa fa-folder"></i></a>
                                       </td>
                                   </tr>
