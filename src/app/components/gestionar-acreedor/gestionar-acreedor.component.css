@@ -37,3 +37,10 @@
     background: rgb(245, 247, 181);
     margin-right: 2%;
 }
+
+.input-buscador{
+    float: right;
+    position: absolute;
+    right: 1.4%;
+    top: 96px;
+}

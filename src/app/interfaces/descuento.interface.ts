@@ -1,11 +1,11 @@
-import { User } from './user.interface';
+import { Acreedor } from './acreedor.interface';
 
-export interface Descuento extends User {
+export interface Descuento extends Acreedor {
   idDescuento?:string
-  idAcreedor?:string
   fechaDescuento?:string
-  saldoInicial?:string
+  saldoInicialDescuento?:string
   montoDescuento?:string
   editDescuento?:string
-  observacion?:string
+  observacionDescuento?:string
+  estadoDescuento?:string
 }

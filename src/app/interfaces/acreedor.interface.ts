@@ -1,6 +1,6 @@
-import { Persona } from './persona.interface';
+import { User } from './user.interface';
 
-export interface Acreedor extends Persona{
+export interface Acreedor extends User{
   idAcreedor?:string;
   idInformeEstudiante?:string;
   idConvenio?:string

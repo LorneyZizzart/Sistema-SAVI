@@ -22,7 +22,12 @@ export class AppAcreedorService {
     return this._http.get<Acreedor[]>(this.uriAcreedor).pipe(map(res => res));
   }
 
-  getAcreedorByIdConvenio(idConvenio){
+  getAcreedorById(idAcreedor:string | number):Observable<Acreedor>{
+    let url = `${this.uriAcreedor}/${idAcreedor}`;
+    return this._http.get<Acreedor>(url).pipe(map(res => res));
+  }
+
+  getAcreedorByIdConvenio(idConvenio):Observable<Acreedor[]>{
     let url = `${this.uriAcreedor}/buscarConvenio/${idConvenio}`;
     return this._http.get<Acreedor[]>(url).pipe(map(res => res));
   }

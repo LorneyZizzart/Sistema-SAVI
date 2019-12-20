@@ -17,6 +17,11 @@ export class AppDescuentoService {
     return this._http.get<Descuento[]>(this.uriDescuento).pipe(map(res => res));
   }
 
+  getDescuentoByConvenio(idConvenio:string | number):Observable<Descuento[]>{
+    let url = `${this.uriDescuento}/convenio/${idConvenio}`;
+    return this._http.get<Descuento[]>(url).pipe(map(res => res));
+  }
+
   postDescuentos(descuento:Descuento):Observable<Descuento[]>{
     let body = JSON.stringify(descuento);
     let headers = new HttpHeaders({
@@ -26,13 +31,13 @@ export class AppDescuentoService {
       .pipe ();
   }
 
-  putDescuento(descuento:Descuento, idDescuento:string):Observable<Descuento[]>{
+  putDescuento(descuento:Descuento, idDescuento:string):Observable<Descuento>{
     let body = JSON.stringify(descuento);
     let headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
     let url = `${this.uriDescuento}/${idDescuento}`;
-    return this._http.put<Descuento[]>(url, body, { headers })
+    return this._http.put<Descuento>(url, body, { headers })
       .pipe ();
   }
 }

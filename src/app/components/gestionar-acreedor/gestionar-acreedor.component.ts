@@ -25,6 +25,7 @@ export class GestionarAcreedorComponent implements OnInit {
   IdUsuario:string;
   //Lista de acreedores
   acreedores:Acreedor[];
+  acreedoresArray:Acreedor[];
   //Lista de estudiantes del departameto
   estudiantes:Convenio[];
   //Info Estudiante
@@ -94,9 +95,34 @@ export class GestionarAcreedorComponent implements OnInit {
     this.IdUsuario = usuario.idUsuario;  
   }
 
+  buscarInforme(nombre:string){
+    let array:Acreedor[] = [];
+    nombre = nombre.toLowerCase();
+    var name;
+    this.acreedores = this.acreedoresArray;
+    for(let informe of this.acreedores){
+      if (informe.segundoNombre == null && informe.segundoApellido != null ) {
+        name = informe.primerApellido + " " + informe.segundoApellido+ " " + informe.primerNombre ;
+      } else if (informe.segundoNombre == null && informe.segundoApellido == null){
+        name = informe.primerApellido + " " + informe.primerNombre; 
+      }else if (informe.segundoNombre != null && informe.segundoApellido == null){ 
+        name = informe.primerApellido + " " + informe.primerNombre + " " + informe.segundoNombre;
+      }else{
+        name = informe.primerApellido + " " + informe.segundoApellido + " " + informe.primerNombre + " " + informe.segundoNombre;
+      }
+      name = name.toLowerCase();
+      if(name.indexOf(nombre) >= 0){
+        array.push(informe);        
+      }  
+    }
+    this.acreedores = array;
+  
+  }
+
   listaAcreedores(){
     this._appAcreedorService.getAcreedor().subscribe((acreedores : Acreedor[]) => {
       this.acreedores = acreedores;
+      this.acreedoresArray = acreedores;
     })
   }
 
@@ -183,7 +209,7 @@ export class GestionarAcreedorComponent implements OnInit {
 
   aprobarDescuento(idAcreedor, saldo, idInformeEstudiante, idConvenio){
     this.descuento.idAcreedor = idAcreedor;
-    this.descuento.saldoInicial = saldo;
+    this.descuento.saldoInicialDescuento = saldo;
     this.acreedor.idAcreedor = idAcreedor;
     this.Saldo = saldo;
     this.inputSaldo = saldo + " Bs."

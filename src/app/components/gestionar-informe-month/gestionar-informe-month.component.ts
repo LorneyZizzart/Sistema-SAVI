@@ -428,14 +428,14 @@ export class GestionarInformeMonthComponent implements OnInit {
         this.informeEstudiante.totalSaldo = this.listSaldo[i];
         
         this._appInformeEstudianteService.postInformeEstudiante(this.informeEstudiante)
-        .subscribe((informe : InformeEstudiante[]) => {console.log(informe)});
+        .subscribe((informe : InformeEstudiante[]) => {});
       }
     }  
   }
 
   eliminarInformeEstudiante(fecha:string, idRegistroHora:string){
     this._appInformeEstudianteService.deleteInformeEstudiante(fecha, idRegistroHora)
-    .subscribe((data : InformeEstudiante[]) => {console.log(data)});
+    .subscribe((data : InformeEstudiante[]) => {});
   }
 
 }

@@ -163,7 +163,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>Observación</label>
-                            <textarea name="descuento.observacion" class="form-control" rows="3" placeholder="obsevaciones ..."></textarea>
+                            <textarea [(ngModel)]="descuento.observacionDescuento" name="descuento.observacionDescuento" class="form-control" rows="3" placeholder="obsevaciones ..."></textarea>
                             </div>
                         </div>
                     </div>
@@ -174,7 +174,7 @@
                     <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-danger"><i class="fa fa-close"></i> Cancelar</button>
                 </div>
                 <div class="col-md-6">
-                    <button  type="button" data-dismiss="modal" aria-label="Close" class="btn btn-success"><i class="fa fa-save"></i> Guardar</button>
+                    <button  (click)="confirmarIncremento()" type="button" data-dismiss="modal" aria-label="Close" class="btn btn-success"><i class="fa fa-save"></i> Guardar</button>
                 </div>
             </div>
         </div>
@@ -206,6 +206,7 @@
                                       <th>Saldo inicial</th>
                                       <th>Fecha descuento</th>
                                       <th>Saldo</th>
+                                      <th>Observación</th>
                                       <th class="text-center" style="width: 20%px">Opciones</th>
                                   </tr>
                                   <tr *ngFor="let informe of descuentos; let i = index">
@@ -213,11 +214,13 @@
                                       <td class="text-center">{{informe.codEstudiante}}</td>
                                       <td>{{informe.primerApellido}} {{informe.segundoApellido}} {{informe.primerNombre}}  {{informe.segundoNombre}}</td>
                                       <td>{{informe.departamento}}</td>
-                                      <td>{{informe.saldoInicial}} Bs.</td>
+                                      <td>{{informe.saldoInicialDescuento}} Bs.</td>
                                       <td>{{informe.fechaDescuento | date: 'dd/MM/yyyy' }}</td>
                                       <td class="text-center">{{informe.montoDescuento}} Bs.</td>
+                                      <td class="text-center">{{informe.observacionDescuento}}</td>
                                       <td class="text-center">
-                                          <a (click)="aprobarIncremento(informe.idConvenio, informe.montoDescuento, informe.idDescuento, informe.idPersona, informe.idDepartamento)" data-toggle="modal" data-target="#modal-acreditacion"  class="btn btn-success btn-xs" title="Descontar"><i class="fa fa-toggle-up"></i></a>
+                                          <a *ngIf="!informe.estadoDescuento" class="btn btn-success btn-xs disabled"><i class="fa fa-toggle-up"></i></a>
+                                          <a *ngIf="informe.estadoDescuento" (click)="aprobarIncremento(informe.idConvenio, informe.montoDescuento, informe.idDescuento, informe.idPersona, informe.idDepartamento, informe.saldoInicialDescuento, informe.idAcreedor)" data-toggle="modal" data-target="#modal-acreditacion"  class="btn btn-success btn-xs" title="Descontar"><i class="fa fa-toggle-up"></i></a>
                                           <a (click)="informacionEstudiante(informe.idPersona, informe.idDepartamento)" data-toggle="modal" data-target="#modal-informacionStudiante"  class="btn btn-primary btn-xs" title="Ver"><i class="fa fa-eye"></i></a>
                                       </td>
                                   </tr>
@@ -238,3 +241,20 @@
 <app-footer></app-footer> 
 </div>
 <!-- /.content-wrapper -->
+<div id="growls-default">
+    <div [ngClass]="{'growl': true, 'growl-notice':alertSuccess, 
+                    'growl-error':alertError, 
+                    'growl-warning':alertWarning, 
+                    'growl-large':true, 
+                    'growl-outgoing':!activateAlert}">
+        <div [ngClass]="{'growl-close': true, 'growl-outgoing':!activateAlert}">×</div>
+        <div [ngClass]="{'growl-title': true, 'growl-outgoing':!activateAlert}">
+            <i [ngClass]="{'icon': true, 'fa': true, 
+            'fa-check': alertSuccess, 
+            'fa-close': alertError, 
+            'fa-warning': alertWarning}"></i>
+            {{titleAlert}} </div>
+        <div [ngClass]="{'growl-message': true,'growl-outgoing':!activateAlert}">{{messageAlert}}</div>
+    </div>
+</div>
+  

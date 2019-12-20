@@ -458,7 +458,7 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
     var saldoTotal;
 
     this._appAcreedorService.getAcreedorByIdConvenio(idConvenio).subscribe((infoAcreedor:Acreedor[])=>{
-        if(infoAcreedor.length > 0){
+        if(infoAcreedor){
           this.procesoAcreditacion = true;
           saldoTotal = parseFloat(infoAcreedor[0].montoBs) + parseFloat(montoBs);
           this.acreedor.montoBs = saldoTotal.toFixed(2);

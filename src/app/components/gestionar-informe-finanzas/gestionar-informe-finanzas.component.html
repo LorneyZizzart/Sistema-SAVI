@@ -134,7 +134,8 @@
                 </div>
                 <div class="col-md-9">
                     <div class="box-header">
-                        <h3 class="modal-name"><strong>{{ nombreCompleto }}</strong> </h3>                         
+                        <h3 class="modal-name"><strong>{{ nombreCompleto }}</strong> </h3> 
+                        <p>{{departamento.nombreDepartamento }}</p>                        
                     </div>
                 </div>                
             </div>
@@ -257,7 +258,7 @@
                                     <span *ngIf="informe.aprobadoJefeDep != null" class="badge bg-green"><i class="fa fa-check"></i></span>
                                 </td>
                                 <td class="text-center">
-                                    <a (click)="aprobarInformeEstudiante(informe.idDepartamento, informe.idRegistroHora, informe.idInformeEstudiante, '1', informe.idConvenio, informe.totalSaldo, informe.codEstudiante, informe.primerApellido, informe.segundoApellido, informe.primerNombre, informe.segundoNombre)" data-toggle="modal" data-target="#modal-acreditacion" class="btn btn-success btn-margin btn-xs" title="Aprobar"><i class="fa fa-check"></i></a>
+                                    <a (click)="aprobarInformeEstudiante(informe, '1')" data-toggle="modal" data-target="#modal-acreditacion" class="btn btn-success btn-margin btn-xs" title="Aprobar"><i class="fa fa-check"></i></a>
                                     <a (click)="aprobarInformeEstudiante(informe.idDepartamento, informe.idRegistroHora, informe.idInformeEstudiante, '0', informe.idConvenio, informe.totalSaldo, informe.codEstudiante, informe.primerApellido, informe.segundoApellido, informe.primerNombre, informe.segundoNombre)" class="btn btn-danger btn-margin btn-xs" data-toggle="tooltip" data-placement="right" title="No aprobar"><i class="fa fa-close"></i></a>
                                 </td>
                                 <td class="text-center">

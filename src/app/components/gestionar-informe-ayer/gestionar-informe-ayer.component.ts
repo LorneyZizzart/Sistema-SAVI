@@ -473,7 +473,7 @@ export class GestionarInformeAyerComponent implements OnInit {
 
   eliminarInformeEstudiante(fecha:string, idRegistroHora:string){
     this._appInformeEstudianteService.deleteInformeEstudiante(fecha, idRegistroHora)
-    .subscribe((data : InformeEstudiante[]) => {console.log(data)});
+    .subscribe((data : InformeEstudiante[]) => {});
   }
 
 }

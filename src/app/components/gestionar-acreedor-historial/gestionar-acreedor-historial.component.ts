@@ -65,8 +65,6 @@ export class GestionarAcreedorHistorialComponent implements OnInit {
   getConvenio(idConvenio){
     this.areas = [];
     this._appConvenioService.getConvenio(idConvenio).subscribe((convenio : Convenio[])=>{
-      console.log("convenio")
-      console.log(convenio)
 
       for(let data of convenio){
         if(data.idConvenio == idConvenio){
@@ -80,6 +78,7 @@ export class GestionarAcreedorHistorialComponent implements OnInit {
             this.nombreCompleto = data.primerApellido + " " + data.segundoApellido + " " + data.primerNombre + " " + data.segundoNombre;
           }
           this._appCarreraService.getCarrera(Number(data.idCarrera)).subscribe((carrera:Carrera)=>{
+            if(carrera)
             this.convenioData.carrera = carrera[0].nombreCarrera;
           })
           this.convenioData.codEstudiante = data.codEstudiante;
@@ -176,9 +175,6 @@ export class GestionarAcreedorHistorialComponent implements OnInit {
   getAcreedorHistorial(idConvenio){
     this._appInformeEstudianteService.getAcreedorHistorial(idConvenio)
     .subscribe((data : InformeEstudiante[]) => {
-      console.log("data")
-
-      console.log(data)
       this.informeEstudiante = data;
       this.informeEstudianteArray = data;
     });
@@ -245,11 +241,9 @@ export class GestionarAcreedorHistorialComponent implements OnInit {
   }
 
   getGestion(data){
-    console.log("gestion: ", data);
     let array:InformeEstudiante[] = [];
     this.informeEstudiante = this.informeEstudianteArray;
     for(let informe of this.informeEstudiante){
-      console.log(this.convertDate(informe.fecha, 6))
       if(this.convertDate(informe.fecha, 6) == data){
         array.push(informe)  
       }
