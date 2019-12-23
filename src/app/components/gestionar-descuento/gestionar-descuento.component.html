@@ -156,7 +156,7 @@
                             <div class="form-group">
                             <label><i class="fa fa-money margin-r-5"></i> Total saldo:</label>
                             <div class="input-group col-md-12">
-                                <input [(ngModel)]="acreedor.montoBs" name="acreedor.montoBs" name="acreedor.montoBs" type="text" class="form-control" placeholder="00.00 Bs." disabled>
+                                <input [(ngModel)]="totalSaldo" name="totalSaldo" type="text" class="form-control" placeholder="00.00 Bs." disabled>
                             </div> 
                             </div>                     
                         </div>
@@ -195,6 +195,15 @@
                   </div>
                   <!-- /.box-header -->
                   <div class="box-body">
+                    <div class="input-buscador">
+                        <div class="input-group input-group-sm" style="width: 250px;">
+                        <input (keyup)="buscarInforme(buscarNombre.value)" #buscarNombre type="text" name="buscarName" class="form-control pull-right" placeholder="Buscar estudiante">
+
+                        <div class="input-group-btn">
+                            <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                        </div>
+                        </div>
+                    </div>
                       <p>Lista de descuentos de los estudiantes que trabajan en la Universidad</p>                     
                           <div class="table-responsive pad">
                               <table class="table table-bordered table-hover ">
@@ -220,7 +229,7 @@
                                       <td class="text-center">{{informe.observacionDescuento}}</td>
                                       <td class="text-center">
                                           <a *ngIf="!informe.estadoDescuento" class="btn btn-success btn-xs disabled"><i class="fa fa-toggle-up"></i></a>
-                                          <a *ngIf="informe.estadoDescuento" (click)="aprobarIncremento(informe.idConvenio, informe.montoDescuento, informe.idDescuento, informe.idPersona, informe.idDepartamento, informe.saldoInicialDescuento, informe.idAcreedor)" data-toggle="modal" data-target="#modal-acreditacion"  class="btn btn-success btn-xs" title="Descontar"><i class="fa fa-toggle-up"></i></a>
+                                          <a *ngIf="informe.estadoDescuento" (click)="aprobarIncremento(informe, informe.idDepartamento, informe.idConvenio)" data-toggle="modal" data-target="#modal-acreditacion"  class="btn btn-success btn-xs" title="Descontar"><i class="fa fa-toggle-up"></i></a>
                                           <a (click)="informacionEstudiante(informe.idPersona, informe.idDepartamento)" data-toggle="modal" data-target="#modal-informacionStudiante"  class="btn btn-primary btn-xs" title="Ver"><i class="fa fa-eye"></i></a>
                                       </td>
                                   </tr>

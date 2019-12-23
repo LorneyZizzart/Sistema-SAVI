@@ -88,7 +88,7 @@
                         </li>
                         <!-- Menu Footer-->
                         <li class="user-footer">
-                            <div class="pull-left">
+                            <div *ngIf="idRol != 5" class="pull-left">
                                 <a href="#" class="btn btn-default btn-flat">Perfil</a>
                             </div>
                             <div class="pull-right">
@@ -133,7 +133,7 @@
                     <i class="fa fa-building"></i> <span>Departamento</span>                    
                 </a>
             </li>
-            <li *ngIf="idRol== 4" >
+            <li *ngIf="idRol== 4 || idRol== 5" >
                 <a (click)="gestionarInfoDepartamento()">
                     <i class="fa fa-home"></i> <span>Departamento</span>                    
                 </a>
@@ -210,10 +210,11 @@
                     <i class="fa fa-toggle-down"></i> <span>Descuentos</span>                    
                 </a>
             </li>
-            <li class="header">Etiquetas</li>
-            <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Importante</span></a></li>
-            <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>Advertencia</span></a></li>
-            <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span>Información</span></a></li>
+            <li *ngIf="idRol== 5" >
+                <a (click)="gestionarHistorialSaldo()">
+                    <i class="fa fa-file-text-o"></i> <span>Historial de saldo</span>                    
+                </a>
+            </li>
         </ul>
     </section>
     <!-- /.sidebar -->

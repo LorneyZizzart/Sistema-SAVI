@@ -6,6 +6,10 @@ import { AuthService } from '../../services/auth.service';
 import { Persona } from '../../interfaces/persona.interface';
 import { AppDepartamentoService } from '../../services/app-departamento.service';
 import { Departamento } from 'src/app/interfaces/departamento.interface';
+import { AppConvenioService } from '../../services/app-convenio.service';
+import { Convenio } from '../../interfaces/convenio.interface';
+
+
 
 
 
@@ -17,8 +21,7 @@ import { Departamento } from 'src/app/interfaces/departamento.interface';
 export class LoginComponent implements OnInit {
   usuario:User[];
   persona:Persona[];
-  private user:User = {};
-  departamento:Departamento[];
+  user:User = {};
   alertUserIncorrect:boolean = false;
   alertUsuarioDesabilitado:boolean = false;
   messageError:string;
@@ -34,7 +37,8 @@ export class LoginComponent implements OnInit {
   constructor(private _router:Router, 
               private _appUserService: AppUserService,
               private _authService:AuthService,
-              private _appDepartamentoService: AppDepartamentoService) { }
+              private _appDepartamentoService: AppDepartamentoService,
+              private _appConvenioService : AppConvenioService) { }
 
   ngOnInit() {
   }
@@ -93,9 +97,16 @@ export class LoginComponent implements OnInit {
                 this._appDepartamentoService.getDepartamentosUser(usuario[0].idRol, usuario[0].idUsuario).subscribe((data:Departamento) => {
                   this._authService.setDatosDepartamento(data);
                 })
-              }              
-              if(this._authService.setUser(usuario[0]) && this._authService.setDatosPersonales(persona[0])){                
-                this._router.navigate(['/home']);  
+              }else if(usuario[0].idRol == "5"){
+                this._appConvenioService.getConvenioByUsuario(usuario[0].idUsuario).subscribe((data:Convenio[]) => {
+                  this._authService.setConvenio(data[0]);
+                  this._appDepartamentoService.getDepartamentoById(data[0].idDepartamento).subscribe((departamento:Departamento)=>{
+                    this._authService.setDatosDepartamento(departamento);
+                  })
+                })
+              }
+              if(this._authService.setUser(usuario[0]) && this._authService.setDatosPersonales(persona[0])){
+                this._router.navigate(['/home']);
               }
             }, res => {
               this.messageError = 'Se ha producido un error en el servidor al extraer los datos del usuario.';
@@ -104,7 +115,7 @@ export class LoginComponent implements OnInit {
           }else{
             this.alertUsuarioDesabilitado = true;
             setTimeout(() => {
-            this.alertUsuarioDesabilitado = false;              
+            this.alertUsuarioDesabilitado = false;
             }, 6000);
           } 
         }else{
@@ -115,7 +126,7 @@ export class LoginComponent implements OnInit {
           this.inputSuccessPassword  = false;
           this.messageError = 'El usuario y la contraseña no son validos.';
           this.alertErrorUser();
-        }            
+        }
       }, res => {
         this.messageError = 'Se ha producido un error al autentificar en el servidor.';
         this.alertErrorUser();

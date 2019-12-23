@@ -33,6 +33,11 @@ export class AppDepartamentoService {
     return this._http.get<Departamento[]>(this.listaDepartamentoURL).pipe(map(res => res));
   }
 
+  getDepartamentoById(idDepartamento:string|number){
+    let url = `${this.listaDepartamentoURL}/getDepartamentoById/${idDepartamento}`;
+    return this._http.get<Departamento>(url).pipe(map(res => res));
+  }
+
   getDepartamentoName(nameDepartamento:string){
     let url = `${this.listaDepartamentoURL}/search/${nameDepartamento}`;
     return this._http.get<Departamento[]>(url).pipe(map(res => res));

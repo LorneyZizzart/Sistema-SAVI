@@ -18,7 +18,7 @@ export class AppAcreedorService {
     return this._http.get<Acreedor[]>(url).pipe(map(res => res));
   }
 
-  getAcreedor(){
+  getAcreedores(){
     return this._http.get<Acreedor[]>(this.uriAcreedor).pipe(map(res => res));
   }
 

@@ -36,6 +36,7 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
   numHour:any = '00:00';
   totalSaldo:any = 0;
   //Info Estudiante
+  codEstudiante:string;
   nombreCompleto:string;
   nacionalidad: string;
   direccion: string;

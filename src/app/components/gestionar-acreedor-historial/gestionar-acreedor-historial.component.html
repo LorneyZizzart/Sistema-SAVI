@@ -246,7 +246,7 @@
       <div class="col-md-9">
           <div class="box">
               <div class="box-header with-border">
-                  <h3 class="box-title">Historial de acreditaciones</h3>
+                  <h3 class="box-title">Días de trabajo</h3>
                   <div class="box-tools pull-right">
                       <button type="button" class="btn btn-box-tool" title="Generar PDF"><i class="fa fa-file-pdf-o"></i></button>
                       <button type="button" class="btn btn-box-tool" title="Imprimir"><i class="fa fa-print"></i></button>
@@ -279,6 +279,71 @@
           </div>
           </div>
       </div>
+      <div class="col-md-3">
+        <!-- small box -->
+        <div class="small-box bg-red">
+          <div class="icon"> Bs. </div>
+          <div class="inner">
+            <h3>{{saldoDiario}}</h3>
+
+            <p>Total saldo de días de trabajo</p>
+          </div>
+         
+        </div>
+      </div>
+      <div class="col-md-3">
+        <!-- small box -->
+        <div class="small-box bg-yellow">
+          <div class="icon">Bs.</div>
+          <div class="inner">
+            <h3>{{saldoDescuento}}</h3>
+
+            <p>Total de descuentos</p>
+          </div>
+         
+        </div>
+      </div>
+      <div class="col-md-3">
+        <!-- small box -->
+        <div class="small-box bg-green">
+          <div class="icon">Bs.</div>
+          <div class="inner">
+            <h3>{{totalSaldo}}</h3>
+
+            <p>Total de saldo</p>
+          </div>
+         
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Acreditaciones</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" title="Generar PDF"><i class="fa fa-file-pdf-o"></i></button>
+                    <button type="button" class="btn btn-box-tool" title="Imprimir"><i class="fa fa-print"></i></button>
+                </div>
+            </div>
+            <div class="box-body">                    
+                <div class="table-responsive pad">
+                    <table class="table table-bordered table-hover ">
+                        <tr class="text-center fila-tabla">
+                            <th style="width: 10px">#</th>
+                            <th class="text-center">Cod.</th>
+                            <th class="text-center">Fecha de descuento</th>
+                            <th class="text-center">Monto en Bs.</th>
+                        </tr>
+                        <tr *ngFor="let informe of descuentos; let i = index">
+                            <td>{{i+1}}.</td>
+                            <td>{{informe.idDescuento}}.</td>
+                            <td class="text-center">{{informe.fechaDescuento | nameDay}}</td>
+                            <td class="text-center">{{informe.saldoInicialDescuento}} Bs.</td> 
+                        </tr>
+                    </table>
+                </div>
+        </div>
+        </div>
+    </div>
       <!-- /.col -->
     </div>
     <!-- /.row -->

@@ -7,6 +7,7 @@ import { AppUserService } from './app-user.service';
 import { User } from '../interfaces/user.interface';
 import { Persona } from '../interfaces/persona.interface';
 import { Departamento } from '../interfaces/departamento.interface';
+import { Convenio } from '../interfaces/convenio.interface';
 
 
 
@@ -53,6 +54,25 @@ export class AuthService {
     if(!isNullOrUndefined(persona)){
       let people: User = JSON.parse(persona);
       return people;
+    } else {
+      return null;
+    }
+  }
+
+  setConvenio(convenio:Convenio):Boolean{
+    if(convenio){
+      localStorage.removeItem("agreement")
+      let agreement =JSON.stringify(convenio);
+      localStorage.setItem("agreement", agreement);
+      return true;
+    }else{return false}
+  }
+
+  getConvenio():Convenio{
+    let agreement = localStorage.getItem("agreement");
+    if(!isNullOrUndefined(agreement)){
+      let agreements: Convenio = JSON.parse(agreement);
+      return agreements;
     } else {
       return null;
     }

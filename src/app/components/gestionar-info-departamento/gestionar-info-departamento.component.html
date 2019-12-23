@@ -57,19 +57,3 @@
 <!-- /.content-wrapper -->
 <app-footer></app-footer> 
 </div>
-<div id="growls-default">
-    <div [ngClass]="{'growl': true, 'growl-notice':alertSuccess, 
-                    'growl-error':alertError, 
-                    'growl-warning':alertWarning, 
-                    'growl-large':true, 
-                    'growl-outgoing':!activateAlert}">
-        <div [ngClass]="{'growl-close': true, 'growl-outgoing':!activateAlert}">×</div>
-        <div [ngClass]="{'growl-title': true, 'growl-outgoing':!activateAlert}">
-            <i [ngClass]="{'icon': true, 'fa': true, 
-            'fa-check': alertSuccess, 
-            'fa-close': alertError, 
-            'fa-warning': alertWarning}"></i>
-            {{titleAlert}} </div>
-        <div [ngClass]="{'growl-message': true,'growl-outgoing':!activateAlert}">{{messageAlert}}</div>
-    </div>
-</div>

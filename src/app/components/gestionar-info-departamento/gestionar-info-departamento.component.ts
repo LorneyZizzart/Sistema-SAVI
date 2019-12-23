@@ -21,6 +21,7 @@ export class GestionarInfoDepartamentoComponent implements OnInit {
 
   ngOnInit() {
     this.departamento = this._appAuthService.getDatosDepartamento();
+    console.log(this.departamento);
     this.getHistorialesDepartamento(this.departamento[0].idDepartamento);
 
   }

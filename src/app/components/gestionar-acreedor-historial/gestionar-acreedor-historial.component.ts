@@ -10,6 +10,11 @@ import { AppAreaService } from '../../services/app-area.service';
 import { Area } from 'src/app/interfaces/area.interface';
 import { AppCarreraService } from '../../services/app-carrera.service';
 import { Carrera } from '../../interfaces/carrera.interface';
+import { AppDescuentoService } from '../../services/app-descuento.service';
+import { Descuento } from '../../interfaces/descuento.interface';
+import { AppAcreedorService } from "../../services/app-acreedor.service";
+import { Acreedor } from '../../interfaces/acreedor.interface';
+
 
 @Component({
   selector: 'app-gestionar-acreedor-historial',
@@ -41,18 +46,27 @@ export class GestionarAcreedorHistorialComponent implements OnInit {
     noviembre : false,
     diciembre : false
   };
+  saldoDiario:string = "00.00";
+  saldoDescuento:string = "00.00";
+  totalSaldo:string = "00.00";
+  descuentos:Descuento[] = [];
   constructor( private _activatedRoute:ActivatedRoute,
                private _router:Router,
                private _appConvenioService:AppConvenioService,
                private _appInformeEstudianteService:AppInformeEstudianteService,
                private _appAreaService:AppAreaService,
-               private _appCarreraService : AppCarreraService) { }
+               private _appCarreraService : AppCarreraService,
+               private _appDescuentoService : AppDescuentoService,
+               private _appAcreedorService : AppAcreedorService
+               ) { }
 
   ngOnInit() {
     this._activatedRoute.params.subscribe(params => {
       this.idConvenio = params['idConvenio'];
       this.getConvenio(this.idConvenio);
       this.getAcreedorHistorial(this.idConvenio);
+      this.getDescuentos(this.idConvenio);
+      this.getTotalSaldoAcreedor(this.idConvenio);
     });
   }
 
@@ -177,7 +191,16 @@ export class GestionarAcreedorHistorialComponent implements OnInit {
     .subscribe((data : InformeEstudiante[]) => {
       this.informeEstudiante = data;
       this.informeEstudianteArray = data;
+      this.calcularSaldoDiario(data);
     });
+  }
+
+  calcularSaldoDiario(data:InformeEstudiante[]){
+    var saldo = 0;
+    for(let informe of data){
+      saldo =  parseFloat(informe.totalSaldo) + saldo;
+    }
+    this.saldoDiario = saldo.toFixed(2);
   }
   //buscar x dia -> falta probar con 1 de enero y 31 de diciembre
   getFecha(date){
@@ -251,7 +274,28 @@ export class GestionarAcreedorHistorialComponent implements OnInit {
     this.informeEstudiante = array;
   }
   
-  
+  getDescuentos(idConvenio){
+    this._appDescuentoService.getDescuentoByConvenio(idConvenio).subscribe((data:Descuento[])=>{
+      this.descuentos = data;
+      var saldo = 0;
+      for(let informe of data){
+        saldo =  saldo + parseFloat(informe.saldoInicialDescuento);
+      }
+      this.saldoDescuento = saldo.toFixed(2);
+    })
+  }
+
+  getTotalSaldoAcreedor(idConvenio){
+    this._appAcreedorService.getAcreedorByIdConvenio(idConvenio).subscribe((data:Acreedor[])=>{
+      if(data.length>0){
+        var saldo = 0;
+        for(let informe of data){
+          saldo =  saldo + parseFloat(informe.montoBs);
+        }
+        this.totalSaldo =  saldo.toFixed(2);
+      }
+    })
+  }
   
 
 }

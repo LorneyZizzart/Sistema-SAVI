@@ -8,6 +8,7 @@ import { AppInformeEstudianteService } from '../../services/app-informe-estudian
 import { AppRegistroHoraService } from '../../services/app-registroHora.service';
 import { RegistroHora } from '../../interfaces/registroHora.interface';
 import { User } from 'src/app/interfaces/user.interface';
+import { Convenio } from 'src/app/interfaces/convenio.interface';
 
 @Component({
   selector: 'app-navbar-jf',
@@ -171,6 +172,13 @@ export class NavbarJFComponent implements OnInit {
 
   gestionarDescuentos(){
     this._router.navigate(['/descuento']);    
+  }
+
+  gestionarHistorialSaldo(){
+    var convenio : Convenio = {};
+    convenio = this._authService.getConvenio();
+    console.log(convenio);
+    this._router.navigate(['/acreedorHistorial', convenio.idConvenio]);  
   }
 
 }

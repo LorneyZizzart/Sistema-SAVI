@@ -27,6 +27,11 @@ export class AppConvenioService {
     return this._http.get<Convenio[]>(url);
   }
 
+  getConvenioByUsuario(idUsuario:string | number){
+    let url = `${this.listaUserURL}/convenioByUsuario/${idUsuario}`;
+    return this._http.get<Convenio[]>(url);
+  }
+
   getHistorialConvenio(idConvenio): Observable<User[]> {
     let url = `${this.listaTipoPersonaURL}/historialConvenio/${idConvenio}`;
     return this._http.get<User[]>(url);

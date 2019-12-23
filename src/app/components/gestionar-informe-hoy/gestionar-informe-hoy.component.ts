@@ -36,7 +36,7 @@ export class GestionarInformeHoyComponent implements OnInit {
   totalSaldo:any = 0;
   //info del departamento
   departamento:Departamento [];
-  private departament:Departamento; /*para obtener el id del departamento del local storage*/
+  departament:Departamento; /*para obtener el id del departamento del local storage*/
   //Registro de hoy
   informesRegistrosNow:RegistroHora[];
   //list of hours the students

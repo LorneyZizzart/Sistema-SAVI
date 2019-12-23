@@ -120,7 +120,7 @@ export class GestionarAcreedorComponent implements OnInit {
   }
 
   listaAcreedores(){
-    this._appAcreedorService.getAcreedor().subscribe((acreedores : Acreedor[]) => {
+    this._appAcreedorService.getAcreedores().subscribe((acreedores : Acreedor[]) => {
       this.acreedores = acreedores;
       this.acreedoresArray = acreedores;
     })

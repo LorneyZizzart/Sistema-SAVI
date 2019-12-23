@@ -24,6 +24,7 @@ export class GestionarDescuentoComponent implements OnInit {
   IdUsuario:string = "0";
   infoEstudiante:Convenio[];
   descuentos:Descuento [];
+  descuentosArray:Descuento[];
   //Info Estudiante
   codEstudiante:string;
   nombreCompleto:string;
@@ -47,6 +48,7 @@ export class GestionarDescuentoComponent implements OnInit {
   idInfoStudent = 0;
   //Para incrementar
   Saldo:string;inputSaldo:string;inputIncremento:string = '00.00';
+  totalSaldo:string = '00.00';
   //save acreedor
   acreedor:Acreedor[] = [];
   descuento:Descuento = {};
@@ -91,7 +93,32 @@ export class GestionarDescuentoComponent implements OnInit {
   getDescuentos(){
     this._appDescuentoService.getDescuentos().subscribe((descuento:Descuento[]) => {
       this.descuentos = descuento;
+      this.descuentosArray = descuento;
     })
+  }
+
+  buscarInforme(nombre:string){
+    let array:Acreedor[] = [];
+    nombre = nombre.toLowerCase();
+    var name;
+    this.descuentos = this.descuentosArray;
+    for(let informe of this.descuentos){
+      if (informe.segundoNombre == null && informe.segundoApellido != null ) {
+        name = informe.primerApellido + " " + informe.segundoApellido+ " " + informe.primerNombre ;
+      } else if (informe.segundoNombre == null && informe.segundoApellido == null){
+        name = informe.primerApellido + " " + informe.primerNombre; 
+      }else if (informe.segundoNombre != null && informe.segundoApellido == null){ 
+        name = informe.primerApellido + " " + informe.primerNombre + " " + informe.segundoNombre;
+      }else{
+        name = informe.primerApellido + " " + informe.segundoApellido + " " + informe.primerNombre + " " + informe.segundoNombre;
+      }
+      name = name.toLowerCase();
+      if(name.indexOf(nombre) >= 0){
+        array.push(informe);        
+      }  
+    }
+    this.descuentos = array;
+  
   }
 
 
@@ -147,28 +174,31 @@ export class GestionarDescuentoComponent implements OnInit {
     if(this.inputIncremento.length > 0){
       if(parseFloat(this.inputIncremento) >= 0 && parseFloat(this.inputIncremento) <= parseFloat(this.Saldo)){
         this.acreedor[0].montoBs = ((parseFloat(this.Saldo) - parseFloat(this.inputIncremento)).toFixed(2)).toString();
+        this.totalSaldo = this.acreedor[0].montoBs;
       }else{
         this.acreedor[0].montoBs = '00.00';
+        this.totalSaldo = '00.00';
       }
     }else{
       this.acreedor[0].montoBs = '00.00';
+      this.totalSaldo = '00.00';
     }
     
   }
-
-  aprobarIncremento(idConvenio, saldo, idDescuento, idPersona, idDepartamento, saldoInicial, idAcreedor){
-    this.Saldo = saldo;
-    this.inputSaldo = saldo + " Bs.";
+  // aprobarIncremento(informe:Descuento, idConvenio, saldo, idDescuento, idPersona, idDepartamento, saldoInicial, idAcreedor){
+  aprobarIncremento(informe:Descuento, idDepartamento, idConvenio){
+    this.Saldo = informe.montoDescuento;
+    this.inputSaldo = informe.montoDescuento + " Bs.";
     this.inputIncremento = '00.00';
     this.acreedor[0].idConvenio = idConvenio;
-    this.descuento.idDescuento = idDescuento;
-    this.descuento.saldoInicialDescuento = saldoInicial;
-    this.descuento.idAcreedor = idAcreedor;
-    this._appTipoPersonaService.getInfoEstudiantes(idDepartamento, idPersona)
+    this.descuento.idDescuento = informe.idDescuento;
+    this.descuento.saldoInicialDescuento = informe.saldoInicialDescuento;
+    this.descuento.idAcreedor = informe.idAcreedor;
+    this._appTipoPersonaService.getInfoEstudiantes(idDepartamento, informe.idPersona)
     .subscribe((estudiantes : Persona[]) => {
       this.infoEstudiante = estudiantes;
       for(let estudiante of this.infoEstudiante){        
-        if(estudiante.idPersona == idPersona){  
+        if(estudiante.idPersona == informe.idPersona){  
             if (estudiante.segundoNombre == null && estudiante.segundoApellido != null ) {
               this.nombreCompleto = estudiante.primerApellido + " " + estudiante.segundoApellido+ " " + estudiante.primerNombre ;
             } else if (estudiante.segundoNombre == null && estudiante.segundoApellido == null){
