@@ -13,58 +13,7 @@
             <li class="active">Gestionar convenios</li>
         </ol>
     </section>
-    <!---MODAL-->
-    <div class="modal fade" id="modal-horario">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Horarios</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="box-profile">
-                                <img class="profile-user-img img-responsive img-circle" src="assets/img/avatar.png" alt="User profile picture">
-                                <p class="text-muted text-center">650004813</p>
-                            </div>
-                        </div>
-                        <div class="col-md-9">
-                            <div class="box-header with-border">
-                                <h3 class="modal-name">{{ infoNombreCompleto }}</h3>
-                            </div>
-                            <div class="box-body">
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        <p><strong><i class="fa fa-book margin-r-5"></i> Carrera:</strong></p>
-                                        <p><strong><i class="fa fa-star margin-r-5"></i> Semestre:</strong></p>
-                                        <p><strong><i class="fa fa-map-marker margin-r-5"></i> Dirección:</strong></p>
-                                        <p><strong><i class="fa fa-flag-checkered margin-r-5"></i> Nacionalidad:</strong></p>
-                                        <p><strong><i class="fa fa-credit-card margin-r-5"></i> Carnet de Identidad:</strong></p>
-                                        <p><strong><i class="fa fa-phone margin-r-5"></i> Celular:</strong></p>
-                                        <p><strong><i class="fa fa-calendar margin-r-5"></i> Fecha nacimiento:</strong></p>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <p>Ingenieria de Sistemas</p>
-                                        <p>8</p>
-                                        <p>{{ infoDireccion }}</p>
-                                        <p>{{ infoNacionalidad }}</p>
-                                        <p>{{ infoCI }}</p>
-                                        <p>{{ infoCelular }}</p>
-                                        <p>{{ infoFechaNacimiento | date: 'dd/MM/yyyy' }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
     <div class="modal fade" id="modal-editar">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -270,7 +219,7 @@
                                     <h4 class="page-header"><i class="fa fa-list-ul"></i> Lista de convenios</h4>
                                     <div class="box-tools left">
                                         <div class="input-group input-group-sm" style="width: 300px;">
-                                            <input (keyup)="searchDepartamento(buscarEstudiante.value)" #buscarEstudiante type="text" name="buscarName" class="form-control pull-right" placeholder="Buscar estudiante">
+                                            <input (keyup)="buscarConvenio(buscarEstudiante.value)" #buscarEstudiante type="text" name="buscarName" class="form-control pull-right" placeholder="Buscar estudiante">
     
                                             <div class="input-group-btn">
                                                 <button type="button" class="btn btn-default"><i class="fa fa-search"></i></button>

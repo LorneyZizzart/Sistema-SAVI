@@ -18,7 +18,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 })
 export class GestionarUsuarioComponent implements OnInit {
   // usuario logeado
-  private userLog:User = {};
+ userLog:User = {};
   idPersona:string = null;
   idRol:string = null;
   password:string = null;
@@ -50,12 +50,12 @@ export class GestionarUsuarioComponent implements OnInit {
 
   estudiante:User[] = [];
 
-  private persona: Persona = {}
-  private editpersona: Persona = {}
-  private edituser: User = {};
-  private editPassword:string;
+   persona: Persona = {}
+   editpersona: Persona = {}
+   edituser: User = {};
+   editPassword:string;
   MessageSuccessUpdate:boolean = false;
-  private user: User = {};
+   user: User = {};
 
   //Confirmacion de eliminar
   messageYdelete:boolean = false;

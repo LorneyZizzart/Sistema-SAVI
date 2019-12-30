@@ -13,17 +13,6 @@
           <li class="active">Informe recividas</li>
       </ol>
   </section>
-<div *ngIf="MessageInformeAprobado == true" class="pad no-print">
-    <div class="callout callout-success">
-        <h4><i class="icon fa fa-check"></i> El informe fue aprobado</h4>
-        <p>Al aprobar se encuentra listo para acreditar el saldo al estudiante.</p>
-    </div>
-</div>
-<div *ngIf="MessageInformeNoAprobado == true" class="pad no-print">
-    <div class="callout callout-info">
-        <h4><i class="icon fa fa-info"></i> El informe fue desaprobado</h4>
-    </div>
-</div>
 <!-- Modal -->
 <div class="modal fade" id="modal-informacionStudiante">
     <div class="modal-dialog">
@@ -192,7 +181,7 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label>Observación</label>
-                    <textarea [(ngModel)]="informeFinanzas.obsrevacionFinanzas" name="informeFinanzas.obsrevacionFinanzas" class="form-control" rows="3" placeholder="obsevaciones ..."></textarea>
+                    <textarea [(ngModel)]="informeFinanzas.observacionFinanzas" name="informeFinanzas.obsrevacionFinanzas" class="form-control" rows="3" placeholder="obsevaciones ..."></textarea>
                     </div>
                 </div>
             </div>

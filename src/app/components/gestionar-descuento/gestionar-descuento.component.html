@@ -13,17 +13,6 @@
           <li class="active">Informe de descuentos</li>
       </ol>
   </section>
-<div *ngIf="MessageInformeAprobado == true" class="pad no-print">
-    <div class="callout callout-success">
-        <h4><i class="icon fa fa-check"></i> El informe fue aprobado</h4>
-        <p>Al aprobar se encuentra listo para acreditar el saldo al estudiante.</p>
-    </div>
-</div>
-<div *ngIf="MessageDescuento == true" class="pad no-print">
-  <div class="callout callout-success">
-      <h4><i class="icon fa fa-check"></i> El descuento se realizo satisfactoriamente.</h4>
-  </div>
-</div>
 <!-- Modal -->
 <div class="modal fade" id="modal-informacionStudiante">
   <div class="modal-dialog">
@@ -156,7 +145,7 @@
                             <div class="form-group">
                             <label><i class="fa fa-money margin-r-5"></i> Total saldo:</label>
                             <div class="input-group col-md-12">
-                                <input [(ngModel)]="totalSaldo" name="totalSaldo" type="text" class="form-control" placeholder="00.00 Bs." disabled>
+                                <input [(ngModel)]="acreedor.montoBs" name="acreedor.montoBs" type="text" class="form-control" placeholder="00.00 Bs." disabled>
                             </div> 
                             </div>                     
                         </div>
@@ -229,7 +218,7 @@
                                       <td class="text-center">{{informe.observacionDescuento}}</td>
                                       <td class="text-center">
                                           <a *ngIf="!informe.estadoDescuento" class="btn btn-success btn-xs disabled"><i class="fa fa-toggle-up"></i></a>
-                                          <a *ngIf="informe.estadoDescuento" (click)="aprobarIncremento(informe, informe.idDepartamento, informe.idConvenio)" data-toggle="modal" data-target="#modal-acreditacion"  class="btn btn-success btn-xs" title="Descontar"><i class="fa fa-toggle-up"></i></a>
+                                          <a *ngIf="informe.estadoDescuento" (click)="aprobarIncremento(informe, informe.idDepartamento)" data-toggle="modal" data-target="#modal-acreditacion"  class="btn btn-success btn-xs" title="Descontar"><i class="fa fa-toggle-up"></i></a>
                                           <a (click)="informacionEstudiante(informe.idPersona, informe.idDepartamento)" data-toggle="modal" data-target="#modal-informacionStudiante"  class="btn btn-primary btn-xs" title="Ver"><i class="fa fa-eye"></i></a>
                                       </td>
                                   </tr>

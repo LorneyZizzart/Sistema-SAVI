@@ -44,7 +44,7 @@ export class GestionarConvenioComponent implements OnInit {
   fotocopiaCarnet:boolean = false;
   solicitud:boolean = false;
   aceptoTerminos:boolean = false;
-  private convenio: Convenio = {};
+  convenio: Convenio = {};
   //Info Estudiante
   IdEstudiante:string;
   codEstudiante:string;
@@ -279,6 +279,7 @@ export class GestionarConvenioComponent implements OnInit {
       this.alert(2, 'Error al registrar', 'Se ha producido un error al registrar el convenio.');
     }
   }
+
   
   searchPutConvenio(idPersona:string, idConvenio){
     this.inputValEditDateStart = true;

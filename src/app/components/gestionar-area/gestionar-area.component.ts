@@ -31,8 +31,8 @@ export class GestionarAreaComponent implements OnInit {
   //GestionarArea
   listaAreaDepartamento:Area[];
   auxListaAreaDepartamento:Area[];
-  private area:Area = {}
-  private estadoUpdate:Area = {}
+  area:Area = {}
+  estadoUpdate:Area = {}
 
   //Lista de estudiantes del departamento correspondiente
   estudiantes:Persona[];

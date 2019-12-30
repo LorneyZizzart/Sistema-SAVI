@@ -50,7 +50,7 @@ export class GestionarDescuentoComponent implements OnInit {
   Saldo:string;inputSaldo:string;inputIncremento:string = '00.00';
   totalSaldo:string = '00.00';
   //save acreedor
-  acreedor:Acreedor[] = [];
+  acreedor:Acreedor = {};
   descuento:Descuento = {};
    //ALERTS
    titleAlert:string = null;
@@ -98,7 +98,7 @@ export class GestionarDescuentoComponent implements OnInit {
   }
 
   buscarInforme(nombre:string){
-    let array:Acreedor[] = [];
+    let array:Descuento[] = [];
     nombre = nombre.toLowerCase();
     var name;
     this.descuentos = this.descuentosArray;
@@ -173,24 +173,22 @@ export class GestionarDescuentoComponent implements OnInit {
   aumentarSaldo(){
     if(this.inputIncremento.length > 0){
       if(parseFloat(this.inputIncremento) >= 0 && parseFloat(this.inputIncremento) <= parseFloat(this.Saldo)){
-        this.acreedor[0].montoBs = ((parseFloat(this.Saldo) - parseFloat(this.inputIncremento)).toFixed(2)).toString();
-        this.totalSaldo = this.acreedor[0].montoBs;
+        this.acreedor.montoBs = ((parseFloat(this.Saldo) - parseFloat(this.inputIncremento)).toFixed(2)).toString();
       }else{
-        this.acreedor[0].montoBs = '00.00';
-        this.totalSaldo = '00.00';
+        this.acreedor.montoBs = '00.00';
       }
     }else{
-      this.acreedor[0].montoBs = '00.00';
-      this.totalSaldo = '00.00';
+      this.acreedor.montoBs = '00.00';
     }
     
   }
   // aprobarIncremento(informe:Descuento, idConvenio, saldo, idDescuento, idPersona, idDepartamento, saldoInicial, idAcreedor){
-  aprobarIncremento(informe:Descuento, idDepartamento, idConvenio){
+  aprobarIncremento(informe:Descuento, idDepartamento){
+
     this.Saldo = informe.montoDescuento;
     this.inputSaldo = informe.montoDescuento + " Bs.";
     this.inputIncremento = '00.00';
-    this.acreedor[0].idConvenio = idConvenio;
+    this.acreedor.idConvenio = informe.idConvenio;
     this.descuento.idDescuento = informe.idDescuento;
     this.descuento.saldoInicialDescuento = informe.saldoInicialDescuento;
     this.descuento.idAcreedor = informe.idAcreedor;
@@ -219,23 +217,23 @@ export class GestionarDescuentoComponent implements OnInit {
   confirmarIncremento(){
     if(parseFloat(this.Saldo) >=  parseFloat(this.inputIncremento)){
       this.descuento.idUsuario = this.IdUsuario;
-      this.descuento.montoDescuento = this.acreedor[0].montoBs;
+      this.descuento.montoDescuento = this.acreedor.montoBs;
       this.descuento.estadoDescuento = '0';
 
       // se deshabilitara el descuento para registrar otro
       this._appDescuentoService.putDescuento(this.descuento, this.descuento.idDescuento).subscribe((data:Descuento) =>{
         
-        this._appAcreedorService.getAcreedorByIdConvenio(this.acreedor[0].idConvenio).subscribe((acreedor:Acreedor[])=>{
+        this._appAcreedorService.getAcreedorByIdConvenio(this.acreedor.idConvenio).subscribe((acreedor:Acreedor[])=>{
 
-          this.acreedor = acreedor;
-          this.acreedor[0].estadoAcreedor = "0";
-          this.acreedor[0].idUsuario = this.IdUsuario;
+          this.acreedor = acreedor[0];
+          this.acreedor.estadoAcreedor = "0";
+          this.acreedor.idUsuario = this.IdUsuario;
 
           
-          this.acreedor[0].montoBs = (parseFloat(acreedor[0].montoBs)+parseFloat(this.inputIncremento)).toString();
+          this.acreedor.montoBs = (parseFloat(acreedor[0].montoBs)+parseFloat(this.inputIncremento)).toString();
           // actualizamos en el acreedor
 
-          this._appAcreedorService.putAcreedor(this.acreedor[0]).subscribe((putAcreedor:Acreedor[])=>{
+          this._appAcreedorService.putAcreedor(this.acreedor).subscribe((putAcreedor:Acreedor[])=>{
 
             this._appDescuentoService.postDescuentos(this.descuento).subscribe((postDescuento :Descuento[])=>{
               this.alert(1, 'Registro exitoso', 'La acreditacion se realizo satisfactoriamente');
