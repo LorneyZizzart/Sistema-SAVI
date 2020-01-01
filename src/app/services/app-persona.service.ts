@@ -33,7 +33,8 @@ export class AppPersonaService {
   postPersona(persona:Persona):Observable<Persona[]>{
       let body = JSON.stringify(persona);
       let headers = new HttpHeaders({
-         'Content-Type': 'application/json'
+         'Content-Type': 'application/json',
+         "Authorization" : "Sabi eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZGF0ZSI6IjIwMTkvMTIvMzEgMTI6MjA6MTQuMDAwIiwiYXBpIjoiQmllbnZlbmlkbyBhIGxhIEFQSSBSRVNUIGRlIFNhYmkuIiwiaWF0IjoxNTc3ODA5MjE0LCJleHAiOjE1Nzc4MTI4MTR9.yY8JTBXMM4BkRUQ7l4PK0IjgZmMGSe1sFX48aTl1OrU"
       });
 
       return this._http.post<Persona[]>(this.listaPersonaURL, body, { headers })
@@ -44,7 +45,8 @@ export class AppPersonaService {
   putPersona(persona:Persona, key$:string):Observable<Persona[]>{
     let body = JSON.stringify(persona);
     let headers = new HttpHeaders({
-      'Content-Type':'application/json'
+      'Content-Type':'application/json',
+      "Authorization" : "Sabi eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZGF0ZSI6IjIwMTkvMTIvMzEgMTI6MjA6MTQuMDAwIiwiYXBpIjoiQmllbnZlbmlkbyBhIGxhIEFQSSBSRVNUIGRlIFNhYmkuIiwiaWF0IjoxNTc3ODA5MjE0LCJleHAiOjE1Nzc4MTI4MTR9.yY8JTBXMM4BkRUQ7l4PK0IjgZmMGSe1sFX48aTl1OrU"
     });
     let url = `${this.listaPersonaURL}/${key$}`;
     return this._http.put<Persona[]>(url, body, {headers})

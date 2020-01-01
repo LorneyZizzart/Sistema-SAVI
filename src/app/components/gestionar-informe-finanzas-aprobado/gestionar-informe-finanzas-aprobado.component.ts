@@ -90,6 +90,7 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
   alertError:Boolean = false;
   alertWarning:boolean = false;
   Usuario:User;
+  private AuthUser:User;
 
   constructor( private _appInformeEstudianteService:AppInformeEstudianteService,
               private _appTipoPersonaService:AppTipoPersonaService,
@@ -107,7 +108,8 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
   }
 
   getUser(){
-    this.Usuario =  this._authService.getDatosPersonales();    
+    this.Usuario =  this._authService.getDatosPersonales();   
+    this.AuthUser = this._authService.getCurrentUser(); 
     this.IdUsuario = this.Usuario.idUsuario;
   }
 
@@ -432,7 +434,7 @@ export class GestionarInformeFinanzasAprobadoComponent implements OnInit {
   }
 
   infoInformeFinanzas(idInformeFinanzas, fechaAprobada, totalHorasF, totalSaldoF, obsrevacionFinanzas, idUsuario){
-    this._appUserService.getUser(idUsuario).subscribe((data : User[]) => {
+    this._appUserService.getUser(idUsuario, this.AuthUser.token).subscribe((data : User[]) => {
       if (data[0].segundoNombre == null && data[0].segundoApellido != null ) {
         this.usuario  = data[0].primerApellido + " " + data[0].segundoApellido+ " " + data[0].primerNombre ;
       } else if (data[0].segundoNombre == null && data[0].segundoApellido == null){

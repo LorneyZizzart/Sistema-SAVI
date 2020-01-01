@@ -17,7 +17,9 @@ import { Convenio } from '../interfaces/convenio.interface';
 export class AuthService {
 
   headers: HttpHeaders = new HttpHeaders({
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
+    "Authorization" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZGF0ZSI6IjIwMTkvMTIvMzEgMTI6MjA6MTQuMDAwIiwiYXBpIjoiQmllbnZlbmlkbyBhIGxhIEFQSSBSRVNUIGRlIFNhYmkuIiwiaWF0IjoxNTc3ODA5MjE0LCJleHAiOjE1Nzc4MTI4MTR9.yY8JTBXMM4BkRUQ7l4PK0IjgZmMGSe1sFX48aTl1OrU"
+
   });
 
   constructor(private htttp: HttpClient,

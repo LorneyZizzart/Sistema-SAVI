@@ -7,4 +7,6 @@ export interface User extends Persona  {
   password?: string;
   estado?: string
   rol?:string
+  token?:string
+  expira?:string
 }

@@ -6,6 +6,7 @@ import { User } from "../interfaces/user.interface";
 import { Persona } from "../interfaces/persona.interface";
 import { Observable } from "rxjs";
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -15,37 +16,48 @@ export class AppUserService {
 
   listaUserURL: string = "http://localhost:3000/user";
 
+
     constructor(private _http:HttpClient) {   }
     //Gestionar User
     //Get Users
-  getUsers(idRol): Observable<Persona[]>{
+  getUsers(idRol, token): Observable<Persona[]>{
     let url = `${this.listaUserURL}/search/users/${idRol}`;
-    return this._http.get<Persona[]>(url).pipe(map(res => res));
+    let headers = new HttpHeaders({
+      "Authorization" : "Sabi "+token
+   });
+    return this._http.get<Persona[]>(url, { headers }).pipe(map(res => res));
     }
 
-  getUser(key$:string):Observable<Persona[]>{
+  getUser(key$:string, token):Observable<Persona[]>{
       let url = `${this.listaUserURL}/${key$}`;
-      return this._http.get<Persona[]>(url);
+      let headers = new HttpHeaders({
+        "Authorization" : "Sabi "+token
+     });
+      return this._http.get<Persona[]>(url, { headers }).pipe();
     }
   
-  getVerificarUser(user:User):Observable<User[]>{
+  getVerificarUser(user:User):Observable<User>{
       let body = JSON.stringify(user);
       let headers = new HttpHeaders({
          'Content-Type': 'application/json'
       });
       let url = `${this.listaUserURL}/verificarUser/`;
-      return this._http.post<User[]>(url, body, { headers }).pipe ();
+      return this._http.post<User>(url, body, { headers }).pipe ();
   }
 
-  searchUser(user:string):Observable<User[]>{
+  searchUser(user:string, token):Observable<User[]>{
     let url = `${this.listaUserURL}/search/name/${user}`;
-    return this._http.get<User[]>(url).pipe(map(res => res));
+    let headers = new HttpHeaders({
+      "Authorization" : "Sabi "+token
+   });
+    return this._http.get<User[]>(url, { headers }).pipe(map(res => res));
   }
 
-  postUser(user:User):Observable<User[]>{
+  postUser(user:User, token):Observable<User[]>{
       let body = JSON.stringify(user);
       let headers = new HttpHeaders({
-         'Content-Type': 'application/json'
+         'Content-Type': 'application/json',
+         "Authorization" : "Sabi " + token 
       });
 
       return this._http.post<User[]>(this.listaUserURL, body, { headers })
@@ -53,15 +65,19 @@ export class AppUserService {
       .pipe ();
     }
 
-  deleteUser(key$:string){
+  deleteUser(key$:string, token){
     let url = `${this.listaUserURL}/${key$}`;
-    return this._http.delete(url).pipe(map(res => res));
+    let headers = new HttpHeaders({
+      "Authorization" : "Sabi "+token
+   });
+    return this._http.delete(url, { headers }).pipe(map(res => res));
   }
 
-  putUser(user:User, key$:string, idPersona:string):Observable<User[]>{
+  putUser(user:User, key$:string, idPersona:string, token):Observable<User[]>{
     let body = JSON.stringify(user);
     let headers = new HttpHeaders({
-      'Content-Type':'application/json'
+      'Content-Type':'application/json',
+      "Authorization" : "Sabi " + token
     });
     let url = `${this.listaUserURL}/${key$}/${idPersona}`;
     return this._http.put<User[]>(url, body, {headers})

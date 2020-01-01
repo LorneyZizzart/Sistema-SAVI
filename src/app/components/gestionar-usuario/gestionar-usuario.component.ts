@@ -110,6 +110,8 @@ export class GestionarUsuarioComponent implements OnInit {
   // API SISTEMA ACADEMICO
   listaEstudiantesSA:Persona[];
   cantidadEstudiantes:number = 0;
+
+  private AuthUser:User;
     
   constructor( private _appUserService: AppUserService,
               private _appPersonaService: AppPersonaService,
@@ -127,13 +129,12 @@ export class GestionarUsuarioComponent implements OnInit {
   }
 
   cargarImg(img){
-    console.log("imagen url: ", img.target.files[0])
+    // console.log("imagen url: ", img.target.files[0])
     this.imagen = img.target.files[0].name;
   }
   //obtencion de datos del usuario logeado
   obtenerUsuario(){
     this.userLog = this._authService.getCurrentUser();
-
   }
 
    //resetear el FORMULARIO no estamos usando
@@ -479,7 +480,7 @@ export class GestionarUsuarioComponent implements OnInit {
           this.inputValPassword = true;
           this.user.usuario = (persona.primerNombre+persona.primerApellido).toLowerCase().replace(/ /g,"").substr(0,6);
           this.password = (persona.primerApellido).toLowerCase().replace(/ /g,"").substr(0,3)+(persona.ci).toLowerCase().replace(/ /g,"").substr(0,3);       
-          this._appUserService.searchUser(this.user.usuario )
+          this._appUserService.searchUser(this.user.usuario, this.userLog.token )
           .subscribe((data:User[])=>{
             if(data.length > 0){ this.inputValUser = false;
               this.messageUser = 'El nombre generado de usuario ya existe.';
@@ -508,7 +509,7 @@ export class GestionarUsuarioComponent implements OnInit {
           if(this.simbolos.indexOf(value.charAt(i),0)!=-1){validInput = false; break}
         }
         if(validInput){
-          this._appUserService.searchUser(value)
+          this._appUserService.searchUser(value, this.userLog.token)
           .subscribe((data:User[])=>{
             if(data.length > 0){
               if(opcion == 1) this.inputValUser = false;
@@ -646,7 +647,7 @@ export class GestionarUsuarioComponent implements OnInit {
   }
 
   getUsers(idRol) {
-    this._appUserService.getUsers(idRol)
+    this._appUserService.getUsers(idRol, this.userLog.token)
     .subscribe((users: Persona[]) => {
       this.userPersona = users; 
       this.usuariosArray = this.userPersona;
@@ -741,7 +742,7 @@ export class GestionarUsuarioComponent implements OnInit {
       this.user.idPersona = idPersona;
       this.user.idRol = idRol;
       this.user.password = this.passwordTwo;      
-      this._appUserService.postUser(this.user)
+      this._appUserService.postUser(this.user, this.userLog.token)
       .subscribe((data :User[]) => {
         this.alert(1, 'Registro exitoso','El registro del usuario se realizó satisfactoriamente.');
         this.resetForm(form);
@@ -755,7 +756,7 @@ export class GestionarUsuarioComponent implements OnInit {
   editUsers(idRol){
     this.edituser.estado = '1';
     this.edituser.idRol = idRol;
-    this._appUserService.putUser(this.edituser, this.idUsuario, this.idPersona)
+    this._appUserService.putUser(this.edituser, this.idUsuario, this.idPersona, this.userLog.token)
     .subscribe((data :User[]) => {
       this.alert(1,'Actualización exitoso', 'Los datos del usuario se actualizarion satisfactoriamente.')
       this.getUsers(this.userLog.idRol);
@@ -768,7 +769,7 @@ export class GestionarUsuarioComponent implements OnInit {
     this.user.usuario = usuario;
     this.user.password = password;
     this.user.estado = estado;
-    this._appUserService.putUser(this.user, idUsuario, idPersona)
+    this._appUserService.putUser(this.user, idUsuario, idPersona, this.userLog.token)
       .subscribe((data: User[]) => {
         if(estado == 1)this.alert(1, 'Habilitación exitosa','Se ha habilitado la cuenta del usuario.')
         if(estado == 0)this.alert(3, 'Deshabilitación exitosa','Se ha habilitado la cuenta del usuario.')
@@ -785,7 +786,7 @@ export class GestionarUsuarioComponent implements OnInit {
   eliminarUser(){
     var successDelete = false;
     if(this.idUsuario != null){
-      this._appUserService.deleteUser(this.idUsuario)
+      this._appUserService.deleteUser(this.idUsuario, this.userLog.token)
         .subscribe((user : User[]) => { successDelete = true},res => { successDelete = false});
       this._appPersonaService.deletePersona(this.idPersona)
       .subscribe((persona : Persona[]) =>{

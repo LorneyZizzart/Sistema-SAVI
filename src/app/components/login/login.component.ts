@@ -89,23 +89,24 @@ export class LoginComponent implements OnInit {
   verificarUsuario(){
     if(this.inputSuccessUsuario && this.inputSuccessPassword){
       this._appUserService.getVerificarUser(this.user)
-      .subscribe((usuario:User[])=>{
-        if(usuario.length>0){
-          if(usuario[0].estado){
-            this._appUserService.getUser(usuario[0].idUsuario).subscribe((persona : Persona[]) => {
-              if(usuario[0].idRol == "4"){
-                this._appDepartamentoService.getDepartamentosUser(usuario[0].idRol, usuario[0].idUsuario).subscribe((data:Departamento) => {
+      .subscribe((usuario:User)=>{
+        console.log(usuario)
+        if(usuario.token){
+          if(usuario.estado){
+            this._appUserService.getUser(usuario.idUsuario, usuario.token).subscribe((persona : Persona[]) => {
+              if(usuario.idRol == "4"){
+                this._appDepartamentoService.getDepartamentosUser(usuario.idRol, usuario.idUsuario).subscribe((data:Departamento) => {
                   this._authService.setDatosDepartamento(data);
                 })
-              }else if(usuario[0].idRol == "5"){
-                this._appConvenioService.getConvenioByUsuario(usuario[0].idUsuario).subscribe((data:Convenio[]) => {
+              }else if(usuario.idRol == "5"){
+                this._appConvenioService.getConvenioByUsuario(usuario.idUsuario).subscribe((data:Convenio[]) => {
                   this._authService.setConvenio(data[0]);
                   this._appDepartamentoService.getDepartamentoById(data[0].idDepartamento).subscribe((departamento:Departamento)=>{
                     this._authService.setDatosDepartamento(departamento);
                   })
                 })
               }
-              if(this._authService.setUser(usuario[0]) && this._authService.setDatosPersonales(persona[0])){
+              if(this._authService.setUser(usuario) && this._authService.setDatosPersonales(persona[0])){
                 this._router.navigate(['/home']);
               }
             }, res => {
