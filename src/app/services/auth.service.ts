@@ -1,11 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Observable } from "rxjs/internal/Observable";
-import { map } from "rxjs/operators";
 import { isNullOrUndefined } from "util";
-import { AppUserService } from './app-user.service';
 import { User } from '../interfaces/user.interface';
-import { Persona } from '../interfaces/persona.interface';
 import { Departamento } from '../interfaces/departamento.interface';
 import { Convenio } from '../interfaces/convenio.interface';
 
@@ -16,14 +11,7 @@ import { Convenio } from '../interfaces/convenio.interface';
 })
 export class AuthService {
 
-  headers: HttpHeaders = new HttpHeaders({
-    "Content-Type": "application/json",
-    "Authorization" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZGF0ZSI6IjIwMTkvMTIvMzEgMTI6MjA6MTQuMDAwIiwiYXBpIjoiQmllbnZlbmlkbyBhIGxhIEFQSSBSRVNUIGRlIFNhYmkuIiwiaWF0IjoxNTc3ODA5MjE0LCJleHAiOjE1Nzc4MTI4MTR9.yY8JTBXMM4BkRUQ7l4PK0IjgZmMGSe1sFX48aTl1OrU"
-
-  });
-
-  constructor(private htttp: HttpClient,
-              private _appUserService: AppUserService) { }
+  constructor() { }
 
   setUser(user:User):Boolean{
     if(user){

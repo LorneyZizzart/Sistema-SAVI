@@ -41,7 +41,7 @@ export class AppUserService {
       let headers = new HttpHeaders({
          'Content-Type': 'application/json'
       });
-      let url = `${this.listaUserURL}/verificarUser/`;
+      let url = `${this.listaUserURL}/login/`;
       return this._http.post<User>(url, body, { headers }).pipe ();
   }
 
